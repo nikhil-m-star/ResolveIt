@@ -7,10 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0a0f1e', // deep navy
-        primary: '#3b82f6',    // electric blue
-        success: '#10b981',    // emerald
-        urgent: '#ef4444',     // red
+        background: '#000000', // pure black
+        primary: '#06b6d4',    // cyan
+        success: '#06b6d4',    // make success cyan too
+        urgent: '#06b6d4',     // make urgent cyan too
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
