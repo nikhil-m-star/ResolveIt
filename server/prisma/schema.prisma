@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id              String         @id @default(cuid())
+  clerkId         String         @unique
+  name            String
+  email           String         @unique
+  role            Role           @default(CITIZEN)
+  city            String?        @default("Bengaluru")
+  area            String?
+  tier            Tier           @default(BRONZE)
+  avgRating       Float          @default(0)
+  resolvedCount   Int            @default(0)
+  assignedCount   Int            @default(0)
+  points          Int            @default(0)
+  createdAt       DateTime       @default(now())
+  comments        Comment[]
+  assignedIssues  Issue[]        @relation("AssignedIssues")
+  issues          Issue[]        @relation("CreatedIssues")
+  resolvedIssues  Issue[]        @relation("ResolvedIssues")
+  notifications   Notification[]
+  ratingsGiven    Rating[]       @relation("RatingGiver")
+  ratingsReceived Rating[]       @relation("RatingReceiver")
+  votes           Vote[]
+  statusHistory   StatusHistory[]
+
+  @@index([role, city, area])
+  @@map("users")
+}
+
+model Issue {
+  id             String          @id @default(cuid())
+  title          String
+  description    String
+  category       Category
+  status         Status          @default(REPORTED)
+  city           String          @default("Bengaluru")
+  area           String?
+  latitude       Float
+  longitude      Float
+  imageUrls      String[]        // Up to 3 images
+  department     String?
+  intensity      Float?
+  etaDays        Int?            // AI predicted resolution ETA
+  isAnonymous    Boolean         @default(false) // For bribery reports
+  votes          Int             @default(0)
+  searchVector   Unsupported("tsvector")? // Full-text search
+  slaBreached    Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  resolvedAt     DateTime?
+  createdById    String
+  assignedToId   String?
+  resolvedById   String?
+  comments       Comment[]
+  assignedTo     User?           @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  createdBy      User            @relation("CreatedIssues", fields: [createdById], references: [id])
+  resolvedBy     User?           @relation("ResolvedIssues", fields: [resolvedById], references: [id])
+  notifications  Notification[]
+  ratings        Rating[]
+  voteRecords    Vote[]
+  statusHistory  StatusHistory[]
+
+  @@index([city, area, status])
+  @@index([category, status])
+  @@index([createdAt])
+  @@index([createdById])
+  @@index([votes(sort: Desc)])
+  @@map("issues")
+}
+
+model StatusHistory {
+  id        String   @id @default(cuid())
+  issueId   String
+  userId    String
+  oldStatus Status
+  newStatus Status
+  note      String?
+  createdAt DateTime @default(now())
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("status_history")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  type      NotifType @default(INFO)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String
+  issueId   String?
+  issue     Issue?   @relation(fields: [issueId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Vote {
+  id      String @id @default(cuid())
+  issueId String
+  userId  String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([issueId, userId])
+  @@map("votes")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  comment   String
+  createdAt DateTime @default(now())
+  issueId   String
+  userId    String
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([issueId, createdAt(sort: Desc)])
+  @@map("comments")
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  score     Int
+  feedback  String?
+  createdAt DateTime @default(now())
+  issueId   String?
+  givenById String
+  officerId String
+  givenBy   User     @relation("RatingGiver", fields: [givenById], references: [id])
+  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  officer   User     @relation("RatingReceiver", fields: [officerId], references: [id])
+
+  @@unique([issueId, givenById])
+  @@map("ratings")
+}
+
+enum Role {
+  CITIZEN
+  OFFICER
+  PRESIDENT
+}
+
+enum Category {
+  POTHOLE
+  GARBAGE
+  STREETLIGHT
+  WATER_LEAK
+  BRIBERY
+  POWER_CUT
+  SEWAGE
+  TREE_FALLEN
+  OTHER
+}
+
+enum Status {
+  REPORTED
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum Tier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum NotifType {
+  INFO
+  URGENT
+  SLA_BREACH
+  RESOLVED
+  BRIBERY
+}
