@@ -10,6 +10,7 @@ import {
   updateStatus
 } from "../controllers/issueController.js";
 import { toggleVote } from "../controllers/voteController.js";
+import { addComment } from "../controllers/commentController.js";
 
 const issueRouter = Router();
 
@@ -24,6 +25,9 @@ issueRouter.get("/:id", jwtAuth, getIssueById);
 
 // Votes
 issueRouter.post("/:id/vote", jwtAuth, toggleVote);
+
+// Comments
+issueRouter.post("/:id/comments", jwtAuth, addComment);
 
 // Officer operations
 issueRouter.patch("/:id/status", jwtAuth, updateStatus);
