@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import { subDays } from "date-fns";
 import prisma from "../lib/prisma.js";
+import { sendEmailNotification } from "../lib/email.js";
 
 // Run every 6 hours
 export const initSLA_CronJob = () => {
@@ -15,6 +16,7 @@ export const initSLA_CronJob = () => {
           createdAt: { lte: seventyTwoHoursAgo },
           slaBreached: false // only flag ones that haven't been flagged yet
         },
+        include: { assignedTo: true, createdBy: true }
       });
 
       if (breachedIssues.length === 0) {
@@ -39,6 +41,14 @@ export const initSLA_CronJob = () => {
               issueId: issue.id
             }
           });
+
+          if (issue.assignedTo.email) {
+             await sendEmailNotification({
+                to: issue.assignedTo.email,
+                subject: `URGENT: SLA Breach for ${issue.title}`,
+                html: `<h2>SLA Breach Warning</h2><p>The issue <strong>${issue.title}</strong> assigned to you has breached the 72-hour Service Level Agreement and requires immediate resolution.</p>`
+             })
+          }
         }
 
         // Notify the area presidents/admins (if we assume region-wide alert needed, but this is simple version)

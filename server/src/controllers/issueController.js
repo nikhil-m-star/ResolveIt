@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
 import { autoCategorizIssue, checkDuplicate, assessIntensity, predictETA } from "../services/nvidia.js";
+import { sendEmailNotification } from "../lib/email.js";
 
 // AI Endpoint: Auto-Categorize Issue
 export const autoCategorize = async (req, res) => {
@@ -156,7 +157,10 @@ export const updateStatus = async (req, res) => {
   }
 
   try {
-    const issue = await prisma.issue.findUnique({ where: { id } });
+    const issue = await prisma.issue.findUnique({ 
+        where: { id },
+        include: { createdBy: true }
+    });
     if (!issue) return res.status(404).json({ error: "Issue not found" });
 
     // Update Issue & Push Status History in a transaction
@@ -177,8 +181,31 @@ export const updateStatus = async (req, res) => {
             newStatus,
             note
         }
+      }),
+      prisma.notification.create({
+        data: {
+          userId: issue.createdById,
+          issueId: id,
+          type: "INFO",
+          message: `Your issue "${issue.title}" has been tracked to: ${newStatus.replace(/_/g, " ")}`
+        }
       })
     ]);
+
+    // Send Real Email!
+    if (issue.createdBy && issue.createdBy.email) {
+      await sendEmailNotification({
+         to: issue.createdBy.email,
+         subject: `Update on your reported issue: ${issue.title}`,
+         html: `
+           <h2>Status Update</h2>
+           <p>Your issue regarding <strong>${issue.title}</strong> has been updated to: <strong>${newStatus.replace(/_/g, " ")}</strong>.</p>
+           ${note ? `<p><strong>Official's Note:</strong> <em>"${note}"</em></p>` : ''}
+           <hr />
+           <p>Check the ResolveIt platform for more details.</p>
+         `
+      });
+    }
 
     res.json({ updatedIssue, statusEntry });
 
