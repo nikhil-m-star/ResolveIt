@@ -1,6 +1,7 @@
 import { UserButton, useUser, useClerk } from "@clerk/clerk-react";
 import { Link, useLocation } from "react-router-dom";
-import { Bell, PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare } from "lucide-react";
+import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, Bell } from "lucide-react";
+import { NotificationsDropdown } from "./NotificationsDropdown";
 
 export function Navbar() {
   const { user } = useUser();
@@ -39,6 +40,7 @@ export function Navbar() {
         <Link to="/leaderboard" className="p-2 text-gray-400 hover:text-yellow-400 transition-colors">
           <Trophy className="w-5 h-5" />
         </Link>
+        <NotificationsDropdown />
         <Link to="/profile" className="p-2 text-gray-400 hover:text-white transition-colors relative">
           <Bell className="hidden w-5 h-5" />
           <UserButton afterSignOutUrl="/sign-in" />
