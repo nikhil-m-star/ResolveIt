@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
-import { Loader2, TrendingUp, AlertTriangle, CheckCircle, Activity, BarChart3, Users } from "lucide-react";
+import { Loader2, TrendingUp, AlertTriangle, CheckCircle, Activity, BarChart3, Users, Download } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
 import { cn } from "../utils/helpers";
+import toast from "react-hot-toast";
 
 export function AdminDashboard() {
   const { data: stats, isLoading, isError } = useQuery({
@@ -41,6 +42,34 @@ export function AdminDashboard() {
     );
   }
 
+  const handleExportCSV = () => {
+    if (!issues || issues.length === 0) return toast.error("No data to export or still loading");
+
+    const headers = ["ID", "Title", "Category", "Status", "Intensity", "City", "Area", "Created At", "SLA Breached"];
+    const rows = issues.map(issue => [
+      issue.id,
+      `"${issue.title.replace(/"/g, '""')}"`,
+      issue.category,
+      issue.status,
+      issue.intensity || "N/A",
+      `"${issue.city}"`,
+      `"${issue.area || ""}"`,
+      new Date(issue.createdAt).toISOString(),
+      issue.slaBreached ? "Yes" : "No"
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `resolveit-report-${new Date().getTime()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Report downloaded safely!");
+  };
+
   const COLORS = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4'];
 
   return (
@@ -54,8 +83,11 @@ export function AdminDashboard() {
             <p className="text-gray-400 mt-1">Real-time overview of civic issues and SLA tracking.</p>
           </div>
           <div className="flex gap-3">
-             <button className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors">
-               Export Report
+             <button 
+                onClick={handleExportCSV}
+                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+             >
+               <Download className="w-4 h-4" /> Export Report
              </button>
           </div>
         </div>
