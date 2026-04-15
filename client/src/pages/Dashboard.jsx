@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
 import { IssueCard } from "../components/issues/IssueCard";
 import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
-import { Search, Filter, Loader2, RefreshCcw } from "lucide-react";
+import { Search, Filter, Loader2, RefreshCcw, CheckCircle2, MapPin } from "lucide-react";
 
 export function Dashboard() {
   const [filters, setFilters] = useState({
@@ -12,6 +12,35 @@ export function Dashboard() {
     status: "",
     search: ""
   });
+  const [isLocating, setIsLocating] = useState(true);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            // Fetch city name using reverse geocoding
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+            const data = await res.json();
+            const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || "Bengaluru";
+            setFilters(prev => ({ ...prev, city }));
+          } catch (error) {
+            console.error("Failed to determine city:", error);
+          } finally {
+            setIsLocating(false);
+          }
+        },
+        (error) => {
+          console.warn("Geolocation denied or failed:", error);
+          setIsLocating(false);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      setIsLocating(false);
+    }
+  }, []);
 
   const { data: issues, isLoading, isError, refetch } = useIssues(filters);
 

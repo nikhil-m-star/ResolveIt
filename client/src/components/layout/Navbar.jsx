@@ -19,33 +19,46 @@ export function Navbar() {
         </Link>
         
         <div className="flex items-center gap-4">
-          {(role === "OFFICER" || role === "PRESIDENT") && (
+          {user ? (
             <>
-              <Link to="/admin" className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-colors ${location.pathname === '/admin' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-primary/5 text-primary/80 border-primary/20 hover:bg-primary/20'}`}>
-                <ShieldAlert className="w-4 h-4" />
-                Command Center
+              {(role === "OFFICER" || role === "PRESIDENT") && (
+                <>
+                  <Link to="/admin" className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-colors ${location.pathname === '/admin' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-primary/5 text-primary/80 border-primary/20 hover:bg-primary/20'}`}>
+                    <ShieldAlert className="w-4 h-4" />
+                    Command Center
+                  </Link>
+                  <Link to="/kanban" className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm border transition-colors ${location.pathname === '/kanban' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-primary/5 text-primary/80 border-primary/20 hover:bg-primary/20'}`}>
+                    <KanbanSquare className="w-4 h-4" />
+                    Board
+                  </Link>
+                </>
+              )}
+              <Link to="/report" className="hidden sm:flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                <PlusCircle className="w-4 h-4" />
+                Report Issue
               </Link>
-              <Link to="/kanban" className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm border transition-colors ${location.pathname === '/kanban' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-primary/5 text-primary/80 border-primary/20 hover:bg-primary/20'}`}>
-                <KanbanSquare className="w-4 h-4" />
-                Board
+              <Link to="/dashboard" className="p-2 text-primary/60 hover:text-primary transition-colors">
+                <LayoutDashboard className="w-5 h-5" />
+              </Link>
+              <Link to="/leaderboard" className="p-2 text-primary/60 hover:text-primary transition-colors">
+                <Trophy className="w-5 h-5" />
+              </Link>
+              <NotificationsDropdown />
+              <Link to="/profile" className="p-2 text-primary/60 hover:text-primary transition-colors relative">
+                <Bell className="hidden w-5 h-5" />
+                <UserButton afterSignOutUrl="/" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/sign-in" className="px-4 py-2 rounded-full font-medium text-sm text-primary/80 hover:text-primary transition-colors">
+                Sign In
+              </Link>
+              <Link to="/sign-up" className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                Get Started
               </Link>
             </>
           )}
-          <Link to="/report" className="hidden sm:flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-            <PlusCircle className="w-4 h-4" />
-            Report Issue
-          </Link>
-          <Link to="/" className="p-2 text-primary/60 hover:text-primary transition-colors">
-            <LayoutDashboard className="w-5 h-5" />
-          </Link>
-          <Link to="/leaderboard" className="p-2 text-primary/60 hover:text-primary transition-colors">
-            <Trophy className="w-5 h-5" />
-          </Link>
-          <NotificationsDropdown />
-          <Link to="/profile" className="p-2 text-primary/60 hover:text-primary transition-colors relative">
-            <Bell className="hidden w-5 h-5" />
-            <UserButton afterSignOutUrl="/sign-in" />
-          </Link>
         </div>
       </nav>
     </div>
