@@ -31,11 +31,11 @@ export function IssueDetail() {
     onError: () => toast.error("Failed to comment"),
   });
 
-  // Handle fake submit comment for now since comment endpoint isn't fully robust in backend
+  // Handle real submit comment
   const handleSubmitComment = async (e) => {
       e.preventDefault();
-      // Placeholder for actual call
-      toast.error("Comments endpoint pending backend completion. Not implemented yet!");
+      if (!comment.trim()) return;
+      commentMutation.mutate();
   }
 
   if (isLoading) {
