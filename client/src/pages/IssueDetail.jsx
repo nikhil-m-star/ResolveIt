@@ -1,0 +1,274 @@
+import { useParams } from "react-router-dom";
+import { useIssue } from "../hooks/useIssue";
+import { Layout } from "../components/layout/Layout";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "../lib/auth";
+import { formatDistanceToNow } from "date-fns";
+import toast from "react-hot-toast";
+import { Bot, MapPin, ChevronUp, Clock, AlertTriangle, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
+import { cn, getCategoryIcon, getCategoryColor, getStatusColor, evaluateIntensityColor } from "../utils/helpers";
+import { useState } from "react";
+
+export function IssueDetail() {
+  const { id } = useParams();
+  const { data: issue, isLoading, isError } = useIssue(id);
+  const queryClient = useQueryClient();
+  const [comment, setComment] = useState("");
+
+  const voteMutation = useMutation({
+    mutationFn: () => api.post(`/issues/${id}/vote`),
+    onSuccess: () => queryClient.invalidateQueries(["issue", id]),
+    onError: () => toast.error("Failed to vote"),
+  });
+
+  const commentMutation = useMutation({
+    mutationFn: () => api.post(`/issues/${id}/comments`, { text: comment }),
+    onSuccess: () => {
+      setComment("");
+      queryClient.invalidateQueries(["issue", id]);
+      toast.success("Comment added");
+    },
+    onError: () => toast.error("Failed to comment"),
+  });
+
+  // Handle fake submit comment for now since comment endpoint isn't fully robust in backend
+  const handleSubmitComment = async (e) => {
+      e.preventDefault();
+      // Placeholder for actual call
+      toast.error("Comments endpoint pending backend completion. Not implemented yet!");
+  }
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center h-full text-primary pt-20">
+          <Loader2 className="w-10 h-10 animate-spin" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (isError || !issue) {
+    return (
+      <Layout>
+        <div className="p-8 text-center text-red-500 font-medium">Failed to load issue details.</div>
+      </Layout>
+    );
+  }
+
+  const Icon = getCategoryIcon(issue.category);
+  const isResolved = issue.status === "RESOLVED";
+
+  return (
+    <Layout>
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        
+        {/* Header Block */}
+        <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative">
+          
+          <div className="flex-1 space-y-4 w-full">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className={cn("px-3 py-1.5 rounded-lg border flex items-center gap-2 text-sm font-bold capitalize", getCategoryColor(issue.category))}>
+                <Icon className="w-4 h-4" /> {issue.category.replace(/_/g, " ")}
+              </div>
+              <div className={cn("px-3 py-1.5 rounded-lg border text-sm font-bold", getStatusColor(issue.status))}>
+                {issue.status.replace(/_/g, " ")}
+              </div>
+              
+              {issue.slaBreached && (
+                <div className="px-3 py-1.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/30 rounded-lg flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4" /> SLA Breached
+                </div>
+              )}
+            </div>
+
+            <h1 className="text-3xl font-heading font-bold text-white">{issue.title}</h1>
+            
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+               <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-md border border-white/5">
+                 <MapPin className="w-4 h-4" /> {issue.area || issue.city}
+               </span>
+               <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-md border border-white/5">
+                 <Clock className="w-4 h-4" /> {formatDistanceToNow(new Date(issue.createdAt), { addSuffix: true })}
+               </span>
+               <span className="px-3 py-1.5 bg-white/5 rounded-md border border-white/5">
+                 By: {issue.isAnonymous ? "Anonymous User" : issue.createdBy?.name || "Citizen"}
+               </span>
+            </div>
+
+            <p className="text-gray-300 leading-relaxed text-base pt-2">
+              {issue.description}
+            </p>
+          </div>
+
+          {/* Action Box */}
+          <div className="w-full md:w-64 flex flex-col gap-4 flex-shrink-0">
+             <button 
+                onClick={() => voteMutation.mutate()}
+                disabled={voteMutation.isPending}
+                className="w-full py-4 bg-primary/20 hover:bg-primary/30 border border-primary/30 rounded-xl flex flex-col items-center justify-center gap-1 transition-colors text-primary font-bold shadow-lg shadow-primary/10"
+             >
+                <ChevronUp className="w-8 h-8" />
+                <span className="text-xl">{issue.votes}</span>
+                <span className="text-xs uppercase tracking-widest opacity-80">Upvotes</span>
+             </button>
+
+             {/* AI Insights Card */}
+             {(issue.intensity || issue.etaDays) && (
+               <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                 <div className="absolute top-0 right-0 p-2 opacity-10"><Bot className="w-16 h-16" /></div>
+                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                    <Bot className="w-4 h-4 text-primary" /> AI Insights
+                 </h4>
+                 {issue.intensity && (
+                   <div>
+                     <div className="flex justify-between text-sm mb-1 font-medium">
+                        <span className="text-gray-300">Severity</span>
+                        <span className={cn("text-emerald-400", evaluateIntensityColor(issue.intensity).replace("bg-", "text-").replace("500", "400"))}>{issue.intensity}/10</span>
+                     </div>
+                     <div className="w-full bg-black/50 rounded-full h-2">
+                       <div className={cn("h-2 rounded-full", evaluateIntensityColor(issue.intensity))} style={{ width: `${(issue.intensity/10)*100}%` }}></div>
+                     </div>
+                   </div>
+                 )}
+                 {issue.etaDays && !isResolved && (
+                   <div className="pt-2 border-t border-white/10">
+                     <div className="text-sm font-medium text-gray-300 flex justify-between items-center">
+                        <span>Expected Resolution</span>
+                        <span className="text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">~{issue.etaDays} Days</span>
+                     </div>
+                   </div>
+                 )}
+               </div>
+             )}
+          </div>
+        </div>
+
+        {/* Media Gallery */}
+        {issue.imageUrls?.length > 0 && (
+          <div className="space-y-3">
+             <h3 className="text-lg font-heading font-semibold text-white">Evidence</h3>
+             <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+               {issue.imageUrls.map((url, i) => (
+                 <a key={i} href={url} target="_blank" rel="noreferrer" className="flex-shrink-0 group">
+                   <div className="w-64 h-48 sm:w-80 sm:h-60 rounded-xl overflow-hidden border border-white/10 relative">
+                     <img src={url} alt={`Evidence ${i+1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                        <span className="bg-white/20 backdrop-blur text-white px-3 py-1.5 rounded-full text-sm font-medium border border-white/30">View Full</span>
+                     </div>
+                   </div>
+                 </a>
+               ))}
+             </div>
+          </div>
+        )}
+
+        {/* Two Column Layout for Status & Updates */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+           
+           {/* Timeline Log */}
+           <div className="lg:col-span-1 glass-card p-6 space-y-6 self-start">
+             <h3 className="text-lg font-heading font-semibold text-white">Audit Trail</h3>
+             <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[11px] before:w-0.5 before:bg-white/10">
+               {/* Original Created Event */}
+               <div className="relative pl-8">
+                  <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500 flex items-center justify-center -ml-px z-10">
+                     <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-white">Issue Reported</p>
+                    <p className="text-xs text-gray-500">{formatDistanceToNow(new Date(issue.createdAt))} ago</p>
+                  </div>
+               </div>
+
+               {/* Map Status Updates */}
+               {issue.statusHistory?.map((history, i) => (
+                 <div key={history.id} className="relative pl-8">
+                    <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-background border border-white/20 flex items-center justify-center -ml-px z-10">
+                       {history.newStatus === "RESOLVED" ? (
+                         <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                       ) : (
+                         <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                       )}
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-white flex items-center gap-2">
+                        Updated to <span className={cn("px-2 py-0.5 text-xs rounded border", getStatusColor(history.newStatus))}>{history.newStatus}</span>
+                      </p>
+                      <p className="text-xs text-gray-500">By {history.user?.name} • {formatDistanceToNow(new Date(history.createdAt))} ago</p>
+                      {history.note && (
+                        <div className="mt-2 p-3 bg-black/40 border border-white/5 rounded-lg text-sm text-gray-300 italic">
+                          "{history.note}"
+                        </div>
+                      )}
+                    </div>
+                 </div>
+               ))}
+             </div>
+
+             {/* Assigned Officer Block */}
+             {issue.assignedTo && (
+                <div className="mt-8 pt-6 border-t border-white/10">
+                  <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Assigned Officer</h4>
+                  <div className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                       {issue.assignedTo.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white w-[150px] truncate">{issue.assignedTo.name}</p>
+                      <p className="text-xs text-gray-400">Field Officer</p>
+                    </div>
+                  </div>
+                </div>
+             )}
+           </div>
+
+           {/* Comments Block */}
+           <div className="lg:col-span-2 glass-card p-6 flex flex-col h-full min-h-[400px]">
+             <h3 className="text-lg font-heading font-semibold text-white flex items-center gap-2 mb-6">
+                <MessageSquare className="w-5 h-5 text-gray-400" /> Discussion
+             </h3>
+             
+             <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+                {issue.comments?.length === 0 ? (
+                  <div className="h-40 flex items-center justify-center text-gray-500 text-sm">
+                    No comments yet. Start the discussion!
+                  </div>
+                ) : (
+                   issue.comments?.map(c => (
+                     <div key={c.id} className="bg-white/5 border border-white/5 p-4 rounded-xl space-y-2">
+                       <div className="flex justify-between items-center text-xs">
+                         <span className="font-medium text-primary">{c.user?.name} {c.user?.role !== "CITIZEN" && <span className="bg-blue-500 text-white px-1.5 py-0.5 rounded text-[10px] ml-1">OFFICER</span>}</span>
+                         <span className="text-gray-500">{formatDistanceToNow(new Date(c.createdAt))} ago</span>
+                       </div>
+                       <p className="text-sm text-gray-300">{c.comment}</p>
+                     </div>
+                   ))
+                )}
+             </div>
+
+             <form onSubmit={handleSubmitComment} className="relative mt-auto border-t border-white/10 pt-4">
+                <textarea 
+                  value={comment}
+                  onChange={e => setComment(e.target.value)}
+                  placeholder="Add a public comment or update..."
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 resize-none"
+                  rows={2}
+                />
+                <div className="flex justify-end mt-2">
+                   <button 
+                     type="submit" 
+                     disabled={!comment.trim()}
+                     className="px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                   >
+                      Post Comment
+                   </button>
+                </div>
+             </form>
+           </div>
+        </div>
+
+      </div>
+    </Layout>
+  );
+}
