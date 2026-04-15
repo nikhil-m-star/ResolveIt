@@ -6,6 +6,7 @@ import { IssueDetail } from './pages/IssueDetail';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Leaderboard } from './pages/Leaderboard';
 import { Profile } from './pages/Profile';
+import { OfficerKanban } from './pages/OfficerKanban';
 
 function App() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -58,6 +59,14 @@ function App() {
           element={
             isSignedIn ? 
               <AdminDashboard /> :
+              <Navigate to="/sign-in" />
+          } 
+        />
+        <Route 
+          path="/kanban" 
+          element={
+            isSignedIn ? 
+              <OfficerKanban /> :
               <Navigate to="/sign-in" />
           } 
         />
