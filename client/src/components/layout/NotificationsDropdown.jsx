@@ -64,8 +64,8 @@ export function NotificationsDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 glass-panel border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 animate-in slide-in-from-top-2 fade-in duration-200">
-          <div className="p-4 border-b border-white/5 bg-black/40 flex items-center justify-between">
+        <div className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-85 glass-panel border border-white/10 rounded-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] overflow-hidden z-[1300] animate-in slide-in-from-top-4 fade-in duration-300">
+          <div className="p-4 border-b border-white/10 bg-white/5 backdrop-blur-3xl flex items-center justify-between">
             <h3 className="font-heading font-semibold text-white">Notifications</h3>
             {unreadCount > 0 && (
               <button 

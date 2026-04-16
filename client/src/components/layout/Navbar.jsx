@@ -49,75 +49,122 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-[1200] w-[96%] max-w-6xl"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-[1200] w-[94%] max-w-5xl"
     >
-      <nav className="relative overflow-hidden rounded-2xl border border-white/15 bg-slate-950/70 px-4 py-3 backdrop-blur-2xl shadow-[0_24px_60px_rgba(2,6,23,0.45)]">
+      <nav className="glass-pill relative rounded-3xl border border-white/10 px-5 py-3 transition-all duration-500">
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(110deg, rgba(251,146,60,0.08), rgba(45,212,191,0.08), transparent 72%)" }}
+          className="absolute inset-0 pointer-events-none rounded-[inherit] opacity-40"
+          style={{ background: "radial-gradient(120% 120% at 50% 0%, rgba(251,146,60,0.15) 0%, transparent 80%)" }}
         />
 
-        <div className="relative z-10 flex items-center justify-between gap-4">
-          <Link to="/" className="flex min-w-0 items-center gap-3">
-            <Motion.div whileHover={{ rotate: 10 }} transition={{ type: "spring", stiffness: 280 }}>
-              <Shield className="h-7 w-7 text-primary drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]" />
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
+          <Link to="/" className="flex shrink-0 items-center gap-2.5">
+            <Motion.div 
+              whileHover={{ rotate: [-5, 5, -5] }} 
+              transition={{ duration: 0.5, repeat: Infinity, repeatType: "mirror" }}
+            >
+              <Shield className="h-7 w-7 text-primary filter drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]" />
             </Motion.div>
-            <div className="min-w-0">
-              <p className="truncate font-heading text-lg font-bold tracking-tight text-white">ResolveIt</p>
-              <p className="hidden text-[11px] text-slate-300 sm:block">Civic response command deck</p>
+            <div className="hidden min-w-0 flex-col sm:flex">
+              <span className="text-gradient-primary font-heading text-xl font-extrabold tracking-tight leading-none">ResolveIt</span>
+              <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-0.5">Control Deck</span>
             </div>
           </Link>
 
-          <div className="flex items-center gap-2">
+          {/* Desktop/Tablet Navigation Links */}
+          <div className="hidden items-center gap-1 md:flex">
+            {navItems.map((item) => {
+              const active = location.pathname === item.to;
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`relative flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
+                    active 
+                      ? "text-primary bg-primary/10 shadow-[inset_0_0_12px_rgba(251,146,60,0.1)]" 
+                      : "text-slate-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-current"}`} />
+                  {item.label}
+                  {active && (
+                    <Motion.div 
+                      layoutId="nav-active"
+                      className="absolute -bottom-1 left-1/2 h-1 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_#fb923c]"
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-4 ml-auto">
             {user ? (
               <>
                 <Link
                   to="/report"
-                  className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/20 px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/30 sm:px-4 sm:text-sm"
+                  className="glass-button text-xs font-bold sm:text-sm shadow-[0_8px_16px_-6px_rgba(251,146,60,0.3)]"
                 >
                   <PlusCircle className="h-4 w-4" />
-                  <span className="hidden sm:inline">Report Issue</span>
+                  <span className="hidden lg:inline">Quick Report</span>
+                  <span className="lg:hidden">Report</span>
                 </Link>
+                <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block" />
                 <NotificationsDropdown />
-                <Link to="/profile" className="rounded-lg p-2 text-slate-300 transition hover:bg-white/10 hover:text-white" title="Profile">
+                <Link 
+                  to="/profile" 
+                  className={`rounded-xl p-2.5 transition-all transition-colors ${
+                    location.pathname === "/profile" ? "bg-primary/10 text-primary" : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
                   <UserCircle2 className="h-5 w-5" />
                 </Link>
-                <UserButtonCompat afterSignOutUrl="/" />
+                <div className="flex items-center border-l border-white/10 pl-2 lg:pl-4 transition-all">
+                  <UserButtonCompat 
+                    afterSignOutUrl="/" 
+                    appearance={{
+                      elements: {
+                        userButtonAvatarBox: "h-9 w-9 rounded-xl border border-white/10 shadow-lg"
+                      }
+                    }}
+                  />
+                </div>
               </>
             ) : (
-              <>
-                <Link to="/sign-in" className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10">
-                  Sign In
+              <div className="flex items-center gap-2">
+                <Link to="/sign-in" className="rounded-xl px-4 py-2 text-sm font-bold text-slate-300 transition-all hover:bg-white/5 active:scale-95">
+                  Access
                 </Link>
-                <Link to="/sign-up" className="rounded-lg border border-secondary/35 bg-secondary/15 px-3 py-2 text-sm font-semibold text-secondary transition hover:bg-secondary/25">
-                  Get Started
+                <Link to="/sign-up" className="glass-button border-secondary/30 bg-secondary/10 text-secondary hover:bg-secondary/20 shadow-[0_8px_16px_-6px_rgba(45,212,191,0.25)]">
+                  Sign Up
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
 
-        <div className="relative z-10 mt-3 flex items-center gap-2 overflow-x-auto pb-1">
+        {/* Mobile Navigation List (Horizontal Scroll) */}
+        <div className="relative mt-4 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide md:hidden">
           {navItems.map((item) => {
             const active = location.pathname === item.to;
-            const IconComponent = item.icon;
+            const Icon = item.icon;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`inline-flex min-w-max items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition sm:text-sm ${
+                className={`flex min-w-max items-center gap-2 rounded-xl border px-3 py-2 text-xs font-bold transition-all ${
                   active
-                    ? "border-primary/40 bg-primary/20 text-primary"
-                    : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+                    ? "border-primary/40 bg-primary/15 text-primary shadow-sm"
+                    : "border-white/5 bg-white/5 text-slate-400"
                 }`}
               >
-                <IconComponent className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5" />
                 {item.label}
               </Link>
             );
           })}
         </div>
       </nav>
-    </Motion.div>
   );
 }
