@@ -209,8 +209,8 @@ export function ReportIssue() {
                   className={cn(
                     "w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 border-2",
                     step > num ? "bg-primary border-primary text-white shadow-lg shadow-primary/20" : 
-                    step === num ? "bg-slate-900 border-primary text-primary shadow-xl scale-110" : 
-                    "bg-slate-900 border-white/5 text-slate-600"
+                    step === num ? "bg-black border-primary text-primary shadow-xl scale-110" : 
+                    "bg-black border-white/5 text-slate-600"
                   )}
                 >
                   {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
@@ -232,7 +232,7 @@ export function ReportIssue() {
         )}
 
         {/* Management Interface (Wizard Steps) */}
-        <div className="glass-card overflow-hidden border-white/5 bg-slate-950/40 p-10 backdrop-blur-3xl shadow-2xl rounded-[3rem]">
+        <div className="glass-card overflow-hidden border-white/5 bg-black/40 p-10 backdrop-blur-3xl shadow-2xl rounded-[3rem]">
           
           {step === 1 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
@@ -248,7 +248,7 @@ export function ReportIssue() {
                   value={formData.title}
                   onChange={(e) => updateForm("title", e.target.value)}
                   placeholder="Summarize the incident..."
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-inner font-medium"
+                  className="w-full bg-black/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-inner font-medium"
                 />
               </div>
 
@@ -260,7 +260,7 @@ export function ReportIssue() {
                   onBlur={handleBlurAIAnalyzers}
                   placeholder="Detail the circumstances. Systematic AI analysis will initiate upon blur..."
                   rows={6}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all font-medium resize-none shadow-inner"
+                  className="w-full bg-black/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all font-medium resize-none shadow-inner"
                 />
                 <AnimatePresence>
                   {isCategorizing && (
@@ -299,7 +299,7 @@ export function ReportIssue() {
                   <select 
                     value={formData.category}
                     onChange={(e) => updateForm("category", e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none font-medium shadow-inner"
+                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none font-medium shadow-inner"
                   >
                     <option value="" disabled>Select Sector Classification...</option>
                     <option value="POTHOLE">Potholes & Road Damage</option>
@@ -334,7 +334,7 @@ export function ReportIssue() {
                              onChange={(e) => updateForm("isAnonymous", e.target.checked)}
                              className="sr-only p-4"
                           />
-                          <div className={cn("w-6 h-6 rounded-lg border flex items-center justify-center transition-all", formData.isAnonymous ? "bg-red-500 border-red-500" : "bg-slate-900 border-white/10 group-hover:border-red-500/50")}>
+                          <div className={cn("w-6 h-6 rounded-lg border flex items-center justify-center transition-all", formData.isAnonymous ? "bg-red-500 border-red-500" : "bg-black border-white/10 group-hover:border-red-500/50")}>
                              {formData.isAnonymous && <CheckCircle2 className="w-4 h-4 text-white" />}
                           </div>
                         </div>
@@ -350,12 +350,12 @@ export function ReportIssue() {
                   {...getRootProps()} 
                   className={cn(
                     "border-2 border-dashed rounded-3xl p-12 text-center cursor-pointer transition-all",
-                    isDragActive ? "border-primary bg-primary/10 scale-[1.01] shadow-2xl" : "border-white/5 bg-slate-900/30 hover:border-primary/30 hover:bg-slate-900/50 shadow-inner",
+                    isDragActive ? "border-primary bg-primary/10 scale-[1.01] shadow-2xl" : "border-white/5 bg-black/30 hover:border-primary/30 hover:bg-black/50 shadow-inner",
                     formData.images.length >= 3 && "opacity-30 pointer-events-none"
                   )}
                 >
                   <input {...getInputProps()} />
-                  <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-xl">
+                  <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-xl">
                     <UploadCloud className="w-8 h-8 text-primary" />
                   </div>
                   <p className="text-sm text-white font-bold mb-1">Upload Tactical Assets</p>
@@ -376,7 +376,7 @@ export function ReportIssue() {
                           </div>
                           <button 
                             onClick={() => removeImage(idx)}
-                            className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-xl flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 transition-opacity border-2 border-slate-950"
+                            className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-xl flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 transition-opacity border-2 border-black"
                           >
                             ×
                           </button>
@@ -402,7 +402,7 @@ export function ReportIssue() {
                     <input 
                       type="text" 
                       value={formData.city} readOnly disabled
-                      className="w-full bg-slate-900 border-white/5 rounded-2xl px-6 py-4 text-slate-600 font-bold shadow-inner"
+                      className="w-full bg-black border-white/5 rounded-2xl px-6 py-4 text-slate-600 font-bold shadow-inner"
                     />
                  </div>
                  <div className="space-y-3">
@@ -412,7 +412,7 @@ export function ReportIssue() {
                       value={formData.area} 
                       onChange={(e) => updateForm("area", e.target.value)}
                       placeholder="e.g. Koramangala"
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all font-medium shadow-inner"
+                      className="w-full bg-black/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all font-medium shadow-inner"
                     />
                  </div>
               </div>
@@ -480,7 +480,7 @@ export function ReportIssue() {
               <button 
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.area}
-                className="flex items-center gap-3 bg-emerald-500 hover:brightness-110 disabled:opacity-50 text-white px-12 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all hover:scale-[1.02] shadow-xl shadow-emerald-500/20 active:scale-95"
+                className="flex items-center gap-3 bg-primary hover:brightness-110 disabled:opacity-50 text-white px-12 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all hover:scale-[1.02] shadow-xl shadow-primary/20 active:scale-95"
               >
                 {isSubmitting ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Synchronizing...</>

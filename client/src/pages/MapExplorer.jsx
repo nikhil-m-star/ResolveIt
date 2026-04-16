@@ -31,7 +31,7 @@ export function MapExplorer() {
 
   return (
     <Layout>
-      <div className="relative h-[calc(100vh-120px)] md:h-[calc(100vh-160px)] w-full overflow-hidden rounded-[2.5rem] border border-white/5 bg-slate-950/20 shadow-2xl">
+      <div className="relative h-[calc(100vh-120px)] md:h-[calc(100vh-160px)] w-full overflow-hidden rounded-[2.5rem] border border-white/5 bg-black/20 shadow-2xl">
         {/* Minimal Map Header */}
         <div className="absolute left-4 top-4 md:left-8 md:top-8 z-[400] flex flex-col md:flex-row items-start md:items-center gap-4 pointer-events-none">
           <Motion.div 
@@ -70,7 +70,7 @@ export function MapExplorer() {
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="absolute bottom-24 left-1/2 z-[400] -translate-x-1/2 rounded-full border border-white/10 bg-slate-950/80 px-5 py-2.5 backdrop-blur-2xl shadow-2xl">
+          <div className="absolute bottom-24 left-1/2 z-[400] -translate-x-1/2 rounded-full border border-white/10 bg-black/80 px-5 py-2.5 backdrop-blur-2xl shadow-2xl">
              <div className="flex items-center gap-3 text-[10px] font-black text-primary uppercase tracking-widest">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 Synchronizing Sector...

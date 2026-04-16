@@ -55,7 +55,7 @@ export function Leaderboard() {
 
         {/* Tab Selection */}
         <div className="flex justify-center">
-          <div className="bg-slate-900/50 p-1.5 rounded-2xl border border-white/5 flex gap-1 shadow-2xl">
+          <div className="bg-black/50 p-1.5 rounded-2xl border border-white/5 flex gap-1 shadow-2xl">
             <button
               onClick={() => setActiveTab("citizens")}
               className={cn(
@@ -98,7 +98,7 @@ export function Leaderboard() {
                   </div>
                   
                   <div className="col-span-5 flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 border border-white/5 flex items-center justify-center font-bold text-white shadow-xl flex-shrink-0">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-800 to-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl flex-shrink-0">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">

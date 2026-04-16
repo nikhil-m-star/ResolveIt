@@ -67,7 +67,7 @@ export function Profile() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] pointer-events-none" />
           
           <div className="relative group">
-            <div className="w-32 h-32 rounded-[2.5rem] bg-slate-900 border-2 border-primary/30 flex items-center justify-center overflow-hidden shadow-2xl transition-transform group-hover:scale-105">
+            <div className="w-32 h-32 rounded-[2.5rem] bg-black border-2 border-primary/30 flex items-center justify-center overflow-hidden shadow-2xl transition-transform group-hover:scale-105">
                {clerkUser?.imageUrl ? (
                  <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover" />
                ) : (
@@ -134,7 +134,7 @@ export function Profile() {
               <button 
                 type="submit" 
                 disabled={updateMutation.isPending}
-                className="px-6 py-2.5 bg-primary hover:bg-blue-600 text-white rounded-lg font-medium transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                className="px-6 py-2.5 bg-primary hover:brightness-110 text-white rounded-lg font-medium transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
               >
                 {updateMutation.isPending ? "Saving..." : "Save Changes"}
               </button>
@@ -150,7 +150,7 @@ export function Profile() {
                 <div className="space-y-4">
                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                       <div className="flex items-center gap-3">
-                         <div className="p-2 bg-blue-500/20 text-blue-400 rounded-lg"><AlertTriangle className="w-5 h-5" /></div>
+                         <div className="p-2 bg-primary/20 text-primary rounded-lg"><AlertTriangle className="w-5 h-5" /></div>
                          <span className="text-gray-300 text-sm">Issues Reported</span>
                       </div>
                       <span className="font-bold text-white font-heading text-lg">{profile._count?.issues || 0}</span>
@@ -174,16 +174,18 @@ export function Profile() {
 
              {/* Officer Upgrade Banner */}
              {!isOfficer && (
-               <div className="glass-card p-6 bg-gradient-to-b from-blue-900/20 to-background border-blue-500/30 relative overflow-hidden">
-                 <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldAlert className="w-24 h-24 text-blue-400" /></div>
-                 <h3 className="text-lg font-bold text-blue-400 flex items-center gap-2 mb-2">
-                    <ShieldAlert className="w-5 h-5" /> Officer Role Access
-                 </h3>
-                 <p className="text-sm text-gray-400 mb-6 relative z-10 leading-relaxed">
-                   Officer assignment is now restricted to President-level admin controls only. Contact the President for role elevation.
-                 </p>
-                 <div className="w-full py-3 bg-blue-600/40 text-white/90 font-bold rounded-xl relative z-10 flex items-center justify-center gap-2 border border-white/10">
-                    President approval required
+               <div className="glass-card p-6 bg-gradient-to-b from-primary/10 to-black border-primary/20 relative overflow-hidden">
+                 <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldAlert className="w-24 h-24 text-primary" /></div>
+                 <div className="relative z-10">
+                   <h3 className="text-lg font-bold text-primary flex items-center gap-2 mb-2">
+                    <ShieldAlert className="w-5 h-5" /> Role Verification
+                   </h3>
+                   <p className="text-sm text-slate-400 mb-6 relative z-10 leading-relaxed">
+                     Officer assignment is restricted to President-level controls. Contact strategic command for role elevation.
+                   </p>
+                   <div className="w-full py-3 bg-white/5 text-slate-500 font-bold rounded-xl relative z-10 flex items-center justify-center gap-2 border border-white/5">
+                      President Approval Pending
+                   </div>
                  </div>
                </div>
              )}

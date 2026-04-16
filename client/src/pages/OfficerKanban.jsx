@@ -79,18 +79,18 @@ export function OfficerKanban() {
           <div className="space-y-1 text-center md:text-left">
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Board</h1>
             <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Operational Situational Awareness
+               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Operational Situational Awareness
             </div>
           </div>
 
           {/* Graphical Metrics Summary */}
-          <div className="flex items-center gap-6 bg-slate-900/50 border border-white/5 rounded-[2rem] px-8 py-5 backdrop-blur-3xl shadow-2xl">
+          <div className="flex items-center gap-6 bg-black/50 border border-white/5 rounded-[2rem] px-8 py-5 backdrop-blur-3xl shadow-2xl">
             <div className="flex flex-col gap-1">
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Clearance Rate</span>
               <div className="flex items-center gap-3">
-                <div className="h-1.5 w-32 bg-slate-800 rounded-full overflow-hidden border border-white/5">
+                <div className="h-1.5 w-32 bg-black rounded-full overflow-hidden border border-white/5">
                   <div 
-                    className="h-full bg-emerald-500 transition-all duration-1000" 
+                    className="h-full bg-primary transition-all duration-1000" 
                     style={{ width: `${Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%` }}
                   />
                 </div>
@@ -121,16 +121,16 @@ export function OfficerKanban() {
                   key={column.id}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, column.id)}
-                  className="flex flex-col rounded-[2rem] bg-slate-950/40 border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl"
+                  className="flex flex-col rounded-[2rem] bg-black/40 border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl"
                 >
                   <div className="p-6 border-b border-white/5 bg-white/[0.02] flex justify-between items-center">
                     <h3 className="text-sm font-black text-white flex items-center gap-3 uppercase tracking-widest">
-                       <div className={cn("p-2 rounded-xl bg-slate-900 border border-white/5 shadow-inner", column.color)}>
+                       <div className={cn("p-2 rounded-xl bg-black border border-white/5 shadow-inner", column.color)}>
                           <Icon className="w-4 h-4" />
                        </div>
                        {column.title}
                     </h3>
-                    <span className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-white/5 rounded-full text-[10px] font-black text-slate-400 shadow-inner">
+                    <span className="w-7 h-7 flex items-center justify-center bg-black border border-white/5 rounded-full text-[10px] font-black text-slate-400 shadow-inner">
                       {columnIssues.length}
                     </span>
                   </div>
@@ -144,7 +144,7 @@ export function OfficerKanban() {
                             e.dataTransfer.setData("issueId", issue.id);
                             e.dataTransfer.setData("currentStatus", issue.status);
                           }}
-                          className="p-5 bg-slate-900/60 border border-white/5 hover:border-primary/50 hover:bg-slate-800 transition-all cursor-grab active:cursor-grabbing rounded-2xl relative group shadow-xl"
+                          className="p-5 bg-black/60 border border-white/5 hover:border-primary/50 hover:bg-black transition-all cursor-grab active:cursor-grabbing rounded-2xl relative group shadow-xl"
                        >
                           {movingId && <div className="absolute inset-0 bg-black/40 z-10 rounded-2xl animate-pulse" />}
                           <div className="flex justify-between items-start mb-4">

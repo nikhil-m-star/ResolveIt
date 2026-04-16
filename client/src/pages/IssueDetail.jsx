@@ -107,7 +107,7 @@ export function IssueDetail() {
                    <select 
                      value={selectedStatus}
                      onChange={(e) => setSelectedStatus(e.target.value)}
-                     className="bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-primary/50 w-full md:w-48"
+                     className="bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-primary/50 w-full md:w-48"
                    >
                       <option value="REPORTED">Reported</option>
                       <option value="IN_PROGRESS">In Progress</option>
@@ -119,7 +119,7 @@ export function IssueDetail() {
                      value={statusNote}
                      onChange={(e) => setStatusNote(e.target.value)}
                      placeholder="Official audit note (optional)..."
-                     className="flex-1 bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 w-full"
+                     className="flex-1 bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 w-full"
                    />
                    <button 
                      onClick={handleUpdateStatus}
@@ -196,31 +196,49 @@ export function IssueDetail() {
 
              {/* AI Insights Card */}
              {(issue.intensity || issue.etaDays) && (
-               <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 relative overflow-hidden">
-                 <div className="absolute top-0 right-0 p-2 opacity-10"><Bot className="w-16 h-16" /></div>
-                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-primary" /> AI Insights
-                 </h4>
-                 {issue.intensity && (
-                   <div>
-                     <div className="flex justify-between text-sm mb-1 font-medium">
-                        <span className="text-gray-300">Severity</span>
-                        <span className={cn("text-emerald-400", evaluateIntensityColor(issue.intensity).replace("bg-", "text-").replace("500", "400"))}>{issue.intensity}/10</span>
-                     </div>
-                     <div className="w-full bg-black/50 rounded-full h-2">
-                       <div className={cn("h-2 rounded-full", evaluateIntensityColor(issue.intensity))} style={{ width: `${(issue.intensity/10)*100}%` }}></div>
-                     </div>
-                   </div>
-                 )}
-                 {issue.etaDays && !isResolved && (
-                   <div className="pt-2 border-t border-white/10">
-                     <div className="text-sm font-medium text-gray-300 flex justify-between items-center">
-                        <span>Expected Resolution</span>
-                        <span className="text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">~{issue.etaDays} Days</span>
+               <>
+                 {!isOfficer && (
+                   <div className="glass-card p-6 bg-gradient-to-b from-primary/10 to-black border-primary/20 relative overflow-hidden">
+                     <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldAlert className="w-24 h-24 text-primary" /></div>
+                     <div className="relative z-10">
+                       <h3 className="text-lg font-bold text-primary flex items-center gap-2 mb-2">
+                        <ShieldAlert className="w-5 h-5" /> Role Verification
+                       </h3>
+                       <p className="text-sm text-slate-400 mb-6 relative z-10 leading-relaxed">
+                         Officer assignment is restricted to President-level controls. Contact strategic command for role elevation.
+                       </p>
+                       <div className="w-full py-3 bg-white/5 text-slate-500 font-bold rounded-xl relative z-10 flex items-center justify-center gap-2 border border-white/5">
+                          President Approval Pending
+                       </div>
                      </div>
                    </div>
                  )}
-               </div>
+                 <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-2 opacity-10"><Bot className="w-16 h-16" /></div>
+                   <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                      <Bot className="w-4 h-4 text-primary" /> AI Insights
+                   </h4>
+                   {issue.intensity && (
+                     <div>
+                       <div className="flex justify-between text-sm mb-1 font-medium">
+                          <span className="text-gray-300">Severity</span>
+                          <span className={cn("text-primary", evaluateIntensityColor(issue.intensity).replace("bg-", "text-").replace("500", "400"))}>{issue.intensity}/10</span>
+                       </div>
+                       <div className="w-full bg-black/50 rounded-full h-2">
+                         <div className={cn("h-2 rounded-full", evaluateIntensityColor(issue.intensity))} style={{ width: `${(issue.intensity/10)*100}%` }}></div>
+                       </div>
+                     </div>
+                   )}
+                   {issue.etaDays && !isResolved && (
+                     <div className="pt-2 border-t border-white/10">
+                       <div className="text-sm font-medium text-gray-300 flex justify-between items-center">
+                          <span>Expected Resolution</span>
+                          <span className="text-primary font-bold bg-primary/10 px-2 py-0.5 rounded border border-primary/20">~{issue.etaDays} Days</span>
+                       </div>
+                     </div>
+                   )}
+                 </div>
+               </>
              )}
           </div>
         </div>
@@ -253,8 +271,8 @@ export function IssueDetail() {
              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[11px] before:w-0.5 before:bg-white/10">
                {/* Original Created Event */}
                <div className="relative pl-8">
-                  <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500 flex items-center justify-center -ml-px z-10">
-                     <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                  <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-primary/20 border border-primary flex items-center justify-center -ml-px z-10">
+                     <div className="w-2 h-2 rounded-full bg-primary"></div>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-white">Issue Reported</p>
@@ -319,7 +337,7 @@ export function IssueDetail() {
                    issue.comments?.map(c => (
                      <div key={c.id} className="bg-white/5 border border-white/5 p-4 rounded-xl space-y-2">
                        <div className="flex justify-between items-center text-xs">
-                         <span className="font-medium text-primary">{c.user?.name} {c.user?.role !== "CITIZEN" && <span className="bg-blue-500 text-white px-1.5 py-0.5 rounded text-[10px] ml-1">OFFICER</span>}</span>
+                         <span className="font-medium text-primary">{c.user?.name} {c.user?.role !== "CITIZEN" && <span className="bg-primary text-white px-1.5 py-0.5 rounded text-[10px] ml-1 uppercase">Official</span>}</span>
                          <span className="text-gray-500">{formatDistanceToNow(new Date(c.createdAt))} ago</span>
                        </div>
                        <p className="text-sm text-gray-300">{c.comment}</p>
@@ -348,7 +366,7 @@ export function IssueDetail() {
                    <button 
                      type="submit" 
                      disabled={!comment.trim()}
-                     className="px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                     className="px-4 py-2 bg-primary hover:bg-primary text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
                    >
                       Post Comment
                    </button>

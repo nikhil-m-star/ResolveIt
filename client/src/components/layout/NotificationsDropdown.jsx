@@ -44,7 +44,7 @@ export function NotificationsDropdown() {
       case "URGENT": return <ShieldAlert className="w-4 h-4 text-red-400" />;
       case "WARNING": return <CircleAlert className="w-4 h-4 text-amber-400" />;
       case "SUCCESS": return <Check className="w-4 h-4 text-emerald-400" />;
-      default: return <Info className="w-4 h-4 text-blue-400" />;
+      default: return <Info className="w-4 h-4 text-primary" />;
     }
   };
 
@@ -71,7 +71,7 @@ export function NotificationsDropdown() {
               <button 
                 onClick={(e) => { e.stopPropagation(); markReadMutation.mutate(); }}
                 disabled={markReadMutation.isPending}
-                className="text-xs text-primary hover:text-blue-400 flex items-center gap-1 font-medium transition-colors"
+                className="text-xs text-primary hover:text-primary flex items-center gap-1 font-medium transition-colors"
               >
                 {markReadMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin"/> : <Check className="w-3 h-3" />}
                 Mark all read

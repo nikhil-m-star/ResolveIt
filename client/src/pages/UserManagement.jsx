@@ -89,11 +89,11 @@ export function UserManagement() {
           </div>
 
           <div className="flex items-center gap-3">
-             <div className="bg-slate-900 border border-white/5 rounded-2xl px-6 py-3 shadow-xl">
+             <div className="bg-black border border-white/5 rounded-2xl px-6 py-3 shadow-xl">
                 <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5 text-center">Active Force</span>
                 <span className="block text-2xl font-black text-white text-center leading-none">{users?.length || 0}</span>
              </div>
-             <div className="bg-slate-900 border border-white/5 rounded-2xl px-6 py-3 shadow-xl">
+             <div className="bg-black border border-white/5 rounded-2xl px-6 py-3 shadow-xl">
                 <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5 text-center">Officers</span>
                 <span className="block text-2xl font-black text-primary text-center leading-none">{users?.filter(u => u.role !== 'CITIZEN').length || 0}</span>
              </div>
@@ -109,10 +109,10 @@ export function UserManagement() {
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-900/50 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
+              className="w-full bg-black/50 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
             />
           </div>
-          <div className="flex items-center gap-2 bg-slate-900/50 border border-white/10 rounded-2xl px-4 p-1">
+          <div className="flex items-center gap-2 bg-black/50 border border-white/10 rounded-2xl px-4 p-1">
              <Filter className="w-4 h-4 text-slate-500" />
              {["ALL", "CITIZEN", "OFFICER", "PRESIDENT"].map((role) => (
                <button
@@ -154,7 +154,7 @@ export function UserManagement() {
                     >
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 border border-white/5 flex items-center justify-center font-bold text-white shadow-xl">
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-800 to-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl">
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div>

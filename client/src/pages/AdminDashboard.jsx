@@ -121,7 +121,7 @@ export function AdminDashboard() {
           <StatCard 
             title="Active Operations" 
             value={stats.inProgress} 
-            icon={<Activity className="text-blue-400 w-5 h-5" />}
+            icon={<Activity className="text-primary w-5 h-5" />}
             trend="Ongoing field response"
           />
           <StatCard 
@@ -199,7 +199,7 @@ function StatCard({ title, value, icon, trend, alert }) {
         alert && "border-red-500/30 bg-red-500/5 hover:border-red-500/50"
     )}>
       <div className="flex justify-between items-start mb-6">
-        <div className="p-3 bg-slate-900 border border-white/5 rounded-2xl shadow-inner group-hover:bg-primary/10 transition-colors">
+        <div className="p-3 bg-black border border-white/5 rounded-2xl shadow-inner group-hover:bg-primary/10 transition-colors">
            {icon}
         </div>
         {alert && <div className="p-1 px-2.5 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest rounded-full animate-pulse shadow-lg shadow-red-500/20">Critical</div>}

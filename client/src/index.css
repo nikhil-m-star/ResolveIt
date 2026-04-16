@@ -14,13 +14,13 @@
   }
 
   :root {
-    --accent-primary: 59 130 246; /* Blue 500 */
-    --panel-bg: 2 6 23; /* Slate 950 */
+    --accent-primary: 16 185 129; /* Emerald 500 */
+    --panel-bg: 0 0 0; /* Pure Black */
   }
 
   body {
     @apply text-white font-sans antialiased min-h-screen;
-    background-color: rgb(var(--panel-bg));
+    background-color: #000000;
   }
 
   *:focus-visible {
@@ -46,7 +46,7 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-slate-900/45 backdrop-blur-2xl rounded-2xl transition-all duration-300 border border-white/5;
+    @apply bg-black/40 backdrop-blur-2xl rounded-2xl transition-all duration-300 border border-white/5;
     box-shadow:
       0 10px 30px -10px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -60,10 +60,10 @@
       0 0 20px rgba(var(--accent-primary), 0.1);
   }
   .glass-panel {
-    @apply bg-slate-950/60 backdrop-blur-3xl border border-white/5;
+    @apply bg-black/60 backdrop-blur-3xl border border-white/5;
   }
   .glass-pill {
-    @apply bg-slate-900/70 backdrop-blur-3xl border border-white/10;
+    @apply bg-black/70 backdrop-blur-3xl border border-white/10;
     box-shadow:
       0 12px 30px -5px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -79,10 +79,10 @@
     box-shadow: 0 0 30px rgba(var(--accent-primary), 0.2);
   }
   .text-gradient-primary {
-    @apply bg-gradient-to-br from-blue-400 to-indigo-400 bg-clip-text text-transparent !important;
+    @apply bg-gradient-to-br from-primary to-primary bg-clip-text text-transparent !important;
   }
   .panel-shell {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
+    @apply bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
   }
   .glass-button {
     @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white hover:brightness-110 transition-all active:scale-95 font-bold shadow-lg shadow-primary/20;
