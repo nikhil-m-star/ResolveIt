@@ -1,4 +1,4 @@
-import { createClerkClient } from "@clerk/backend";
+import { createClerkClient, verifyToken } from "@clerk/backend";
 
 const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
@@ -10,7 +10,7 @@ export const clerkAuth = async (req, res, next) => {
       return res.status(401).json({ error: "No token provided" });
     }
     
-    const payload = await clerk.verifyToken(token);
+    const payload = await verifyToken(token, { secretKey: process.env.CLERK_SECRET_KEY });
     req.clerkUserId = payload.sub;
     next();
   } catch (err) {

@@ -15,6 +15,7 @@ import { ratingRouter } from "./routes/ratings.js"; // Import Rating
 import { initSLA_CronJob } from "./services/sla.js"; // Import Cron
 
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(helmet());
 const allowedOrigins = [
