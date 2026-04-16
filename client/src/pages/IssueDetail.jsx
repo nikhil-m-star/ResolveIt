@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { formatDistanceToNow } from "date-fns";
 import toast from "react-hot-toast";
-import { Bot, MapPin, ChevronUp, Clock, AlertTriangle, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
+import { Bot, MapPin, ArrowBigUp, ArrowBigDown, Clock, AlertTriangle, MessageSquare, Loader2, CheckCircle2, Shield } from "lucide-react";
 import { cn, getCategoryIconNode, getCategoryColor, getStatusColor, evaluateIntensityColor } from "../utils/helpers";
 import { useState } from "react";
 
@@ -91,7 +91,7 @@ export function IssueDetail() {
         
         {/* Management Controls (Officals Only) */}
         {isOfficial && (
-          <div className="glass-card border-primary/30 bg-primary/5 p-6 animate-in fade-in slide-in-from-top-4">
+          <div className="glass-card bg-black border border-primary/30 p-6 animate-in fade-in slide-in-from-top-4">
              <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="flex-shrink-0 flex items-center gap-3">
                    <div className="p-3 bg-primary rounded-2xl shadow-lg shadow-primary/20">
@@ -134,7 +134,7 @@ export function IssueDetail() {
         )}
 
         {/* Header Block */}
-        <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative">
+        <div className="glass-card bg-black border border-white/5 p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative">
           
           <div className="flex-1 space-y-4 w-full">
             <div className="flex flex-wrap items-center gap-3">
@@ -171,17 +171,28 @@ export function IssueDetail() {
             </p>
           </div>
 
-          {/* Action Box */}
+          {/* Action Box - Reddit Style */}
           <div className="w-full md:w-64 flex flex-col gap-4 flex-shrink-0">
-             <button 
-                onClick={() => voteMutation.mutate()}
-                disabled={voteMutation.isPending}
-                className="w-full py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all text-primary font-black shadow-xl active:scale-95"
-             >
-                <ChevronUp className="w-8 h-8" />
-                <span className="text-2xl">{issue.votes}</span>
-                <span className="text-[10px] uppercase tracking-widest opacity-80">Upvotes</span>
-             </button>
+             <div className="flex flex-col items-center bg-white/[0.03] border border-white/10 rounded-[2rem] p-4 gap-2 shadow-2xl">
+                <button 
+                   onClick={() => voteMutation.mutate('UP')}
+                   disabled={voteMutation.isPending}
+                   className="w-full py-3 flex items-center justify-center text-slate-500 hover:text-primary transition-all active:scale-95 disabled:opacity-50"
+                >
+                   <ArrowBigUp className="w-10 h-10 fill-current" />
+                </button>
+                <div className="flex flex-col items-center">
+                   <span className="text-3xl font-black text-white">{issue.votes}</span>
+                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Net Score</span>
+                </div>
+                <button 
+                   onClick={() => voteMutation.mutate('DOWN')}
+                   disabled={voteMutation.isPending}
+                   className="w-full py-3 flex items-center justify-center text-slate-500 hover:text-primary transition-all active:scale-95 disabled:opacity-50"
+                >
+                   <ArrowBigDown className="w-10 h-10 fill-current" />
+                </button>
+             </div>
 
              {/* AI Insights Card */}
              {(issue.intensity || issue.etaDays) && (
@@ -237,7 +248,7 @@ export function IssueDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
            
            {/* Timeline Log */}
-           <div className="lg:col-span-1 glass-card p-6 space-y-6 self-start">
+           <div className="lg:col-span-1 glass-card bg-black border border-white/5 p-6 space-y-6 self-start">
              <h3 className="text-lg font-heading font-semibold text-white">Audit Trail</h3>
              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[11px] before:w-0.5 before:bg-white/10">
                {/* Original Created Event */}
@@ -294,7 +305,7 @@ export function IssueDetail() {
            </div>
 
            {/* Comments Block */}
-           <div className="lg:col-span-2 glass-card p-6 flex flex-col h-full min-h-[400px]">
+           <div className="lg:col-span-2 glass-card bg-black border border-white/5 p-6 flex flex-col h-full min-h-[400px]">
              <h3 className="text-lg font-heading font-semibold text-white flex items-center gap-2 mb-6">
                 <MessageSquare className="w-5 h-5 text-gray-400" /> Discussion
              </h3>
