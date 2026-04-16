@@ -65,8 +65,8 @@ export function Dashboard() {
               <input 
                 type="text"
                 placeholder="Search sector reports..."
-                value={filters.search}
-                onChange={(e) => setFilters({...filters, search: e.target.value})}
+                value={filters.search || ""}
+                onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
                 className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
               />
             </div>

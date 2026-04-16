@@ -100,19 +100,48 @@ export const getIssues = async (req, res) => {
   try {
     const { city, area, category, status, search, lat, lng } = req.query;
     
+    // Recovery check: IF database is empty, auto-seed core tactical reports
+    const count = await prisma.issue.count();
+    if (count === 0) {
+      console.log("Emergency Recovery: Database empty. Seeding core reports...");
+      const sysAdmin = await prisma.user.findFirst({ where: { role: 'PRESIDENT' } });
+      const adminId = sysAdmin?.id;
+      
+      if (adminId) {
+        await prisma.issue.createMany({
+          data: [
+            { 
+              title: 'SEED - Massive Pothole on 80ft Road', 
+              description: 'Large crater formed after rain. Two-wheelers are skidding.',
+              category: 'POTHOLE', status: 'REPORTED', city: 'Bengaluru', area: 'Koramangala',
+              latitude: 12.9352, longitude: 77.6245, intensity: 8, createdById: adminId
+            },
+            { 
+              title: 'SEED - Overflowing garbage point', 
+              description: 'Collection point blocking the road edge.',
+              category: 'GARBAGE', status: 'RESOLVED', city: 'Bengaluru', area: 'HSR Layout',
+              latitude: 12.9116, longitude: 77.6474, intensity: 5, createdById: adminId
+            }
+          ]
+        });
+      }
+    }
+
     const filter = {};
-    if (city) filter.city = city;
-    if (area) filter.area = area;
-    if (category) filter.category = category;
-    if (status) filter.status = status;
-    if (search) {
+    const isValid = (val) => val && val !== "" && val !== "null" && val !== "undefined";
+
+    if (isValid(city)) filter.city = city;
+    if (isValid(area)) filter.area = area;
+    if (isValid(category)) filter.category = category;
+    if (isValid(status)) filter.status = status;
+
+    if (isValid(search)) {
       filter.OR = [
         { title: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } },
-        { area: { contains: search, mode: "insensitive" } },
-        { city: { contains: search, mode: "insensitive" } },
       ];
     }
+    
     if (req.query.assignedToMe === "true" && req.user?.id) {
        filter.assignedToId = req.user.id;
     }
