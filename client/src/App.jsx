@@ -4,7 +4,6 @@ import { Dashboard } from './pages/Dashboard';
 import { ReportIssue } from './pages/ReportIssue';
 import { IssueDetail } from './pages/IssueDetail';
 import { AdminDashboard } from './pages/AdminDashboard';
-import { Leaderboard } from './pages/Leaderboard';
 import { Profile } from './pages/Profile';
 import { OfficerKanban } from './pages/OfficerKanban';
 import { MapExplorer } from './pages/MapExplorer';
@@ -77,14 +76,6 @@ function App() {
           element={
             isSignedIn ? 
               <OfficerKanban /> :
-              <Navigate to="/sign-in" />
-          } 
-        />
-        <Route 
-          path="/leaderboard" 
-          element={
-            isSignedIn ? 
-              <Leaderboard /> :
               <Navigate to="/sign-in" />
           } 
         />

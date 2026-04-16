@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
@@ -7,6 +8,7 @@ import { cn } from "../utils/helpers";
 import toast from "react-hot-toast";
 
 export function AdminDashboard() {
+  const [isGenerating, setIsGenerating] = useState(false);
   const { data: stats, isLoading, isError } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
@@ -43,6 +45,7 @@ export function AdminDashboard() {
 
   const handleExportCSV = () => {
     if (!issues || issues.length === 0) return toast.error("No data to export or still loading");
+    setIsGenerating(true);
 
     const headers = ["ID", "Title", "Category", "Status", "Intensity", "City", "Area", "Created At", "SLA Breached"];
     const rows = issues.map(issue => [
@@ -66,10 +69,11 @@ export function AdminDashboard() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setIsGenerating(false);
     toast.success("Report downloaded safely!");
   };
 
-  const COLORS = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4'];
+  const COLORS = ["#00eaff", "#00bcd4", "#4dd0e1", "#80deea", "#26c6da", "#0097a7"];
 
   return (
     <Layout>
@@ -84,9 +88,10 @@ export function AdminDashboard() {
           <div className="flex gap-3">
              <button 
                 onClick={handleExportCSV}
-                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                disabled={isGenerating}
+                className="px-4 py-2 bg-primary/20 hover:bg-primary/30 border border-primary/40 text-primary rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-70"
              >
-               <Download className="w-4 h-4" /> Export Report
+               {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />} Generate Report
              </button>
           </div>
         </div>
@@ -96,26 +101,26 @@ export function AdminDashboard() {
           <StatCard 
             title="Total Issues" 
             value={stats.total} 
-            icon={<BarChart3 className="text-blue-500 w-6 h-6" />}
+            icon={<BarChart3 className="text-primary w-6 h-6" />}
             trend="+12% this week"
             trendUp={true}
           />
           <StatCard 
             title="Resolved" 
             value={stats.resolved} 
-            icon={<CheckCircle className="text-emerald-500 w-6 h-6" />}
+            icon={<CheckCircle className="text-secondary w-6 h-6" />}
             trend={`Resolution Rate: ${stats.resolutionRate}%`}
             trendUp={true}
           />
           <StatCard 
             title="In Progress" 
             value={stats.inProgress} 
-            icon={<Activity className="text-amber-500 w-6 h-6" />}
+            icon={<Activity className="text-primary w-6 h-6" />}
           />
           <StatCard 
             title="SLA Breached" 
             value={stats.slaBreached} 
-            icon={<AlertTriangle className="text-red-500 w-6 h-6" />}
+            icon={<AlertTriangle className="text-purple-400 w-6 h-6" />}
             trend="Require immediate attention"
             trendUp={false}
             alert={stats.slaBreached > 0}
@@ -185,9 +190,9 @@ function StatCard({ title, value, icon, trend, trendUp, alert }) {
   return (
     <div className={cn(
         "glass-card p-6 relative overflow-hidden",
-        alert ? "border-red-500/50 bg-red-500/5" : ""
+        alert ? "border-primary/50 bg-primary/10" : ""
     )}>
-      {alert && <div className="absolute top-0 right-0 w-16 h-16 bg-red-500/10 rounded-bl-full blur-xl"></div>}
+      {alert && <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 rounded-bl-full blur-xl"></div>}
       <div className="flex justify-between items-start mb-4 relative z-10">
         <h3 className="text-gray-400 font-medium text-sm">{title}</h3>
         <div className="p-2 bg-white/5 rounded-lg border border-white/5">{icon}</div>
@@ -195,7 +200,7 @@ function StatCard({ title, value, icon, trend, trendUp, alert }) {
       <div className="space-y-1 relative z-10">
         <h4 className="text-3xl font-heading font-bold text-white">{value}</h4>
         {trend && (
-          <p className={cn("text-xs font-medium flex items-center gap-1", trendUp === true ? "text-emerald-400" : trendUp === false ? "text-red-400" : "text-gray-500")}>
+          <p className={cn("text-xs font-medium flex items-center gap-1", trendUp === true ? "text-secondary" : trendUp === false ? "text-purple-300" : "text-gray-500")}>
             {trendUp === true && <TrendingUp className="w-3 h-3" />}
             {trend}
           </p>

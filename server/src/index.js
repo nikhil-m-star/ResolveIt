@@ -10,7 +10,6 @@ import { userRouter } from "./routes/users.js";
 import { adminRouter } from "./routes/admin.js";
 import { notificationRouter } from "./routes/notifications.js";
 import { authRouter } from "./routes/auth.js";
-import { ratingRouter } from "./routes/ratings.js"; // Import Rating
 
 import { initSLA_CronJob } from "./services/sla.js"; // Import Cron
 
@@ -52,7 +51,6 @@ app.use("/api/issues", issueRouter);
 app.use("/api/users", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/notifications", notificationRouter);
-app.use("/api/ratings", ratingRouter); // Add ratings router
 
 // Initialize cron schedule checks
 initSLA_CronJob();

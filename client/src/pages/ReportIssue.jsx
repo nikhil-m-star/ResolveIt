@@ -134,7 +134,7 @@ export function ReportIssue() {
           setIsLocatingGPS(false);
         }
       },
-      (err) => {
+      () => {
         toast.error("Failed to get location. Please pin manually.");
         setIsLocatingGPS(false);
       },
@@ -147,7 +147,7 @@ export function ReportIssue() {
     if (step === 3 && formData.latitude === 12.9716 && formData.longitude === 77.5946) {
       handleUseCurrentLocation();
     }
-  }, [step, handleUseCurrentLocation]);
+  }, [step, handleUseCurrentLocation, formData.latitude, formData.longitude]);
 
   const handleSubmit = async () => {
     if (!formData.category) return toast.error("Please select a category");

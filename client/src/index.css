@@ -42,18 +42,22 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-black/80 backdrop-blur-xl border border-primary/30 rounded-2xl transition-all duration-300;
-    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 234, 255, 0.12);
+    @apply bg-black/70 backdrop-blur-xl border border-primary/30 rounded-2xl transition-all duration-300;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.72), inset 0 0 0 1px rgba(0, 234, 255, 0.1);
   }
   .glass-card:hover {
-    @apply border-primary/30;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(0, 234, 255, 0.26);
+    @apply border-primary/50;
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 42px rgba(0, 0, 0, 0.78),
+      0 0 0 1px rgba(0, 234, 255, 0.35),
+      0 0 24px rgba(0, 234, 255, 0.14);
   }
   .glass-panel {
     @apply bg-black/70 backdrop-blur-2xl border-primary/20;
   }
   .glass-pill {
-    @apply bg-black/80 backdrop-blur-3xl border border-primary/30 shadow-[0_24px_44px_rgba(0,0,0,0.7)];
+    @apply bg-black/80 backdrop-blur-3xl border border-primary/35 shadow-[0_24px_44px_rgba(0,0,0,0.7)];
   }
   .border-glow {
     @apply relative after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-primary/20 after:pointer-events-none;
@@ -86,42 +90,9 @@
     inset: 0;
   }
 
-  /* Enforce no gradients and keep black + cyan palette across legacy classes. */
+  /* Enforce no gradients across the UI system. */
   [class*="bg-gradient"],
   [style*="gradient"] {
     background-image: none !important;
-  }
-
-  [class*="text-red-"],
-  [class*="text-blue-"],
-  [class*="text-green-"],
-  [class*="text-yellow-"],
-  [class*="text-amber-"],
-  [class*="text-orange-"],
-  [class*="text-purple-"],
-  [class*="text-emerald-"] {
-    color: #00eaff !important;
-  }
-
-  [class*="bg-red-"],
-  [class*="bg-blue-"],
-  [class*="bg-green-"],
-  [class*="bg-yellow-"],
-  [class*="bg-amber-"],
-  [class*="bg-orange-"],
-  [class*="bg-purple-"],
-  [class*="bg-emerald-"] {
-    background-color: rgba(0, 234, 255, 0.16) !important;
-  }
-
-  [class*="border-red-"],
-  [class*="border-blue-"],
-  [class*="border-green-"],
-  [class*="border-yellow-"],
-  [class*="border-amber-"],
-  [class*="border-orange-"],
-  [class*="border-purple-"],
-  [class*="border-emerald-"] {
-    border-color: rgba(0, 234, 255, 0.42) !important;
   }
 }

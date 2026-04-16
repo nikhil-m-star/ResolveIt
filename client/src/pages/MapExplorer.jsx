@@ -13,20 +13,17 @@ export function MapExplorer() {
     search: ""
   });
   const [detectedLocation, setDetectedLocation] = useState(null);
-  const [isLocating, setIsLocating] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const { data: issues, isLoading } = useIssues(filters);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
-      setIsLocating(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setDetectedLocation([position.coords.latitude, position.coords.longitude]);
-          setIsLocating(false);
         },
-        () => setIsLocating(false),
+        () => {},
         { enableHighAccuracy: true }
       );
     }

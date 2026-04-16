@@ -34,18 +34,6 @@ export function Profile() {
     onError: () => toast.error("Failed to update profile"),
   });
 
-  const upgradeMutation = useMutation({
-    mutationFn: () => api.post("/users/upgrade"),
-    onSuccess: () => {
-      localStorage.setItem("resolveit_user_role", "OFFICER");
-      queryClient.invalidateQueries(["profile"]);
-      toast.success("Successfully upgraded to Officer! Please sign out and sign back in to refresh permissions.");
-    },
-    onError: (err) => {
-        toast.error(err.response?.data?.error || "Failed to upgrade role");
-    },
-  });
-
   if (isLoading) {
     return (
       <Layout>
@@ -209,18 +197,14 @@ export function Profile() {
                <div className="glass-card p-6 bg-gradient-to-b from-blue-900/20 to-background border-blue-500/30 relative overflow-hidden">
                  <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldAlert className="w-24 h-24 text-blue-400" /></div>
                  <h3 className="text-lg font-bold text-blue-400 flex items-center gap-2 mb-2">
-                    <ShieldAlert className="w-5 h-5" /> Become an Official
+                    <ShieldAlert className="w-5 h-5" /> Officer Role Access
                  </h3>
                  <p className="text-sm text-gray-400 mb-6 relative z-10 leading-relaxed">
-                   Are you a verified city official or representative? Connect your `.ac.in` or official government email to unlock the Command Center and manage civic issues.
+                   Officer assignment is now restricted to President-level admin controls only. Contact the President for role elevation.
                  </p>
-                 <button 
-                    onClick={() => upgradeMutation.mutate()}
-                    disabled={upgradeMutation.isPending}
-                    className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 relative z-10 flex items-center justify-center gap-2"
-                 >
-                    {upgradeMutation.isPending ? "Verifying..." : "Request Upgrade credentials"}
-                 </button>
+                 <div className="w-full py-3 bg-blue-600/40 text-white/90 font-bold rounded-xl relative z-10 flex items-center justify-center gap-2 border border-white/10">
+                    President approval required
+                 </div>
                </div>
              )}
           </div>

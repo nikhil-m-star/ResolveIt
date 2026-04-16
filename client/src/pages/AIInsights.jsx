@@ -49,13 +49,13 @@ export function AIInsights() {
             <button 
               onClick={fetchReport}
               disabled={isLoading}
-              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all disabled:opacity-50"
+              className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 border border-primary/30 rounded-xl px-5 py-2.5 text-sm font-semibold text-primary transition-all disabled:opacity-50"
             >
               <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-              Re-Analyze Grid
+              Generate Report
             </button>
             <button 
-              className="flex items-center gap-2 bg-primary hover:bg-blue-600 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-lg shadow-primary/20"
+              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-lg shadow-primary/20"
               onClick={() => window.print()}
             >
               <Download className="w-4 h-4" />
@@ -73,12 +73,12 @@ export function AIInsights() {
                    <ShieldAlert className="w-4 h-4" /> Security Protocol
                 </h3>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  This report is generated using private municipal data and is restricted to authorized personnel.
+                  This report is available to citizens and officials for transparent, city-wide planning and accountability.
                 </p>
                 <div className="mt-6 pt-6 border-t border-white/5">
                    <div className="flex items-center justify-between text-[11px] text-slate-500 mb-2">
                       <span>Sync Status</span>
-                      <span className="text-emerald-400 font-bold">Encrypted</span>
+                      <span className="text-primary font-bold">Public View</span>
                    </div>
                    <div className="flex items-center justify-between text-[11px] text-slate-500">
                       <span>Last Scan</span>
@@ -129,14 +129,14 @@ export function AIInsights() {
                          
                          <ReactMarkdown 
                             components={{
-                                h1: ({node, ...props}) => <h1 className="text-3xl font-heading font-bold text-white mt-8 mb-4 grad-text-primary" {...props} />,
-                                h2: ({node, ...props}) => <h2 className="text-2xl font-heading font-bold text-white mt-10 mb-4 border-b border-white/10 pb-2" {...props} />,
-                                h3: ({node, ...props}) => <h3 className="text-xl font-heading font-bold text-slate-200 mt-6 mb-3" {...props} />,
-                                p: ({node, ...props}) => <p className="text-slate-300 leading-relaxed mb-4" {...props} />,
-                                ul: ({node, ...props}) => <ul className="list-disc list-inside space-y-2 mb-6 text-slate-300" {...props} />,
-                                li: ({node, ...props}) => <li className="marker:text-primary list-item" {...props} />,
-                                strong: ({node, ...props}) => <strong className="text-white font-bold" {...props} />,
-                                blockquote: ({node, ...props}) => (
+                                h1: (props) => <h1 className="text-3xl font-heading font-bold text-white mt-8 mb-4" {...props} />,
+                                h2: (props) => <h2 className="text-2xl font-heading font-bold text-white mt-10 mb-4 border-b border-white/10 pb-2" {...props} />,
+                                h3: (props) => <h3 className="text-xl font-heading font-bold text-slate-200 mt-6 mb-3" {...props} />,
+                                p: (props) => <p className="text-slate-300 leading-relaxed mb-4" {...props} />,
+                                ul: (props) => <ul className="list-disc list-inside space-y-2 mb-6 text-slate-300" {...props} />,
+                                li: (props) => <li className="marker:text-primary list-item" {...props} />,
+                                strong: (props) => <strong className="text-white font-bold" {...props} />,
+                                blockquote: (props) => (
                                     <blockquote className="border-l-4 border-primary/50 bg-primary/5 p-4 rounded-r-xl my-6 italic text-slate-300" {...props} />
                                 ),
                             }}
