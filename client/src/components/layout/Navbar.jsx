@@ -72,6 +72,6 @@ export function Navbar() {
           )}
         </div>
       </nav>
-    </div>
+    </motion.div>
   );
 }
