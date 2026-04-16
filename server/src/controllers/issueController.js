@@ -109,6 +109,8 @@ export const getIssues = async (req, res) => {
       filter.OR = [
         { title: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } },
+        { area: { contains: search, mode: "insensitive" } },
+        { city: { contains: search, mode: "insensitive" } },
       ];
     }
     if (req.query.assignedToMe === "true") filter.assignedToId = req.user.id;
