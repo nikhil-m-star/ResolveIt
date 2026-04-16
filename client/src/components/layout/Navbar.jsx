@@ -64,7 +64,7 @@ export function Navbar() {
                 <PlusCircle className="w-4 h-4" />
                 Report Issue
               </Link>
-              <Link to="/dashboard" className="p-2 text-primary/60 hover:text-primary transition-colors">
+              <Link to="/" className="p-2 text-primary/60 hover:text-primary transition-colors" title="Dashboard">
                 <LayoutDashboard className="w-5 h-5" />
               </Link>
               <Link to="/leaderboard" className="p-2 text-primary/60 hover:text-primary transition-colors">

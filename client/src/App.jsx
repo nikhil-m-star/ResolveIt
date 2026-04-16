@@ -39,6 +39,14 @@ function App() {
           } 
         />
         <Route 
+          path="/dashboard" 
+          element={
+            isSignedIn ? 
+              <Dashboard /> :
+              <Navigate to="/sign-in" />
+          } 
+        />
+        <Route 
           path="/report" 
           element={
             isSignedIn ? 
@@ -86,6 +94,7 @@ function App() {
               <Navigate to="/sign-in" />
           } 
         />
+        <Route path="*" element={<Navigate to={isSignedIn ? "/" : "/sign-in"} replace />} />
       </Routes>
     </div>
   );
