@@ -69,6 +69,21 @@ export const createIssue = async (req, res) => {
         console.error("AI Error getting intensity/ETA:", ai_err);
     }
 
+    // Automated Dispatch: Find officer assigned to this area
+    let assignedToId = null;
+    if (area) {
+      const matchingOfficer = await prisma.user.findFirst({
+        where: { 
+          role: 'OFFICER',
+          area: { equals: area, mode: 'insensitive' }
+        }
+      });
+      if (matchingOfficer) {
+        assignedToId = matchingOfficer.id;
+        console.log(`Automated Dispatch: Incident in ${area} assigned to Officer ${matchingOfficer.name}`);
+      }
+    }
+
     const issueData = {
       title,
       description,
@@ -81,12 +96,29 @@ export const createIssue = async (req, res) => {
       intensity,
       etaDays,
       isAnonymous: resolvedIsAnonymous,
-      createdById: req.user.id
+      createdById: req.user.id,
+      assignedToId // Auto-assigned if match found
     };
 
     const newIssue = await prisma.issue.create({
       data: issueData,
     });
+
+    // Notify officer if automatically assigned
+    if (assignedToId) {
+      try {
+        await prisma.notification.create({
+          data: {
+            userId: assignedToId,
+            issueId: newIssue.id,
+            type: 'URGENT',
+            message: `URGENT: New incident dispatched to your sector (${area}): ${title}`
+          }
+        });
+      } catch (notifErr) {
+        console.error("Failed to send auto-dispatch notification:", notifErr);
+      }
+    }
 
     res.status(201).json(newIssue);
   } catch (error) {

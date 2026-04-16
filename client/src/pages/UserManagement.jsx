@@ -34,13 +34,18 @@ export function UserManagement() {
     },
   });
 
+  const [promotingUserId, setPromotingUserId] = useState(null);
+  const [promoArea, setPromoArea] = useState("");
+
   const roleMutation = useMutation({
-    mutationFn: ({ userId, role }) => api.patch(`/users/admin/role/${userId}`, { role }),
+    mutationFn: ({ userId, role, area }) => api.patch(`/users/admin/role/${userId}`, { role, area }),
     onSuccess: () => {
       queryClient.invalidateQueries(["admin", "users"]);
-      toast.success("User role updated successfully");
+      toast.success("Personnel status updated");
+      setPromotingUserId(null);
+      setPromoArea("");
     },
-    onError: () => toast.error("Failed to update user role"),
+    onError: () => toast.error("Failed to update status"),
   });
 
   const filteredUsers = users?.filter(u => {
@@ -76,6 +81,79 @@ export function UserManagement() {
     <Layout>
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-8 animate-in fade-in slide-in-from-bottom-4">
         
+        {/* Promotion Modal Overlay */}
+        <AnimatePresence>
+          {promotingUserId && (
+            <>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setPromotingUserId(null)}
+                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] flex items-center justify-center p-6"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-md glass-panel rounded-[2.5rem] p-8 border border-primary/20 shadow-[0_32px_64px_-16px_rgba(16,185,129,0.3)]"
+                >
+                  <div className="flex flex-col items-center text-center gap-6">
+                    <div className="p-4 rounded-3xl bg-primary/10 border border-primary/20">
+                       <ShieldCheck className="w-12 h-12 text-primary" />
+                    </div>
+                    <div>
+                       <h2 className="text-2xl font-black text-white uppercase tracking-tight">Assign Jurisdiction</h2>
+                       <p className="text-slate-400 text-sm mt-2">Designate the operational sector for this officer.</p>
+                    </div>
+
+                    <div className="w-full space-y-4">
+                       <div className="relative group">
+                          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors" />
+                          <input 
+                            type="text"
+                            placeholder="e.g. Koramangala"
+                            value={promoArea}
+                            onChange={(e) => setPromoArea(e.target.value)}
+                            onKeyDown={(e) => {
+                               if (e.key === 'Enter' && promoArea.trim()) {
+                                  roleMutation.mutate({ userId: promotingUserId, role: 'OFFICER', area: promoArea.trim() });
+                               }
+                            }}
+                            autoFocus
+                            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-4 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all font-bold"
+                          />
+                       </div>
+
+                       <button 
+                          onClick={() => {
+                             if (promoArea.trim()) {
+                                roleMutation.mutate({ userId: promotingUserId, role: 'OFFICER', area: promoArea.trim() });
+                             } else {
+                                toast.error("Jurisdiction required");
+                             }
+                          }}
+                          disabled={roleMutation.isPending}
+                          className="w-full py-4 bg-primary hover:bg-emerald-400 text-black font-black uppercase tracking-[0.2em] text-xs rounded-2xl transition-all shadow-xl shadow-primary/20 disabled:opacity-50"
+                       >
+                          {roleMutation.isPending ? "Syncing..." : "Confirm Elevation"}
+                       </button>
+                       
+                       <button 
+                          onClick={() => setPromotingUserId(null)}
+                          className="w-full py-2 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors"
+                       >
+                          Cancel Protocol
+                       </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
@@ -190,7 +268,7 @@ export function UserManagement() {
                          <div className="flex items-center justify-end gap-2">
                             {u.role === 'CITIZEN' ? (
                                <button 
-                                 onClick={() => roleMutation.mutate({ userId: u.id, role: 'OFFICER' })}
+                                 onClick={() => setPromotingUserId(u.id)}
                                  disabled={roleMutation.isPending}
                                  className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/20 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
                                >

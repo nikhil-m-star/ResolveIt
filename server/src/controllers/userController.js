@@ -115,7 +115,7 @@ export const updateUserRole = async (req, res) => {
   }
 
   const { id } = req.params;
-  const { role } = req.body;
+  const { role, area } = req.body;
 
   if (!["CITIZEN", "OFFICER", "PRESIDENT"].includes(role)) {
     return res.status(400).json({ error: "Invalid role" });
@@ -124,7 +124,10 @@ export const updateUserRole = async (req, res) => {
   try {
     const user = await prisma.user.update({
       where: { id },
-      data: { role }
+      data: { 
+        role,
+        ...(area && { area })
+      }
     });
     res.json(user);
   } catch (error) {
