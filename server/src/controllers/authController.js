@@ -44,7 +44,7 @@ export const createSession = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });
 
-    res.json({ user });
+    res.json({ user, token: internalToken });
   } catch (error) {
     console.error("Auth Exception:", error);
     res.status(500).json({ error: "Authentication server error" });

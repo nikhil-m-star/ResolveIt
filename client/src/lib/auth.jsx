@@ -17,6 +17,31 @@ export const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// Attach internal ResolveIt token to protected API calls.
+api.interceptors.request.use(
+  (config) => {
+    if (typeof window === "undefined") return config;
+    if (config.url === "/auth/session") return config;
+
+    const internalToken = window.localStorage.getItem("resolveit_token");
+    if (internalToken) {
+      config.headers.Authorization = `Bearer ${internalToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (typeof window !== "undefined" && error?.response?.status === 401) {
+      window.localStorage.removeItem("resolveit_token");
+    }
+    return Promise.reject(error);
+  }
+);
+
 // A component that intercepts Clerk state and Syncs it with our internal API session
 const AuthSync = ({ children }) => {
   const { getToken, isSignedIn, isLoaded } = useAuthCompat();
@@ -58,15 +83,19 @@ const AuthSync = ({ children }) => {
           if (data?.user?.role) {
             localStorage.setItem("resolveit_user_role", data.user.role);
           }
+          if (data?.token) {
+            localStorage.setItem("resolveit_token", data.token);
+          }
           
           // Re-fetch standard user profiles after identity established
-          queryClient.invalidateQueries(["userProfile"]);
+          queryClient.invalidateQueries({ queryKey: ["profile"] });
         } catch (err) {
             console.error("Session sync failed", err);
         }
       } else if (isLoaded && !isSignedIn) {
           // Server will clear cookie or handle session expiration
           localStorage.removeItem("resolveit_user_role");
+          localStorage.removeItem("resolveit_token");
       }
     };
 

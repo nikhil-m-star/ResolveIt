@@ -4,6 +4,14 @@ import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare,
 import { NotificationsDropdown } from "./NotificationsDropdown";
 import { motion as Motion } from "framer-motion";
 
+const decodeJwtPayload = (token) => {
+  const base64Url = token.split(".")[1];
+  if (!base64Url) return null;
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const normalized = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+  return JSON.parse(atob(normalized));
+};
+
 export function Navbar() {
   const { user } = useUserCompat();
   const location = useLocation();
@@ -13,7 +21,7 @@ export function Navbar() {
   try {
     const token = localStorage.getItem("resolveit_token");
     if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const payload = decodeJwtPayload(token);
       role = payload.role || "CITIZEN";
     }
     const cachedRole = localStorage.getItem("resolveit_user_role");
@@ -30,7 +38,7 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-[1200] w-[95%] max-w-5xl"
     >
       <nav className="relative overflow-hidden px-6 py-3 flex items-center justify-between rounded-full shadow-[0_8px_32px_rgba(6,182,212,0.15)] bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08]">
         {/* Dynamic gradient line overlay */}
@@ -60,9 +68,9 @@ export function Navbar() {
                   </Link>
                 </>
               )}
-              <Link to="/report" className="hidden sm:flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+              <Link to="/report" className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-3 sm:px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
                 <PlusCircle className="w-4 h-4" />
-                Report Issue
+                <span className="hidden sm:inline">Report Issue</span>
               </Link>
               <Link to="/" className="p-2 text-primary/60 hover:text-primary transition-colors" title="Dashboard">
                 <LayoutDashboard className="w-5 h-5" />

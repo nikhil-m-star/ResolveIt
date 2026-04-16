@@ -98,13 +98,19 @@ export const createIssue = async (req, res) => {
 // Get all issues with filters
 export const getIssues = async (req, res) => {
   try {
-    const { city, area, category, status } = req.query;
+    const { city, area, category, status, search } = req.query;
     
     const filter = {};
     if (city) filter.city = city;
     if (area) filter.area = area;
     if (category) filter.category = category;
     if (status) filter.status = status;
+    if (search) {
+      filter.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+      ];
+    }
     if (req.query.assignedToMe === "true") filter.assignedToId = req.user.id;
 
     let issues = await prisma.issue.findMany({
