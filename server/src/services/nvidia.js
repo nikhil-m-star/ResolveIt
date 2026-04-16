@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 const MODEL = "meta/llama-3.3-70b-instruct";
 
-async function nvidiaChat(systemPrompt, userPrompt) {
+async function nvidiaChatRaw(systemPrompt, userPrompt) {
   const res = await fetch(NVIDIA_API_URL, {
     method: "POST",
     headers: {
@@ -28,7 +28,11 @@ async function nvidiaChat(systemPrompt, userPrompt) {
   }
 
   const data = await res.json();
-  const text = data.choices[0].message.content.trim();
+  return data.choices[0].message.content.trim();
+}
+
+async function nvidiaChat(systemPrompt, userPrompt) {
+  const text = await nvidiaChatRaw(systemPrompt, userPrompt);
 
   // Strip markdown code fences if model wraps output
   const clean = text.replace(/```json|```/gi, "").trim();
@@ -76,7 +80,7 @@ Reply ONLY with: { "etaDays": number, "reasoning": string }`
 }
 
 export async function generateCityReport(city, issues) {
-  const result = await nvidiaChat(
+  const result = await nvidiaChatRaw(
     "You are a civic data analyst. Generate a structured markdown report for local government officials. Include: top recurring problems, most affected areas, resolution rate analysis, and urgent action items.",
     `City: ${city}. Recent issues (last 50): ${JSON.stringify(issues)}.
 Return a well-formatted markdown report.`

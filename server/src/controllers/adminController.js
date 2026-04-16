@@ -42,7 +42,7 @@ export const getDashboardStats = async (req, res) => {
 export const assignIssue = async (req, res) => {
     const { id } = req.params;
     const { officerId } = req.body;
-    const { role } = req.user;
+    const { role, city } = req.user;
 
     // Only President can assign issues forcefully
     if (role !== "PRESIDENT") {
@@ -50,6 +50,23 @@ export const assignIssue = async (req, res) => {
     }
 
     try {
+        // Validate that the officerId user exists, has role OFFICER, and belongs to the same city
+        const officer = await prisma.user.findUnique({
+            where: { id: officerId }
+        });
+
+        if (!officer) {
+            return res.status(404).json({ error: "Officer not found" });
+        }
+
+        if (officer.role !== "OFFICER") {
+            return res.status(400).json({ error: "User is not an officer" });
+        }
+
+        if (officer.city !== city) {
+            return res.status(400).json({ error: "Officer does not belong to your city jurisdiction" });
+        }
+
         const issue = await prisma.issue.update({
             where: { id },
             data: { assignedToId: officerId }

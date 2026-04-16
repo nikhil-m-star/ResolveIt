@@ -105,8 +105,9 @@ export const getIssues = async (req, res) => {
     if (area) filter.area = area;
     if (category) filter.category = category;
     if (status) filter.status = status;
+    if (req.query.assignedToMe === "true") filter.assignedToId = req.user.id;
 
-    const issues = await prisma.issue.findMany({
+    let issues = await prisma.issue.findMany({
       where: filter,
       orderBy: { createdAt: 'desc' },
       include: {
@@ -115,6 +116,15 @@ export const getIssues = async (req, res) => {
         }
       }
     });
+
+    // Mask user details for anonymous issues API side
+    issues = issues.map(issue => {
+      if (issue.isAnonymous) {
+        issue.createdBy = null;
+      }
+      return issue;
+    });
+
     res.json(issues);
   } catch (error) {
     console.error("Get Issues Error:", error);
@@ -152,7 +162,7 @@ export const updateStatus = async (req, res) => {
   const { newStatus, note } = req.body;
   const userId = req.user.id;
 
-  if (req.user.role === "CITIZEN") {
+  if (!["OFFICER", "PRESIDENT"].includes(req.user.role)) {
      return res.status(403).json({ error: "Only officers/presidents can update status" });
   }
 
@@ -164,7 +174,7 @@ export const updateStatus = async (req, res) => {
     if (!issue) return res.status(404).json({ error: "Issue not found" });
 
     // Update Issue & Push Status History in a transaction
-    const [updatedIssue, statusEntry] = await prisma.$transaction([
+    const [updatedIssue, statusEntry, _notification] = await prisma.$transaction([
       prisma.issue.update({
         where: { id },
         data: { 

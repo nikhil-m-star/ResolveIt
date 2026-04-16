@@ -37,7 +37,14 @@ export const createSession = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    res.json({ token: internalToken, user });
+    res.cookie("resolveit_token", internalToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+
+    res.json({ user });
   } catch (error) {
     console.error("Auth Exception:", error);
     res.status(500).json({ error: "Authentication server error" });

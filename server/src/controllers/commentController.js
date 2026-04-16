@@ -10,6 +10,10 @@ export const addComment = async (req, res) => {
     return res.status(400).json({ error: "Comment text is required" });
   }
 
+  if (text.length > 1000) {
+    return res.status(400).json({ error: "Comment cannot exceed 1000 characters" });
+  }
+
   try {
     const issue = await prisma.issue.findUnique({
       where: { id },
