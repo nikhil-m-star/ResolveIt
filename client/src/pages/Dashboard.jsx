@@ -13,6 +13,7 @@ export function Dashboard() {
     search: ""
   });
   const [detectedCity, setDetectedCity] = useState("");
+  const [detectedLocation, setDetectedLocation] = useState(null);
   const [isLocating, setIsLocating] = useState(false);
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export function Dashboard() {
         async (position) => {
           try {
             const { latitude, longitude } = position.coords;
+            setDetectedLocation([latitude, longitude]);
             // Fetch city name using reverse geocoding
             const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
             const data = await res.json();
@@ -180,7 +182,7 @@ export function Dashboard() {
                 LIVE HEATMAP
              </span>
           </div>
-          <IssueMap issues={issues || []} />
+          <IssueMap issues={issues || []} userLocation={detectedLocation} />
         </div>
       </div>
     </Layout>

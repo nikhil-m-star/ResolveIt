@@ -1,8 +1,8 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 // Fix Leaflet's default icon path issues
 delete L.Icon.Default.prototype._getIconUrl;
@@ -12,18 +12,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-const MapUpdater = ({ issues }) => {
-  const map = useMap();
-  useEffect(() => {
-    const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
-    if (issuesWithCoords.length > 0) {
-      const bounds = L.latLngBounds(issuesWithCoords.map((i) => [i.latitude, i.longitude]));
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
-    }
-  }, [issues, map]);
-  return null;
-};
-
 const isFiniteNumber = (value) => Number.isFinite(Number(value));
 const isValidIssueCoordinate = (issue) =>
   issue &&
@@ -31,9 +19,36 @@ const isValidIssueCoordinate = (issue) =>
   isFiniteNumber(issue.longitude) &&
   Math.abs(Number(issue.latitude)) <= 90 &&
   Math.abs(Number(issue.longitude)) <= 180;
+const isValidLatLng = (coords) =>
+  Array.isArray(coords) &&
+  coords.length === 2 &&
+  isFiniteNumber(coords[0]) &&
+  isFiniteNumber(coords[1]) &&
+  Math.abs(Number(coords[0])) <= 90 &&
+  Math.abs(Number(coords[1])) <= 180;
 
-export function IssueMap({ issues }) {
-  const defaultCenter = [12.9716, 77.5946]; // Bengaluru default
+const MapUpdater = ({ issues, userLocation }) => {
+  const map = useMap();
+  const hasCenteredOnUserRef = useRef(false);
+
+  useEffect(() => {
+    if (isValidLatLng(userLocation) && !hasCenteredOnUserRef.current) {
+      map.flyTo(userLocation, 14, { animate: true, duration: 1 });
+      hasCenteredOnUserRef.current = true;
+      return;
+    }
+
+    const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
+    if (issuesWithCoords.length > 0) {
+      const bounds = L.latLngBounds(issuesWithCoords.map((i) => [i.latitude, i.longitude]));
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+    }
+  }, [issues, map, userLocation]);
+
+  return null;
+};
+export function IssueMap({ issues, userLocation }) {
+  const defaultCenter = isValidLatLng(userLocation) ? userLocation : [12.9716, 77.5946];
   const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
 
   return (
@@ -71,7 +86,16 @@ export function IssueMap({ issues }) {
             </Popup>
           </Marker>
         ))}
-        <MapUpdater issues={issues} />
+        {isValidLatLng(userLocation) && (
+          <CircleMarker
+            center={userLocation}
+            radius={8}
+            pathOptions={{ color: "#22d3ee", fillColor: "#06b6d4", fillOpacity: 0.8, weight: 2 }}
+          >
+            <Popup>You are here</Popup>
+          </CircleMarker>
+        )}
+        <MapUpdater issues={issues} userLocation={userLocation} />
       </MapContainer>
     </div>
   );

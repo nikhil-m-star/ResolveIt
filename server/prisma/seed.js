@@ -5,75 +5,324 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding the database...');
 
-  // Create a President user
+  const CITY = 'Bengaluru';
+
+  // Reset prior seed issues/comments/relations for idempotent runs.
+  const oldSeedIssues = await prisma.issue.findMany({
+    where: { title: { startsWith: 'SEED - ' } },
+    select: { id: true },
+  });
+  const oldIssueIds = oldSeedIssues.map((i) => i.id);
+
+  if (oldIssueIds.length > 0) {
+    await prisma.$transaction([
+      prisma.vote.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
+      prisma.comment.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
+      prisma.statusHistory.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
+      prisma.notification.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
+      prisma.rating.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
+      prisma.issue.deleteMany({ where: { id: { in: oldIssueIds } } }),
+    ]);
+  }
+
+  // Clear notification/vote residue from seeded users if they exist.
+  const seededUsers = await prisma.user.findMany({
+    where: { clerkId: { startsWith: 'seed_' } },
+    select: { id: true },
+  });
+  const seededUserIds = seededUsers.map((u) => u.id);
+  if (seededUserIds.length > 0) {
+    await prisma.$transaction([
+      prisma.notification.deleteMany({ where: { userId: { in: seededUserIds } } }),
+      prisma.vote.deleteMany({ where: { userId: { in: seededUserIds } } }),
+    ]);
+  }
+
+  // Create or refresh users.
   const president = await prisma.user.upsert({
     where: { email: 'president@resolveit.com' },
-    update: {},
+    update: {
+      name: 'Admin President',
+      role: 'PRESIDENT',
+      city: CITY,
+      area: 'HQ',
+      tier: 'PLATINUM',
+      points: 1200,
+      resolvedCount: 130,
+      assignedCount: 75,
+      avgRating: 4.9,
+    },
     create: {
       clerkId: 'seed_president_1',
       name: 'Admin President',
       email: 'president@resolveit.com',
       role: 'PRESIDENT',
-      city: 'Bengaluru',
+      city: CITY,
+      area: 'HQ',
       tier: 'PLATINUM',
+      points: 1200,
+      resolvedCount: 130,
+      assignedCount: 75,
+      avgRating: 4.9,
     },
   });
 
-  // Create an Officer user
   const officer = await prisma.user.upsert({
     where: { email: 'officer@resolveit.com' },
-    update: {},
+    update: {
+      name: 'Field Officer Raj',
+      role: 'OFFICER',
+      city: CITY,
+      area: 'Koramangala',
+      tier: 'GOLD',
+      points: 820,
+      resolvedCount: 46,
+      assignedCount: 22,
+      avgRating: 4.7,
+    },
     create: {
       clerkId: 'seed_officer_1',
       name: 'Field Officer Raj',
       email: 'officer@resolveit.com',
       role: 'OFFICER',
-      city: 'Bengaluru',
+      city: CITY,
       area: 'Koramangala',
       tier: 'GOLD',
-      resolvedCount: 45,
-      avgRating: 4.8,
+      points: 820,
+      resolvedCount: 46,
+      assignedCount: 22,
+      avgRating: 4.7,
     },
   });
 
-  // Create a Citizen user
   const citizen = await prisma.user.upsert({
     where: { email: 'citizen@resolveit.com' },
-    update: {},
+    update: {
+      name: 'Rahul Sharma',
+      role: 'CITIZEN',
+      city: CITY,
+      area: 'Koramangala',
+      points: 145,
+      tier: 'SILVER',
+    },
     create: {
       clerkId: 'seed_citizen_1',
       name: 'Rahul Sharma',
       email: 'citizen@resolveit.com',
       role: 'CITIZEN',
-      city: 'Bengaluru',
+      city: CITY,
       area: 'Koramangala',
-      points: 120,
+      points: 145,
       tier: 'SILVER',
     },
   });
 
-  // Create a dummy issue
-  const issue = await prisma.issue.create({
-    data: {
-      title: 'Massive Pothole on 80ft Road',
-      description: 'A massive pothole has formed after the recent rains, causing a huge risk to two-wheelers.',
-      category: 'POTHOLE',
-      status: 'REPORTED',
-      city: 'Bengaluru',
-      area: 'Koramangala',
-      latitude: 12.9352,
-      longitude: 77.6245,
-      imageUrls: ['https://res.cloudinary.com/demo/image/upload/sample.jpg'],
-      intensity: 8,
-      etaDays: 3,
-      createdById: citizen.id,
-      votes: 1,
+  const citizenTwo = await prisma.user.upsert({
+    where: { email: 'citizen2@resolveit.com' },
+    update: {
+      name: 'Neha R',
+      role: 'CITIZEN',
+      city: CITY,
+      area: 'Indiranagar',
+      points: 88,
+      tier: 'SILVER',
+    },
+    create: {
+      clerkId: 'seed_citizen_2',
+      name: 'Neha R',
+      email: 'citizen2@resolveit.com',
+      role: 'CITIZEN',
+      city: CITY,
+      area: 'Indiranagar',
+      points: 88,
+      tier: 'SILVER',
     },
   });
 
+  // Create multiple issues for feed, heatmap, admin, kanban and detail views.
+  const createdIssues = [];
+  const issueSpecs = [
+    {
+      title: 'SEED - Massive Pothole on 80ft Road',
+      description: 'Large crater formed after rain. Two-wheelers are skidding during peak hours.',
+      category: 'POTHOLE',
+      status: 'REPORTED',
+      city: CITY,
+      area: 'Koramangala',
+      latitude: 12.9352,
+      longitude: 77.6245,
+      intensity: 8,
+      etaDays: 3,
+      votes: 12,
+      createdById: citizen.id,
+      assignedToId: officer.id,
+      imageUrls: ['https://res.cloudinary.com/demo/image/upload/sample.jpg'],
+    },
+    {
+      title: 'SEED - Streetlights not working near metro station',
+      description: 'Three consecutive streetlights are off making the footpath unsafe at night.',
+      category: 'STREETLIGHT',
+      status: 'IN_PROGRESS',
+      city: CITY,
+      area: 'Indiranagar',
+      latitude: 12.9784,
+      longitude: 77.6408,
+      intensity: 6,
+      etaDays: 2,
+      votes: 9,
+      createdById: citizenTwo.id,
+      assignedToId: officer.id,
+      imageUrls: [],
+    },
+    {
+      title: 'SEED - Overflowing garbage point near market',
+      description: 'Collection point has not been cleared for 4 days and is blocking the road edge.',
+      category: 'GARBAGE',
+      status: 'RESOLVED',
+      city: CITY,
+      area: 'HSR Layout',
+      latitude: 12.9116,
+      longitude: 77.6474,
+      intensity: 5,
+      etaDays: 1,
+      votes: 6,
+      createdById: citizen.id,
+      assignedToId: officer.id,
+      resolvedById: officer.id,
+      resolvedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      imageUrls: [],
+    },
+    {
+      title: 'SEED - Water leakage at junction',
+      description: 'Continuous underground pipeline leak creating waterlogging and traffic slowdowns.',
+      category: 'WATER_LEAK',
+      status: 'REPORTED',
+      city: CITY,
+      area: 'BTM Layout',
+      latitude: 12.9166,
+      longitude: 77.6101,
+      intensity: 7,
+      etaDays: 4,
+      votes: 4,
+      createdById: citizenTwo.id,
+      imageUrls: [],
+    },
+    {
+      title: 'SEED - Fallen tree branch blocking lane',
+      description: 'Major branch collapsed after storm and blocks one side of the lane.',
+      category: 'TREE_FALLEN',
+      status: 'IN_PROGRESS',
+      city: CITY,
+      area: 'Jayanagar',
+      latitude: 12.9293,
+      longitude: 77.5838,
+      intensity: 6,
+      etaDays: 2,
+      votes: 7,
+      createdById: citizen.id,
+      assignedToId: officer.id,
+      imageUrls: [],
+    },
+  ];
+
+  for (const spec of issueSpecs) {
+    const issue = await prisma.issue.create({ data: spec });
+    createdIssues.push(issue);
+  }
+
+  // Add status history and comments for richer detail pages.
+  const inProgressIssue = createdIssues.find((i) => i.status === 'IN_PROGRESS');
+  if (inProgressIssue) {
+    await prisma.statusHistory.create({
+      data: {
+        issueId: inProgressIssue.id,
+        userId: officer.id,
+        oldStatus: 'REPORTED',
+        newStatus: 'IN_PROGRESS',
+        note: 'Crew has been assigned and inspection completed.',
+      },
+    });
+  }
+
+  const resolvedIssue = createdIssues.find((i) => i.status === 'RESOLVED');
+  if (resolvedIssue) {
+    await prisma.statusHistory.createMany({
+      data: [
+        {
+          issueId: resolvedIssue.id,
+          userId: officer.id,
+          oldStatus: 'REPORTED',
+          newStatus: 'IN_PROGRESS',
+          note: 'Collected site evidence and initiated cleanup.',
+        },
+        {
+          issueId: resolvedIssue.id,
+          userId: officer.id,
+          oldStatus: 'IN_PROGRESS',
+          newStatus: 'RESOLVED',
+          note: 'Garbage removed and area disinfected.',
+        },
+      ],
+    });
+  }
+
+  await prisma.comment.createMany({
+    data: [
+      {
+        issueId: createdIssues[0].id,
+        userId: citizenTwo.id,
+        comment: 'I almost slipped here this morning. Please prioritize.',
+      },
+      {
+        issueId: createdIssues[1].id,
+        userId: officer.id,
+        comment: 'Replacement bulbs procured. Team expected to fix tonight.',
+      },
+      {
+        issueId: createdIssues[2].id,
+        userId: citizen.id,
+        comment: 'Cleanup confirmed. Thanks for the quick response.',
+      },
+    ],
+  });
+
+  // Create some notification samples for UI dropdown.
+  await prisma.notification.createMany({
+    data: [
+      {
+        userId: citizen.id,
+        issueId: createdIssues[1].id,
+        type: 'INFO',
+        message: 'Your streetlight issue was moved to IN_PROGRESS.',
+      },
+      {
+        userId: citizen.id,
+        issueId: createdIssues[2].id,
+        type: 'RESOLVED',
+        message: 'Your garbage issue has been resolved.',
+      },
+      {
+        userId: officer.id,
+        issueId: createdIssues[0].id,
+        type: 'URGENT',
+        message: 'New high-intensity pothole issue assigned to you.',
+      },
+    ],
+  });
+
+  // Add explicit votes (issue.votes counter already set for feed visuals).
+  await prisma.vote.createMany({
+    data: [
+      { issueId: createdIssues[0].id, userId: citizenTwo.id },
+      { issueId: createdIssues[1].id, userId: citizen.id },
+      { issueId: createdIssues[3].id, userId: citizen.id },
+    ],
+    skipDuplicates: true,
+  });
+
   console.log('Database seeding completed successfully ✅');
-  console.log(`Created test users: ${president.email}, ${officer.email}, ${citizen.email}`);
-  console.log(`Created test issue: ${issue.title}`);
+  console.log(`Seed users: ${president.email}, ${officer.email}, ${citizen.email}, ${citizenTwo.email}`);
+  console.log(`Seed issues created: ${createdIssues.length}`);
 }
 
 main()
