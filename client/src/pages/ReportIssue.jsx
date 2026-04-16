@@ -105,6 +105,50 @@ export function ReportIssue() {
     }
   };
 
+  const [isLocatingGPS, setIsLocatingGPS] = useState(false);
+
+  const handleUseCurrentLocation = useCallback(() => {
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setIsLocatingGPS(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        updateForm("latitude", latitude);
+        updateForm("longitude", longitude);
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || "Bengaluru";
+          const area = data.address?.suburb || data.address?.neighbourhood || data.address?.road || "";
+          updateForm("city", city);
+          updateForm("area", area);
+          toast.success("Location Synced!", { icon: "📍" });
+        } catch (err) {
+          console.error("Reverse geocode failed", err);
+        } finally {
+          setIsLocatingGPS(false);
+        }
+      },
+      (err) => {
+        toast.error("Failed to get location. Please pin manually.");
+        setIsLocatingGPS(false);
+      },
+      { enableHighAccuracy: true, timeout: 5000 }
+    );
+  }, []);
+
+  // Auto-detect on step 3 entry or first mount
+  useEffect(() => {
+    if (step === 3 && formData.latitude === 12.9716 && formData.longitude === 77.5946) {
+      handleUseCurrentLocation();
+    }
+  }, [step, handleUseCurrentLocation]);
+
   const handleSubmit = async () => {
     if (!formData.category) return toast.error("Please select a category");
     if (!formData.area) return toast.error("Please provide an area or neighborhood name");
@@ -321,14 +365,25 @@ export function ReportIssue() {
                  </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                   <MapPin className="w-4 h-4"/> Click on the map to pin exact location
-                </label>
-                <div className="w-full h-64 rounded-xl overflow-hidden border border-white/10 relative z-0">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                     <MapPin className="w-4 h-4 text-primary"/> Click on the map to pin exact location
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleUseCurrentLocation}
+                    disabled={isLocatingGPS}
+                    className="text-xs font-bold text-primary hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 transition-all active:scale-95 disabled:opacity-50"
+                  >
+                    {isLocatingGPS ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
+                    Use Current Location
+                  </button>
+                </div>
+                <div className="w-full h-80 rounded-2xl overflow-hidden border border-white/10 relative z-0 shadow-2xl">
                   <MapContainer 
                     center={[formData.latitude, formData.longitude]} 
-                    zoom={13} 
+                    zoom={15} 
                     className="w-full h-full"
                   >
                     <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />

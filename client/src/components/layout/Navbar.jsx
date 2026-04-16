@@ -1,6 +1,6 @@
 import { UserButtonCompat, useUserCompat } from "../../lib/clerkCompat";
 import { Link, useLocation } from "react-router-dom";
-import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, UserCircle2 } from "lucide-react";
+import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, UserCircle2, Map } from "lucide-react";
 import { NotificationsDropdown } from "./NotificationsDropdown";
 import { motion as Motion } from "framer-motion";
 
@@ -36,6 +36,7 @@ export function Navbar() {
   const navItems = [
     { to: "/", label: "Dashboard", icon: LayoutDashboard },
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+    { to: "/map", label: "Map View", icon: Map },
     ...(role === "OFFICER" || role === "PRESIDENT"
       ? [
           { to: "/admin", label: "Command Center", icon: ShieldAlert },
