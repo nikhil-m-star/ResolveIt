@@ -74,6 +74,5 @@ export function IssueCard({ issue }) {
         </div>
       </div>
     </Motion.div>
-    </Motion.div>
   );
 }
