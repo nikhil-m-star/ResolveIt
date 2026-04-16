@@ -10,7 +10,9 @@ export function Dashboard() {
     city: "",
     category: "",
     status: "",
-    search: ""
+    search: "",
+    lat: null,
+    lng: null
   });
   const [detectedCity, setDetectedCity] = useState("");
   const [isLocating, setIsLocating] = useState(false);
@@ -22,6 +24,7 @@ export function Dashboard() {
         async (position) => {
           try {
             const { latitude, longitude } = position.coords;
+            setFilters(prev => ({ ...prev, lat: latitude, lng: longitude }));
             // Fetch city name using reverse geocoding
             const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
             const data = await res.json();
@@ -68,15 +71,15 @@ export function Dashboard() {
         <div className="mb-6 rounded-2xl bg-black/50 p-5 backdrop-blur-2xl sm:p-6 shadow-[0_18px_40px_rgba(0,0,0,0.55)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">ResolveIt Live Monitor</p>
-              <h1 className="font-heading text-2xl font-bold text-white sm:text-3xl">City Pulse Dashboard</h1>
-              <p className="text-sm text-slate-300">Track active incidents, prioritize fixes, and coordinate civic response in real time.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">ResolveIt Live Monitor</p>
+              <h1 className="font-heading text-2xl font-bold text-white sm:text-3xl tracking-tight">City Pulse Dashboard</h1>
+              <p className="text-sm text-slate-400">Track active incidents, prioritize fixes, and coordinate civic response.</p>
             </div>
             <button
               onClick={() => refetch()}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary/85 px-4 py-2 text-sm font-semibold text-black transition hover:bg-primary"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-blue-600 shadow-lg shadow-primary/20"
             >
-              <RefreshCcw className="h-4 w-4" />
+              <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh Feed
             </button>
           </div>
@@ -110,8 +113,8 @@ export function Dashboard() {
                     onClick={() => setFilters((prev) => ({ ...prev, city: prev.city ? "" : detectedCity }))}
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold min-w-max transition-all ${
                       filters.city
-                        ? "bg-primary text-black shadow-[0_0_16px_rgba(0,234,255,0.4)]"
-                        : "bg-white/10 text-slate-300 border-white/10 hover:bg-fuchsia-500/35"
+                        ? "bg-primary text-white border-primary shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+                        : "bg-white/5 text-slate-400 border-white/5 hover:bg-primary/20"
                     }`}
                   >
                     <LocateFixed className="h-4 w-4" />

@@ -79,12 +79,15 @@ Reply ONLY with: { "etaDays": number, "reasoning": string }`
   );
 }
 
-export async function generateCityReport(city, issues) {
+export async function generateCityReport(city, issues, area = null) {
+  const scopeString = area ? `Area: ${area} within ${city}` : `City: ${city}`;
+  
   const result = await nvidiaChatRaw(
-    "You are a civic data analyst. Generate a structured markdown report for local government officials. Include: top recurring problems, most affected areas, resolution rate analysis, and urgent action items.",
-    `City: ${city}. Recent issues (last 50): ${JSON.stringify(issues)}.
-Return a well-formatted markdown report.`
+    "You are a strategic civic data analyst. Generate a structured markdown report. " +
+    "CRITICAL: When referencing specific issues, YOU MUST use markdown links in the format [Title](/issues/id). " +
+    "Focus on top recurring problems, affected zones, and urgent action items.",
+    `${scopeString}. Recent issues (last 50): ${JSON.stringify(issues)}.
+Return a well-formatted markdown report with deep-links to issues.`
   );
-  // Re-wrap or format the result if it tries to return an object because of the system prompt
   return result;
 }

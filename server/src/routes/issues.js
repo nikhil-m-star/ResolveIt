@@ -8,7 +8,7 @@ import {
   autoCategorize,
   duplicateCheck,
   updateStatus,
-  getCityReport
+  getAIReport
 } from "../controllers/issueController.js";
 import { toggleVote } from "../controllers/voteController.js";
 import { addComment } from "../controllers/commentController.js";

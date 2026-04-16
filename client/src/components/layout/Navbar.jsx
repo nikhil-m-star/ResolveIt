@@ -60,7 +60,7 @@ export function Navbar() {
                 whileHover={{ rotate: [-5, 5, -5] }} 
                 transition={{ duration: 0.5, repeat: Infinity, repeatType: "mirror" }}
               >
-                <Shield className="h-7 w-7 text-primary filter drop-shadow-[0_0_8px_rgba(0,234,255,0.45)]" />
+                <Shield className="h-7 w-7 text-primary filter drop-shadow-[0_0_8px_rgba(37,99,235,0.45)]" />
               </Motion.div>
               <div className="hidden min-w-0 flex-col sm:flex">
                 <span className="text-primary font-heading text-xl font-extrabold tracking-tight leading-none">ResolveIt</span>
@@ -78,8 +78,8 @@ export function Navbar() {
                     to={item.to}
                     className={`relative flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                       active 
-                        ? "text-black bg-primary shadow-[0_0_16px_rgba(0,234,255,0.35)]" 
-                        : "text-slate-200 bg-white/10 hover:text-white hover:bg-fuchsia-500/40"
+                        ? "text-white bg-primary shadow-[0_0_16px_rgba(37,99,235,0.35)]" 
+                        : "text-slate-200 bg-white/10 hover:text-white hover:bg-blue-500/40"
                     }`}
                   >
                     <Icon className={`h-4 w-4 ${active ? "text-black" : "text-current"}`} />
@@ -94,7 +94,7 @@ export function Navbar() {
                 <>
                 <Link
                   to="/report"
-                  className="glass-button text-xs sm:text-sm shadow-[0_8px_16px_-6px_rgba(0,234,255,0.35)]"
+                  className="glass-button text-xs sm:text-sm shadow-[0_8px_16px_-6px_rgba(37,99,235,0.35)]"
                 >
                     <PlusCircle className="h-4 w-4" />
                     <span className="hidden lg:inline">Quick Report</span>
@@ -105,7 +105,7 @@ export function Navbar() {
                   <Link 
                     to="/profile" 
                     className={`rounded-xl p-2.5 transition-all transition-colors ${
-                      location.pathname === "/profile" ? "bg-fuchsia-500 text-white" : "text-slate-200 bg-white/10 hover:bg-fuchsia-500/40 hover:text-white"
+                      location.pathname === "/profile" ? "bg-blue-600 text-white" : "text-slate-200 bg-white/10 hover:bg-blue-500/40 hover:text-white"
                     }`}
                   >
                     <UserCircle2 className="h-5 w-5" />
@@ -126,7 +126,7 @@ export function Navbar() {
                   <Link to="/sign-in" className="rounded-xl px-4 py-2 text-sm font-bold text-slate-300 transition-all hover:bg-white/5 active:scale-95">
                     Access
                   </Link>
-                  <Link to="/sign-up" className="glass-button border-secondary/30 bg-secondary/10 text-secondary hover:bg-secondary/20 shadow-[0_8px_16px_-6px_rgba(0,234,255,0.35)]">
+                  <Link to="/sign-up" className="glass-button border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 shadow-[0_8px_16px_-6px_rgba(37,99,235,0.35)]">
                     Sign Up
                   </Link>
                 </div>
@@ -149,9 +149,9 @@ export function Navbar() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="fixed bottom-4 left-1/2 z-[1250] w-[94%] -translate-x-1/2 md:hidden"
+        className="fixed bottom-6 left-0 right-0 z-[1250] flex justify-center px-4 md:hidden"
       >
-        <nav className="glass-pill rounded-3xl px-3 py-2">
+        <nav className="glass-pill w-full max-w-sm rounded-[2rem] px-2 py-2 border-white/10">
           <div className="grid grid-cols-5 gap-1">
             {[...navItems.slice(0, 3), { to: "/report", label: "Report", icon: PlusCircle }, { to: "/profile", label: "Profile", icon: UserCircle2 }].map((item) => {
               const active = location.pathname === item.to;
@@ -160,12 +160,12 @@ export function Navbar() {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`flex flex-col items-center justify-center rounded-2xl px-2 py-2 text-[10px] font-semibold transition-all ${
-                    active ? "bg-primary text-black" : "text-slate-200 bg-white/10 hover:bg-fuchsia-500/45"
+                  className={`flex flex-col items-center justify-center rounded-[1.5rem] py-2.5 text-[10px] font-bold transition-all duration-300 ${
+                    active ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105" : "text-slate-300 bg-white/5 hover:bg-white/10"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  <span className="mt-1 leading-none">{item.label}</span>
+                  <Icon className="h-4.5 w-4.5 mb-1" />
+                  <span className="scale-[0.9] uppercase tracking-tighter">{item.label}</span>
                 </Link>
               );
             })}

@@ -14,7 +14,7 @@
   }
 
   :root {
-    --accent-primary: 0 234 255;
+    --accent-primary: 37 99 235; /* Blue 600 */
     --panel-bg: 0 0 0;
   }
 
@@ -32,11 +32,11 @@
     background: #000000;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 234, 255, 0.35);
+    background: rgba(37, 99, 235, 0.35);
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 234, 255, 0.55);
+    background: rgba(37, 99, 235, 0.55);
   }
 }
 
@@ -46,15 +46,15 @@
     box-shadow:
       0 20px 44px rgba(0, 0, 0, 0.62),
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      inset 0 -1px 0 rgba(0, 234, 255, 0.12);
+      inset 0 -1px 0 rgba(37, 99, 235, 0.12);
   }
   .glass-card:hover {
     transform: translateY(-2px);
     box-shadow:
       0 22px 52px rgba(0, 0, 0, 0.68),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      inset 0 -1px 0 rgba(0, 234, 255, 0.25),
-      0 0 24px rgba(0, 234, 255, 0.18);
+      inset 0 -1px 0 rgba(37, 99, 235, 0.25),
+      0 0 24px rgba(37, 99, 235, 0.18);
   }
   .glass-panel {
     @apply bg-black/50 backdrop-blur-3xl;
@@ -64,23 +64,26 @@
     box-shadow:
       0 24px 44px rgba(0, 0, 0, 0.7),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      inset 0 -1px 0 rgba(0, 234, 255, 0.22);
+      inset 0 -1px 0 rgba(37, 99, 235, 0.22);
   }
   .border-glow {
     @apply relative after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-primary/20 after:pointer-events-none;
-    box-shadow: inset 0 0 12px rgba(0, 234, 255, 0.14);
+    box-shadow: inset 0 0 12px rgba(37, 99, 235, 0.14);
   }
   .text-glow {
-    text-shadow: 0 0 20px rgba(0, 234, 255, 0.45);
+    text-shadow: 0 0 20px rgba(37, 99, 235, 0.45);
+  }
+  .blue-glow {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
   }
   .text-gradient-primary {
-    color: #00eaff;
+    @apply bg-gradient-to-r from-blue-400 via-blue-200 to-indigo-300 bg-clip-text text-transparent !important;
   }
   .panel-shell {
     @apply bg-slate-950/35 backdrop-blur-xl border border-white/10 rounded-2xl;
   }
   .glass-button {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/80 text-black hover:bg-primary transition-all active:scale-95 font-semibold;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/80 text-white hover:bg-primary transition-all active:scale-95 font-semibold;
   }
   .glass-button-ghost {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/12 text-gray-100 hover:bg-white/20 transition-all active:scale-95;
@@ -95,11 +98,5 @@
     z-index: 0;
     position: absolute;
     inset: 0;
-  }
-
-  /* Enforce no gradients across the UI system. */
-  [class*="bg-gradient"],
-  [style*="gradient"] {
-    background-image: none !important;
   }
 }

@@ -98,7 +98,7 @@ export const createIssue = async (req, res) => {
 // Get all issues with filters
 export const getIssues = async (req, res) => {
   try {
-    const { city, area, category, status, search } = req.query;
+    const { city, area, category, status, search, lat, lng } = req.query;
     
     const filter = {};
     if (city) filter.city = city;
@@ -125,13 +125,36 @@ export const getIssues = async (req, res) => {
       }
     });
 
-    // Mask user details for anonymous issues API side
+    // Mask user details for anonymous issues
     issues = issues.map(issue => {
       if (issue.isAnonymous) {
         issue.createdBy = null;
       }
       return issue;
     });
+
+    // Geospatial Sorting: Nearest to location first
+    if (lat && lng) {
+      const uLat = parseFloat(lat);
+      const uLng = parseFloat(lng);
+      
+      const getDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      };
+
+      issues.sort((a, b) => {
+          const distA = getDistance(uLat, uLng, a.latitude, a.longitude);
+          const distB = getDistance(uLat, uLng, b.latitude, b.longitude);
+          return distA - distB;
+      });
+    }
 
     res.json(issues);
   } catch (error) {
@@ -233,16 +256,19 @@ export const updateStatus = async (req, res) => {
   }
 };
 
-export const getCityReport = async (req, res) => {
+export const getAIReport = async (req, res) => {
   const { city } = req.user;
+  const { area } = req.query;
 
   try {
-    // Get last 50 issues for this city to analyze
+    // Get last 50 issues for this filter set to analyze
+    const filter = area ? { city, area } : { city };
     const issues = await prisma.issue.findMany({
-      where: { city },
+      where: filter,
       take: 50,
       orderBy: { createdAt: 'desc' },
       select: {
+          id: true,
           title: true,
           description: true,
           category: true,
@@ -254,10 +280,10 @@ export const getCityReport = async (req, res) => {
     });
 
     if (issues.length === 0) {
-        return res.json({ report: "No issues reported in this city yet to generate a report." });
+        return res.json({ report: `No issues reported in ${area || city} yet to generate a report.` });
     }
 
-    const reportMarkdown = await generateCityReport(city, issues);
+    const reportMarkdown = await generateCityReport(city, issues, area);
     res.json({ report: reportMarkdown });
 
   } catch (error) {
