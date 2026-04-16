@@ -14,6 +14,20 @@ export function IssueDetail() {
   const { data: issue, isLoading, isError } = useIssue(id);
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
+  const [statusNote, setStatusNote] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(issue?.status || "REPORTED");
+
+  // Read role from JWT
+  const decodeJwtPayload = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(atob(base64));
+    } catch { return {}; }
+  };
+  const token = localStorage.getItem("resolveit_token");
+  const userRole = token ? decodeJwtPayload(token).role : "CITIZEN";
+  const isOfficial = userRole === "OFFICER" || userRole === "PRESIDENT";
 
   const voteMutation = useMutation({
     mutationFn: () => api.post(`/issues/${id}/vote`),
@@ -31,7 +45,20 @@ export function IssueDetail() {
     onError: () => toast.error("Failed to comment"),
   });
 
-  // Handle real submit comment
+  const statusMutation = useMutation({
+    mutationFn: (data) => api.patch(`/issues/${id}/status`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["issue", id]);
+      toast.success("Status updated successfully");
+      setStatusNote("");
+    },
+    onError: () => toast.error("Failed to update status"),
+  });
+
+  const handleUpdateStatus = () => {
+    statusMutation.mutate({ newStatus: selectedStatus, note: statusNote });
+  };
+
   const handleSubmitComment = async (e) => {
       e.preventDefault();
       if (!comment.trim()) return;
@@ -62,6 +89,50 @@ export function IssueDetail() {
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         
+        {/* Management Controls (Officals Only) */}
+        {isOfficial && (
+          <div className="glass-card border-primary/30 bg-primary/5 p-6 animate-in fade-in slide-in-from-top-4">
+             <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-shrink-0 flex items-center gap-3">
+                   <div className="p-3 bg-primary rounded-2xl shadow-lg shadow-primary/20">
+                      <Shield className="w-6 h-6 text-white" />
+                   </div>
+                   <div>
+                      <h3 className="text-white font-bold leading-none">Status Management</h3>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Official Oversight Active</p>
+                   </div>
+                </div>
+
+                <div className="flex-1 flex flex-col md:flex-row items-center gap-4 w-full">
+                   <select 
+                     value={selectedStatus}
+                     onChange={(e) => setSelectedStatus(e.target.value)}
+                     className="bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-primary/50 w-full md:w-48"
+                   >
+                      <option value="REPORTED">Reported</option>
+                      <option value="IN_PROGRESS">In Progress</option>
+                      <option value="RESOLVED">Resolved</option>
+                      <option value="REJECTED">Rejected</option>
+                   </select>
+                   <input 
+                     type="text"
+                     value={statusNote}
+                     onChange={(e) => setStatusNote(e.target.value)}
+                     placeholder="Official audit note (optional)..."
+                     className="flex-1 bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 w-full"
+                   />
+                   <button 
+                     onClick={handleUpdateStatus}
+                     disabled={statusMutation.isPending || selectedStatus === issue.status}
+                     className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 whitespace-nowrap"
+                   >
+                      {statusMutation.isPending ? "Syncing..." : "Update Case"}
+                   </button>
+                </div>
+             </div>
+          </div>
+        )}
+
         {/* Header Block */}
         <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative">
           
@@ -81,21 +152,21 @@ export function IssueDetail() {
               )}
             </div>
 
-            <h1 className="text-3xl font-heading font-bold text-white">{issue.title}</h1>
+            <h1 className="text-3xl font-heading font-bold text-white tracking-tight">{issue.title}</h1>
             
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-               <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-md border border-white/5">
-                 <MapPin className="w-4 h-4" /> {issue.area || issue.city}
+               <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-md border border-white/5 font-medium">
+                 <MapPin className="w-4 h-4 text-primary" /> {issue.area || issue.city}
                </span>
-               <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-md border border-white/5">
-                 <Clock className="w-4 h-4" /> {formatDistanceToNow(new Date(issue.createdAt), { addSuffix: true })}
+               <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-md border border-white/5 font-medium">
+                 <Clock className="w-4 h-4 text-primary" /> {formatDistanceToNow(new Date(issue.createdAt), { addSuffix: true })}
                </span>
-               <span className="px-3 py-1.5 bg-white/5 rounded-md border border-white/5">
-                 By: {issue.isAnonymous ? "Anonymous User" : issue.createdBy?.name || "Citizen"}
+               <span className="px-3 py-1.5 bg-white/5 rounded-md border border-white/5 font-medium">
+                 Reported by: <span className="text-white">{issue.isAnonymous ? "Anonymous User" : issue.createdBy?.name || "Citizen"}</span>
                </span>
             </div>
 
-            <p className="text-gray-300 leading-relaxed text-base pt-2">
+            <p className="text-slate-300 leading-relaxed text-base pt-2">
               {issue.description}
             </p>
           </div>
@@ -105,11 +176,11 @@ export function IssueDetail() {
              <button 
                 onClick={() => voteMutation.mutate()}
                 disabled={voteMutation.isPending}
-                className="w-full py-4 bg-primary/20 hover:bg-primary/30 border border-primary/30 rounded-xl flex flex-col items-center justify-center gap-1 transition-colors text-primary font-bold shadow-lg shadow-primary/10"
+                className="w-full py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all text-primary font-black shadow-xl active:scale-95"
              >
                 <ChevronUp className="w-8 h-8" />
-                <span className="text-xl">{issue.votes}</span>
-                <span className="text-xs uppercase tracking-widest opacity-80">Upvotes</span>
+                <span className="text-2xl">{issue.votes}</span>
+                <span className="text-[10px] uppercase tracking-widest opacity-80">Upvotes</span>
              </button>
 
              {/* AI Insights Card */}

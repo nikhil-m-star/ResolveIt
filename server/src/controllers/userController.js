@@ -14,18 +14,6 @@ export const getProfile = async (req, res) => {
 
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Determine current tier logic on the fly (or you could sync it statically)
-    const points = user.points || 0;
-    let tier = "BRONZE";
-    if (points >= 500) tier = "PLATINUM";
-    else if (points >= 200) tier = "GOLD";
-    else if (points >= 50) tier = "SILVER";
-
-    if (user.tier !== tier) {
-        await prisma.user.update({ where: { id: user.id }, data: { tier } });
-        user.tier = tier;
-    }
-
     res.json(user);
   } catch (error) {
     console.error("Get Profile Error:", error);
@@ -47,9 +35,91 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// Upgrade Role explicitly to checking standard ac.in domain
-export const upgradeRole = async (req, res) => {
-  return res.status(403).json({
-    error: "Role upgrades are restricted. Only platform admins can assign officer roles.",
-  });
+// Leaderboard logic based on impact, not points
+export const getLeaderboard = async (req, res) => {
+  try {
+    const citizens = await prisma.user.findMany({
+      where: { role: "CITIZEN" },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: { issues: true, votes: true }
+        }
+      },
+      take: 10,
+      orderBy: {
+        issues: { _count: "desc" }
+      }
+    });
+
+    const officers = await prisma.user.findMany({
+      where: { role: { in: ["OFFICER", "PRESIDENT"] } },
+      select: {
+        id: true,
+        name: true,
+        resolvedCount: true,
+        avgRating: true,
+      },
+      take: 10,
+      orderBy: {
+        resolvedCount: "desc"
+      }
+    });
+
+    res.json({ citizens, officers });
+  } catch (error) {
+    console.error("Leaderboard Error:", error);
+    res.status(500).json({ error: "Failed to fetch leaderboard" });
+  }
+};
+
+// Admin: Get all users (President Only)
+export const getAllUsers = async (req, res) => {
+  if (req.user.role !== "PRESIDENT") {
+     return res.status(403).json({ error: "Unauthorized. President only." });
+  }
+
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        city: true,
+        area: true,
+        resolvedCount: true,
+        _count: { select: { issues: true } }
+      }
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
+
+// Admin: Update User Role (President Only)
+export const updateUserRole = async (req, res) => {
+  if (req.user.role !== "PRESIDENT") {
+    return res.status(403).json({ error: "Unauthorized. President only." });
+  }
+
+  const { id } = req.params;
+  const { role } = req.body;
+
+  if (!["CITIZEN", "OFFICER", "PRESIDENT"].includes(role)) {
+    return res.status(400).json({ error: "Invalid role" });
+  }
+
+  try {
+    const user = await prisma.user.update({
+      where: { id },
+      data: { role }
+    });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update role" });
+  }
 };

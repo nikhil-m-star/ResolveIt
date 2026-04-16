@@ -20,7 +20,7 @@ export function AdminDashboard() {
   const { data: issues } = useQuery({
     queryKey: ["adminIssues"],
     queryFn: async () => {
-      const res = await api.get("/issues"); // Optionally filter for officer/president
+      const res = await api.get("/issues");
       return res.data;
     },
   });
@@ -38,7 +38,11 @@ export function AdminDashboard() {
   if (isError || !stats) {
     return (
       <Layout>
-        <div className="p-8 text-center text-red-500">Failed to load dashboard metrics. Ensure you have Officer or President privileges.</div>
+        <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+          <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2">Metrics Unavailable</h2>
+          <p className="text-slate-400">Ensure you have the required Official clearance to access the Command Center.</p>
+        </div>
       </Layout>
     );
   }
@@ -65,80 +69,80 @@ export function AdminDashboard() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `resolveit-report-${new Date().getTime()}.csv`);
+    link.setAttribute("download", `resolveit-intelligence-export-${new Date().getTime()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     setIsGenerating(false);
-    toast.success("Report downloaded safely!");
+    toast.success("Intelligence export complete");
   };
 
-  const COLORS = ["#00eaff", "#00bcd4", "#4dd0e1", "#80deea", "#26c6da", "#0097a7"];
+  const COLORS = ["#3b82f6", "#06b6d4", "#6366f1", "#8b5cf6", "#ec4899", "#f59e0b"];
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-          <div>
-            <h1 className="text-3xl font-heading font-bold text-white flex items-center gap-3">
-              <Activity className="w-8 h-8 text-primary" /> Command Center
-            </h1>
-            <p className="text-gray-400 mt-1">Real-time overview of civic issues and SLA tracking.</p>
+      <div className="max-w-7xl mx-auto px-4 py-12 space-y-12 animate-in fade-in duration-700">
+        
+        {/* Admin Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
+               <Activity className="w-3.5 h-3.5" /> Sector Intelligence Active
+            </div>
+            <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">Command Center</h1>
+            <p className="text-slate-400 font-medium">Strategic overview of city-wide operations and performance metrics.</p>
           </div>
-          <div className="flex gap-3">
-             <button 
-                onClick={handleExportCSV}
-                disabled={isGenerating}
-                className="px-4 py-2 bg-primary/20 hover:bg-primary/30 border border-primary/40 text-primary rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-70"
-             >
-               {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />} Generate Report
-             </button>
-          </div>
+          <button 
+            onClick={handleExportCSV}
+            disabled={isGenerating}
+            className="flex items-center gap-2 rounded-2xl bg-white/5 border border-white/10 px-8 py-3.5 text-sm font-black text-white hover:bg-white/10 transition-all active:scale-95 disabled:opacity-50"
+          >
+            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4 text-primary" />} 
+            Log Data Export
+          </button>
         </div>
 
-        {/* Global KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Strategic KPIs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard 
-            title="Total Issues" 
+            title="Total Reports" 
             value={stats.total} 
-            icon={<BarChart3 className="text-primary w-6 h-6" />}
-            trend="+12% this week"
-            trendUp={true}
+            icon={<BarChart3 className="text-primary w-5 h-5" />}
+            trend="+8.2% vs last month"
           />
           <StatCard 
-            title="Resolved" 
-            value={stats.resolved} 
-            icon={<CheckCircle className="text-secondary w-6 h-6" />}
-            trend={`Resolution Rate: ${stats.resolutionRate}%`}
-            trendUp={true}
+            title="Success Rate" 
+            value={`${stats.resolutionRate}%`} 
+            icon={<CheckCircle className="text-emerald-400 w-5 h-5" />}
+            trend="Clearance optimization active"
           />
           <StatCard 
-            title="In Progress" 
+            title="Active Operations" 
             value={stats.inProgress} 
-            icon={<Activity className="text-primary w-6 h-6" />}
+            icon={<Activity className="text-blue-400 w-5 h-5" />}
+            trend="Ongoing field response"
           />
           <StatCard 
-            title="SLA Breached" 
+            title="Critical Breaches" 
             value={stats.slaBreached} 
-            icon={<AlertTriangle className="text-purple-400 w-6 h-6" />}
-            trend="Require immediate attention"
-            trendUp={false}
+            icon={<AlertTriangle className="w-5 h-5" />}
+            trend={stats.slaBreached > 0 ? "Immediate action required" : "Operations within SLA"}
             alert={stats.slaBreached > 0}
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Chart Section */}
-          <div className="lg:col-span-2 glass-card p-6 h-[400px] flex flex-col">
-            <h3 className="text-lg font-heading font-medium text-white mb-6">Category Breakdown</h3>
-            <div className="flex-1 w-full relative">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Data Visualization */}
+          <div className="lg:col-span-2 glass-card overflow-hidden h-[450px] flex flex-col p-8">
+            <h3 className="text-sm font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Category Distribution</h3>
+            <div className="flex-1 w-full">
               {stats.categoryBreakdown?.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={stats.categoryBreakdown} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="category" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => val.replace(/_/g, " ")} />
-                    <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                    <Tooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={{ backgroundColor: '#0a0f1e', borderColor: '#3b82f6', borderRadius: '8px' }} />
-                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                  <BarChart data={stats.categoryBreakdown} margin={{ top: 0, right: 0, left: -30, bottom: 0 }}>
+                    <XAxis dataKey="category" stroke="#475569" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} tickFormatter={(val) => val.split('_')[0].substring(0, 6)} />
+                    <YAxis stroke="#475569" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} />
+                    <Tooltip cursor={{fill: 'rgba(255,255,255,0.02)'}} contentStyle={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }} />
+                    <Bar dataKey="count" radius={[6, 6, 0, 0]} barSize={40}>
                       {stats.categoryBreakdown.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
@@ -146,14 +150,14 @@ export function AdminDashboard() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">No category data available</div>
+                <div className="h-full flex items-center justify-center text-slate-600 text-xs font-bold uppercase tracking-widest">Awaiting sector data...</div>
               )}
             </div>
           </div>
 
-          <div className="glass-card p-6 h-[400px] flex flex-col">
-            <h3 className="text-lg font-heading font-medium text-white mb-6">Distribution</h3>
-            <div className="flex-1 w-full relative">
+          <div className="glass-card overflow-hidden h-[450px] flex flex-col p-8">
+            <h3 className="text-sm font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Resource Spread</h3>
+            <div className="flex-1 w-full flex items-center justify-center">
                {stats.categoryBreakdown?.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -161,9 +165,9 @@ export function AdminDashboard() {
                         data={stats.categoryBreakdown}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
-                        paddingAngle={5}
+                        innerRadius={80}
+                        outerRadius={120}
+                        paddingAngle={8}
                         dataKey="count"
                         stroke="none"
                       >
@@ -171,11 +175,11 @@ export function AdminDashboard() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip contentStyle={{ backgroundColor: '#0a0f1e', borderColor: '#3b82f6', borderRadius: '8px' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }} />
                     </PieChart>
                   </ResponsiveContainer>
                ) : (
-                 <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">No data available</div>
+                 <div className="h-full flex items-center justify-center text-slate-600 text-xs font-bold uppercase tracking-widest">Analyzing distribution...</div>
                )}
             </div>
           </div>
@@ -186,22 +190,23 @@ export function AdminDashboard() {
   );
 }
 
-function StatCard({ title, value, icon, trend, trendUp, alert }) {
+function StatCard({ title, value, icon, trend, alert }) {
   return (
     <div className={cn(
-        "glass-card p-6 relative overflow-hidden",
-        alert ? "border-primary/50 bg-primary/10" : ""
+        "glass-card p-8 group hover:border-primary/40 transition-all",
+        alert && "border-red-500/30 bg-red-500/5 hover:border-red-500/50"
     )}>
-      {alert && <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 rounded-bl-full blur-xl"></div>}
-      <div className="flex justify-between items-start mb-4 relative z-10">
-        <h3 className="text-gray-400 font-medium text-sm">{title}</h3>
-        <div className="p-2 bg-white/5 rounded-lg border border-white/5">{icon}</div>
+      <div className="flex justify-between items-start mb-6">
+        <div className="p-3 bg-slate-900 border border-white/5 rounded-2xl shadow-inner group-hover:bg-primary/10 transition-colors">
+           {icon}
+        </div>
+        {alert && <div className="p-1 px-2.5 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest rounded-full animate-pulse shadow-lg shadow-red-500/20">Critical</div>}
       </div>
-      <div className="space-y-1 relative z-10">
-        <h4 className="text-3xl font-heading font-bold text-white">{value}</h4>
+      <div className="space-y-1">
+        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">{title}</h3>
+        <h4 className="text-4xl font-heading font-black text-white tracking-tight">{value}</h4>
         {trend && (
-          <p className={cn("text-xs font-medium flex items-center gap-1", trendUp === true ? "text-secondary" : trendUp === false ? "text-purple-300" : "text-gray-500")}>
-            {trendUp === true && <TrendingUp className="w-3 h-3" />}
+          <p className={cn("text-[9px] font-bold uppercase tracking-wider pt-2", alert ? "text-red-400" : "text-slate-500")}>
             {trend}
           </p>
         )}

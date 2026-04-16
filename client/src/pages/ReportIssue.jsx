@@ -184,210 +184,262 @@ export function ReportIssue() {
 
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-12 space-y-12 animate-in fade-in duration-700">
         
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-white mb-2">Report an Issue</h1>
-          <p className="text-gray-400">Help us improve the civic infrastructure. AI will assist you along the way.</p>
+        {/* Header Section */}
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
+             <Bot className="w-3.5 h-3.5" /> Intelligence Assisted
+          </div>
+          <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">Initiate Official Report</h1>
+          <p className="text-slate-400 font-medium">Your vigilance drives civic progress. AI-powered diagnostics will help optimize your submission.</p>
         </div>
 
-        {/* Progress Bar */}
-        <div className="flex items-center justify-between mb-8 relative">
-           <div className="absolute left-0 top-1/2 w-full h-0.5 bg-white/10 -z-10" />
-           {[1, 2, 3].map((num) => (
-             <div 
-               key={num} 
-               className={cn(
-                 "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors border-4 border-background",
-                 step > num ? "bg-primary text-white" : step === num ? "bg-primary text-white ring-2 ring-primary ring-offset-2 ring-offset-background animate-pulse" : "bg-white/10 text-gray-500"
-               )}
-             >
-               {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
-             </div>
-           ))}
+        {/* Tactical Pipeline (Progress) */}
+        <div className="max-w-xl mx-auto relative px-8">
+           <div className="absolute left-0 top-1/2 w-full h-[2px] bg-white/5 -translate-y-1/2" />
+           <div 
+             className="absolute left-0 top-1/2 h-[2px] bg-primary transition-all duration-700 -translate-y-1/2" 
+             style={{ width: `${((step - 1) / 2) * 100}%` }}
+           />
+           <div className="flex justify-between relative">
+              {[1, 2, 3].map((num) => (
+                <div 
+                  key={num} 
+                  className={cn(
+                    "w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 border-2",
+                    step > num ? "bg-primary border-primary text-white shadow-lg shadow-primary/20" : 
+                    step === num ? "bg-slate-900 border-primary text-primary shadow-xl scale-110" : 
+                    "bg-slate-900 border-white/5 text-slate-600"
+                  )}
+                >
+                  {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
+                </div>
+              ))}
+           </div>
         </div>
 
         {duplicateWarning && (
-           <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-start gap-3 text-orange-200">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+           <div className="p-6 bg-amber-500/5 border border-amber-500/20 rounded-[2rem] flex items-start gap-4 animate-in zoom-in duration-300">
+              <div className="p-2 bg-amber-500/10 rounded-xl">
+                 <AlertCircle className="w-6 h-6 text-amber-500" />
+              </div>
               <div>
-                 <h4 className="font-bold flex items-center gap-2">Possible Duplicate Detected <Bot className="w-4 h-4 opacity-50" /></h4>
-                 <p className="text-sm mt-1 opacity-90">{duplicateWarning.reasoning}</p>
+                 <h4 className="font-bold text-amber-200 flex items-center gap-2 uppercase tracking-wide text-sm">Conflict Warning <Bot className="w-4 h-4 opacity-50" /></h4>
+                 <p className="text-xs mt-1 text-amber-200/70 leading-relaxed font-medium">{duplicateWarning.reasoning}</p>
               </div>
            </div>
         )}
 
-        {/* Wizard Steps */}
-        <div className="glass-card p-6 sm:p-8">
+        {/* Management Interface (Wizard Steps) */}
+        <div className="glass-card overflow-hidden border-white/5 bg-slate-950/40 p-10 backdrop-blur-3xl shadow-2xl rounded-[3rem]">
           
           {step === 1 && (
-            <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-xl font-heading font-semibold">1. Describe the Problem</h2>
-              
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Issue Title</label>
+                <h2 className="text-lg font-black text-white uppercase tracking-widest">Step 01</h2>
+                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em]">Diagnostic Narrative</p>
+              </div>
+              
+              <div className="space-y-3">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Case Subject</label>
                 <input 
                   type="text" 
                   value={formData.title}
                   onChange={(e) => updateForm("title", e.target.value)}
-                  placeholder="e.g. Huge Pothole near Central Mall"
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
+                  placeholder="Summarize the incident..."
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-inner font-medium"
                 />
               </div>
 
-              <div className="space-y-2 relative">
-                <label className="text-sm font-medium text-gray-300">Description</label>
+              <div className="space-y-3 relative group">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Operational Description</label>
                 <textarea 
                   value={formData.description}
                   onChange={(e) => updateForm("description", e.target.value)}
                   onBlur={handleBlurAIAnalyzers}
-                  placeholder="Provide details. AI will automatically analyze this when you're done typing to suggest a category and check for duplicates..."
-                  rows={5}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 transition-colors resize-none"
+                  placeholder="Detail the circumstances. Systematic AI analysis will initiate upon blur..."
+                  rows={6}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all font-medium resize-none shadow-inner"
                 />
-                {isCategorizing && (
-                   <div className="absolute right-3 bottom-3 flex items-center gap-2 text-primary/70 text-xs font-medium">
-                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                     AI Analyzing...
-                   </div>
-                )}
+                <AnimatePresence>
+                  {isCategorizing && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-4 bottom-4 flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-xl border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest"
+                    >
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      Analyzing Sequence...
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           )}
 
           {step === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-xl font-heading font-semibold flex items-center justify-between">
-                2. Category & Evidence
-                {formData.category && <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-md border border-primary/30 flex items-center gap-1"><Bot className="w-3 h-3"/> AI Categorized</span>}
-              </h2>
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <h2 className="text-lg font-black text-white uppercase tracking-widest">Step 02</h2>
+                  <p className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em]">Asset Categorization</p>
+                </div>
+                {formData.category && (
+                  <div className="px-4 py-2 bg-primary/10 border border-primary/20 rounded-2xl text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-primary/5">
+                    <Bot className="w-3.5 h-3.5" /> AI Recommended
+                  </div>
+                )}
+              </div>
               
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Category Selection</label>
-                <select 
-                  value={formData.category}
-                  onChange={(e) => updateForm("category", e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors appearance-none"
-                >
-                  <option value="" disabled>Select a category...</option>
-                  <option value="POTHOLE">Pothole</option>
-                  <option value="GARBAGE">Garbage & Waste</option>
-                  <option value="WATER_LEAK">Water Leakage</option>
-                  <option value="POWER_CUT">Power Cut</option>
-                  <option value="STREETLIGHT">Broken Streetlight</option>
-                  <option value="SEWAGE">Sewage Issue</option>
-                  <option value="TREE_FALLEN">Fallen Tree</option>
-                  <option value="BRIBERY">Bribery / Corruption</option>
-                  <option value="OTHER">Other</option>
-                </select>
+              <div className="space-y-3">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Case Category</label>
+                <div className="relative">
+                  <select 
+                    value={formData.category}
+                    onChange={(e) => updateForm("category", e.target.value)}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none font-medium shadow-inner"
+                  >
+                    <option value="" disabled>Select Sector Classification...</option>
+                    <option value="POTHOLE">Potholes & Road Damage</option>
+                    <option value="GARBAGE">Sanitation & Waste</option>
+                    <option value="WATER_LEAK">Water Infrastructure</option>
+                    <option value="POWER_CUT">Grid Stability / Outages</option>
+                    <option value="STREETLIGHT">Public Illumination</option>
+                    <option value="SEWAGE">Drainage & Sewage</option>
+                    <option value="TREE_FALLEN">Navigational Hazards</option>
+                    <option value="BRIBERY">Integrity Violation</option>
+                    <option value="OTHER">Miscellaneous Sector</option>
+                  </select>
+                </div>
               </div>
 
               {formData.category === "BRIBERY" && (
-                 <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
-                   <ShieldAlert className="w-5 h-5 text-red-500 flex-shrink-0" />
-                   <div>
-                     <p className="text-sm text-red-200 font-medium mb-2">Bribery/Corruption reports can be submitted anonymously.</p>
-                     <label className="flex items-center gap-2 cursor-pointer">
-                        <input 
-                           type="checkbox" 
-                           checked={formData.isAnonymous}
-                           onChange={(e) => updateForm("isAnonymous", e.target.checked)}
-                           className="w-4 h-4 rounded border-white/20 bg-black text-red-500 focus:ring-red-500 focus:ring-offset-gray-900"
-                        />
-                        <span className="text-sm text-white">Hide my identity from this report</span>
+                 <motion.div 
+                   initial={{ scale: 0.95, opacity: 0 }}
+                   animate={{ scale: 1, opacity: 1 }}
+                   className="p-6 bg-red-500/5 border border-red-500/20 rounded-[2rem] flex items-start gap-4"
+                 >
+                   <div className="p-2 bg-red-500/10 rounded-xl">
+                      <ShieldAlert className="w-6 h-6 text-red-500" />
+                   </div>
+                   <div className="flex-1">
+                     <p className="text-xs text-red-200 font-black uppercase tracking-widest mb-3">Anonymous Protocol Enabled</p>
+                     <label className="flex items-center gap-3 cursor-pointer group">
+                        <div className="relative">
+                          <input 
+                             type="checkbox" 
+                             checked={formData.isAnonymous}
+                             onChange={(e) => updateForm("isAnonymous", e.target.checked)}
+                             className="sr-only p-4"
+                          />
+                          <div className={cn("w-6 h-6 rounded-lg border flex items-center justify-center transition-all", formData.isAnonymous ? "bg-red-500 border-red-500" : "bg-slate-900 border-white/10 group-hover:border-red-500/50")}>
+                             {formData.isAnonymous && <CheckCircle2 className="w-4 h-4 text-white" />}
+                          </div>
+                        </div>
+                        <span className="text-sm text-slate-400 font-medium group-hover:text-white transition-colors">Mask Identity for this submission</span>
                      </label>
                    </div>
-                 </div>
+                 </motion.div>
               )}
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Evidence Images (Up to 3)</label>
+              <div className="space-y-4">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Visual Evidence</label>
                 <div 
                   {...getRootProps()} 
                   className={cn(
-                    "border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors",
-                    isDragActive ? "border-primary bg-primary/5" : "border-white/10 hover:border-white/20 hover:bg-white/5",
-                    formData.images.length >= 3 && "opacity-50 pointer-events-none"
+                    "border-2 border-dashed rounded-3xl p-12 text-center cursor-pointer transition-all",
+                    isDragActive ? "border-primary bg-primary/10 scale-[1.01] shadow-2xl" : "border-white/5 bg-slate-900/30 hover:border-primary/30 hover:bg-slate-900/50 shadow-inner",
+                    formData.images.length >= 3 && "opacity-30 pointer-events-none"
                   )}
                 >
                   <input {...getInputProps()} />
-                  <UploadCloud className="w-10 h-10 mx-auto text-gray-400 mb-3" />
-                  <p className="text-sm text-gray-300">Drag & drop images here, or click to select files</p>
-                  <p className="text-xs text-gray-500 mt-1">JPEG, PNG, WEBP only. Max 3 files.</p>
+                  <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-xl">
+                    <UploadCloud className="w-8 h-8 text-primary" />
+                  </div>
+                  <p className="text-sm text-white font-bold mb-1">Upload Tactical Assets</p>
+                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Max 3 (JPEG, PNG, WEBP)</p>
                 </div>
 
-                {formData.images.length > 0 && (
-                  <div className="flex gap-4 mt-4 overflow-x-auto pb-2">
-                    {formData.images.map((file, idx) => (
-                      <div key={idx} className="relative group flex-shrink-0">
-                        <img 
-                          src={imagePreviews[idx]} 
-                          alt={`Upload preview ${idx}`} 
-                          className="w-24 h-24 object-cover rounded-lg border border-white/10"
-                        />
-                        <button 
-                          onClick={() => removeImage(idx)}
-                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white text-xs font-bold flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {formData.images.length > 0 && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="flex gap-4 mt-6 overflow-x-auto pb-4 px-2"
+                    >
+                      {formData.images.map((file, idx) => (
+                        <div key={idx} className="relative group flex-shrink-0 animate-in zoom-in-75">
+                          <div className="w-28 h-28 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                             <img src={imagePreviews[idx]} alt="Evidence" className="w-full h-full object-cover" />
+                          </div>
+                          <button 
+                            onClick={() => removeImage(idx)}
+                            className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-xl flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 transition-opacity border-2 border-slate-950"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           )}
 
           {step === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-xl font-heading font-semibold">3. Pin the Location</h2>
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+              <div className="space-y-2">
+                <h2 className="text-lg font-black text-white uppercase tracking-widest">Step 03</h2>
+                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em]">Geospatial Positioning</p>
+              </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">City</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-3">
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Assigned City</label>
                     <input 
                       type="text" 
                       value={formData.city} readOnly disabled
-                      className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2.5 text-gray-500 cursor-not-allowed"
+                      className="w-full bg-slate-900 border-white/5 rounded-2xl px-6 py-4 text-slate-600 font-bold shadow-inner"
                     />
                  </div>
-                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">Area / Neighborhood</label>
+                 <div className="space-y-3">
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Area / Neighbor Sector</label>
                     <input 
                       type="text" 
                       value={formData.area} 
                       onChange={(e) => updateForm("area", e.target.value)}
-                      placeholder="e.g. Indiranagar"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:border-primary/50 transition-colors"
+                      placeholder="e.g. Koramangala"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all font-medium shadow-inner"
                     />
                  </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                     <MapPin className="w-4 h-4 text-primary"/> Click on the map to pin exact location
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                     <MapPin className="w-3.5 h-3.5 text-primary"/> Triangulate Case via Map
                   </label>
                   <button
                     type="button"
                     onClick={handleUseCurrentLocation}
                     disabled={isLocatingGPS}
-                    className="text-xs font-bold text-primary hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 transition-all active:scale-95 disabled:opacity-50"
+                    className="flex items-center gap-2 px-5 py-2 rounded-xl bg-primary/10 border border-primary/20 text-[10px] font-black uppercase text-primary tracking-widest transition-all hover:bg-primary hover:text-white disabled:opacity-50"
                   >
-                    {isLocatingGPS ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
-                    Use Current Location
+                    {isLocatingGPS ? <Loader2 className="w-3 h-3 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
+                    Sync GPS
                   </button>
                 </div>
-                <div className="w-full h-80 rounded-2xl overflow-hidden border border-white/10 relative z-0 shadow-2xl">
+                <div className="w-full h-80 rounded-[2.5rem] overflow-hidden border border-white/10 relative z-0 shadow-2xl">
                   <MapContainer 
                     center={[formData.latitude, formData.longitude]} 
                     zoom={15} 
                     className="w-full h-full"
                   >
                     <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <LocationPicker 
@@ -400,47 +452,50 @@ export function ReportIssue() {
                   </MapContainer>
                 </div>
               </div>
-
             </div>
           )}
 
-          {/* Wizard Navigation */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
+          {/* Tactical Navigation Bar */}
+          <div className="flex items-center justify-between mt-12 pt-8 border-t border-white/5">
             <button 
               onClick={() => setStep(s => Math.max(1, s - 1))}
               disabled={step === 1 || isSubmitting}
-              className="flex items-center gap-2 text-gray-400 hover:text-white disabled:opacity-30 disabled:hover:text-gray-400 transition-colors font-medium"
+              className="px-6 py-3 text-slate-500 hover:text-white disabled:opacity-0 transition-all font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
             >
-              <ArrowLeft className="w-4 h-4" /> Back
+              <ArrowLeft className="w-4 h-4" /> ABORT STEP
             </button>
             
             {step < 3 ? (
               <button 
                 onClick={() => {
-                   if (step === 1) {
-                      handleBlurAIAnalyzers();
-                   }
+                   if (step === 1) handleBlurAIAnalyzers();
                    setStep(s => Math.min(3, s + 1));
                 }}
                 disabled={(step === 1 && (!formData.title || !formData.description))}
-                className="flex items-center gap-2 bg-primary hover:bg-blue-600 disabled:opacity-50 disabled:bg-primary text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-primary/20"
+                className="flex items-center gap-2 bg-primary hover:brightness-110 disabled:opacity-50 text-white px-10 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all shadow-xl shadow-primary/20 active:scale-95"
               >
-                Next Step <ArrowRight className="w-4 h-4" />
+                Next Sequence <ArrowRight className="w-3.5 h-3.5" />
               </button>
             ) : (
               <button 
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.area}
-                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white px-8 py-2.5 rounded-xl font-medium transition-all hover:scale-105 shadow-lg shadow-emerald-500/20"
+                className="flex items-center gap-3 bg-emerald-500 hover:brightness-110 disabled:opacity-50 text-white px-12 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all hover:scale-[1.02] shadow-xl shadow-emerald-500/20 active:scale-95"
               >
                 {isSubmitting ? (
-                  <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Synchronizing...</>
                 ) : (
-                  <>Submit Report</>
+                  <>Submit Mission</>
                 )}
               </button>
             )}
           </div>
+          
+        </div>
+      </div>
+    </Layout>
+  );
+}
           
         </div>
       </div>

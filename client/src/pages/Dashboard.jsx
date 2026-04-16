@@ -3,7 +3,7 @@ import { Layout } from "../components/layout/Layout";
 import { IssueCard } from "../components/issues/IssueCard";
 import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
-import { Search, Filter, Loader2, RefreshCcw, CheckCircle2, LocateFixed } from "lucide-react";
+import { RefreshCcw, CheckCircle2, Loader2 } from "lucide-react";
 
 export function Dashboard() {
   const [filters, setFilters] = useState({
@@ -48,104 +48,41 @@ export function Dashboard() {
   }, []);
 
   const { data: issues, isLoading, isError, refetch } = useIssues(filters);
-  const searchTimeout = useRef(null);
-
-  // Simple debounced search (normally move to hook)
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    if (searchTimeout.current) clearTimeout(searchTimeout.current);
-    searchTimeout.current = setTimeout(() => {
-      setFilters(prev => ({ ...prev, search: value }));
-    }, 300);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (searchTimeout.current) clearTimeout(searchTimeout.current);
-    };
-  }, []);
 
   return (
     <Layout>
-      <div className="px-4 py-6 sm:px-6 sm:py-8">
-        <div className="mb-6 rounded-2xl bg-black/50 p-5 backdrop-blur-2xl sm:p-6 shadow-[0_18px_40px_rgba(0,0,0,0.55)]">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">ResolveIt Live Monitor</p>
-              <h1 className="font-heading text-2xl font-bold text-white sm:text-3xl tracking-tight">City Pulse Dashboard</h1>
-              <p className="text-sm text-slate-400">Track active incidents, prioritize fixes, and coordinate civic response.</p>
+    <Layout>
+      <div className="px-4 py-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
+        
+        {/* Dashboard Header */}
+        <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border-primary/20 bg-primary/5">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
+               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Live Monitoring
             </div>
-            <button
-              onClick={() => refetch()}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-blue-600 shadow-lg shadow-primary/20"
-            >
-              <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh Feed
-            </button>
+            <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">City Pulse Monitor</h1>
+            <p className="text-slate-400 font-medium">Real-time situational awareness and civic response coordination.</p>
           </div>
+          <button
+            onClick={() => refetch()}
+            className="flex items-center gap-2 rounded-2xl bg-primary px-8 py-3.5 text-sm font-black text-white transition-all hover:brightness-110 shadow-xl shadow-primary/25 active:scale-95"
+          >
+            <RefreshCcw className={cn("h-4 w-4", isLoading && "animate-spin")} />
+            Refresh Sector
+          </button>
         </div>
 
-        <div className="mx-auto max-w-4xl">
-          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-3xl bg-black/50 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.66)] backdrop-blur-3xl">
-            <div className="space-y-4 bg-white/8 p-5 sm:p-6">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search issues by title or description..."
-                  onChange={handleSearch}
-                  className="w-full rounded-2xl border border-white/10 bg-black/40 py-3 pl-11 pr-4 text-sm text-white placeholder:text-slate-500 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-                <div className="flex min-w-max items-center gap-2 rounded-xl bg-primary/18 px-4 py-2">
-                  <Filter className="h-4 w-4 text-primary" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-slate-300">Filters</span>
+        <div className="mx-auto max-w-5xl w-full">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-[2.5rem] bg-slate-950/40 border border-white/5 shadow-2xl backdrop-blur-3xl">
+            {/* Minimal Sub-header */}
+            <div className="px-8 py-5 border-b border-white/5 bg-white/[0.01] flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Chronological Intel Feed</span>
+              {isLocating && (
+                <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase animate-pulse">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Triangulating Sector...
                 </div>
-                {isLocating ? (
-                  <div className="flex min-w-max items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-slate-300">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    Locating...
-                  </div>
-                ) : detectedCity ? (
-                  <button
-                    onClick={() => setFilters((prev) => ({ ...prev, city: prev.city ? "" : detectedCity }))}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold min-w-max transition-all ${
-                      filters.city
-                        ? "bg-primary text-white border-primary shadow-[0_0_20px_rgba(37,99,235,0.3)]"
-                        : "bg-white/5 text-slate-400 border-white/5 hover:bg-primary/20"
-                    }`}
-                  >
-                    <LocateFixed className="h-4 w-4" />
-                    {filters.city ? filters.city : `Near ${detectedCity}`}
-                  </button>
-                ) : null}
-                <select 
-                  onChange={e => setFilters(f => ({ ...f, category: e.target.value }))}
-                  className="text-xs font-bold bg-white/10 rounded-xl px-4 py-2 text-slate-200 outline-none transition-all appearance-none min-w-max cursor-pointer"
-                >
-                  <option value="">All Categories</option>
-                  <option value="POTHOLE">Potholes</option>
-                  <option value="GARBAGE">Garbage</option>
-                  <option value="POWER_CUT">Power Cuts</option>
-                  <option value="WATER_LEAK">Water Leaks</option>
-                  <option value="BRIBERY">Bribery</option>
-                  <option value="STREETLIGHT">Streetlight</option>
-                  <option value="SEWAGE">Sewage</option>
-                  <option value="TREE_FALLEN">Fallen Tree</option>
-                  <option value="OTHER">Other</option>
-                </select>
-                <select 
-                  onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-                  className="text-xs font-bold bg-white/10 rounded-xl px-4 py-2 text-slate-200 outline-none transition-all appearance-none min-w-max cursor-pointer"
-                >
-                  <option value="">All Statuses</option>
-                  <option value="REPORTED">Reported</option>
-                  <option value="IN_PROGRESS">In Progress</option>
-                  <option value="RESOLVED">Resolved</option>
-                </select>
-              </div>
+              )}
             </div>
 
             <div className="flex-1 space-y-6 overflow-y-auto px-5 py-8 sm:px-8">

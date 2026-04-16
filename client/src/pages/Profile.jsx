@@ -57,54 +57,14 @@ export function Profile() {
       updateMutation.mutate(formData);
   };
 
-  const getTierColor = (tier) => {
-    switch (tier) {
-      case "PLATINUM": return "text-blue-300 bg-blue-500/10 border-blue-500/30";
-      case "GOLD": return "text-yellow-400 bg-yellow-500/10 border-yellow-500/30";
-      case "SILVER": return "text-gray-300 bg-gray-500/10 border-gray-500/30";
-      case "BRONZE": return "text-amber-600 bg-amber-700/10 border-amber-700/30";
-      default: return "text-white bg-white/5 border-white/10";
-    }
-  };
-
-  const isOfficer = profile.role === "OFFICER" || profile.role === "PRESIDENT";
-
-  return (
-    <Layout>
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
-        
-        {/* Header Block */}
-        <div className="glass-card p-8 flex flex-col md:flex-row items-center md:items-start gap-8 text-center md:text-left relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
-          {/* Decorative background glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="relative">
-            <div className="w-32 h-32 rounded-full border-4 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center shadow-xl">
-               {clerkUser?.imageUrl ? (
-                 <img src={clerkUser.imageUrl} alt="Profile" className="w-full h-full object-cover" />
-               ) : (
-                 <UserIcon className="w-16 h-16 text-gray-500" />
-               )}
-            </div>
-            {isOfficer && (
-              <div className="absolute -bottom-2 -right-2 bg-blue-500 text-white p-2 rounded-full border-2 border-background shadow-lg">
-                <Shield className="w-5 h-5 fill-current" />
-              </div>
-            )}
-          </div>
-
-          <div className="flex-1 space-y-3 z-10">
             <div>
               <h1 className="text-3xl font-heading font-bold text-white mb-2">{profile.name}</h1>
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                 <span className={cn("px-3 py-1 rounded-lg text-sm font-bold uppercase tracking-wider border", getTierColor(profile.tier))}>
-                    {profile.tier} TIER
-                 </span>
-                 <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-sm text-gray-400 font-medium">
+                 <span className="px-4 py-1.5 bg-primary/10 border border-primary/20 text-primary rounded-lg text-sm font-bold uppercase tracking-wider">
                     {profile.role}
                  </span>
-                 <span className="flex items-center gap-1.5 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-lg text-sm font-bold">
-                    <Star className="w-4 h-4 fill-current" /> {profile.points} PTS
+                 <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-400 font-bold uppercase tracking-widest">
+                    Citizen Member
                  </span>
               </div>
             </div>

@@ -16,11 +16,9 @@ model User {
   role            Role           @default(CITIZEN)
   city            String?        @default("Bengaluru")
   area            String?
-  tier            Tier           @default(BRONZE)
   avgRating       Float          @default(0)
   resolvedCount   Int            @default(0)
   assignedCount   Int            @default(0)
-  points          Int            @default(0)
   createdAt       DateTime       @default(now())
   comments        Comment[]
   assignedIssues  Issue[]        @relation("AssignedIssues")
@@ -168,13 +166,6 @@ enum Status {
   IN_PROGRESS
   RESOLVED
   REJECTED
-}
-
-enum Tier {
-  BRONZE
-  SILVER
-  GOLD
-  PLATINUM
 }
 
 enum NotifType {
