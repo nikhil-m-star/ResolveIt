@@ -166,5 +166,6 @@ export function Navbar() {
           })}
         </div>
       </nav>
+    </Motion.div>
   );
 }
