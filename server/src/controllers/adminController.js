@@ -9,8 +9,10 @@ export const getDashboardStats = async (req, res) => {
   }
 
   try {
-    // If exact filter bounds are required locally:
-    const filter = role === "PRESIDENT" ? { city } : { city, area };
+    // Presidents see city-wide data; officers default to city-wide when area is missing.
+    const filter = role === "PRESIDENT"
+      ? { city }
+      : { city, ...(area ? { area } : {}) };
 
     const totalIssues = await prisma.issue.count({ where: filter });
     const resolvedIssues = await prisma.issue.count({ where: { ...filter, status: "RESOLVED" } });

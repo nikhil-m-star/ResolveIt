@@ -19,8 +19,13 @@ export function OfficerKanban() {
   const { data: issues, isLoading, isError } = useQuery({
     queryKey: ["kanbanIssues"],
     queryFn: async () => {
-      const res = await api.get("/issues?assignedToMe=true");
-      return res.data;
+      const assignedRes = await api.get("/issues?assignedToMe=true");
+      if (assignedRes.data?.length > 0) {
+        return assignedRes.data;
+      }
+      // Fallback for fresh accounts with no direct assignments yet.
+      const allRes = await api.get("/issues");
+      return allRes.data;
     },
   });
 
