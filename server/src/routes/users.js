@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { jwtAuth } from "../middleware/jwtAuth.js";
-import { getProfile, updateProfile } from "../controllers/userController.js";
+import { getProfile, updateProfile, getLeaderboard, getAllUsers, updateUserRole } from "../controllers/userController.js";
 
 const userRouter = Router();
 

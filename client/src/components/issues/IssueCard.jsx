@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { MapPin, ArrowBigUp, ArrowBigDown, Bot, Loader2 } from "lucide-react";
+import { MapPin, ArrowBigUp, ArrowBigDown, Bot, Loader2, Activity } from "lucide-react";
 import { cn, getCategoryColor, getCategoryIconNode, getStatusColor, evaluateIntensityColor } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../lib/auth";
@@ -75,17 +75,28 @@ export function IssueCard({ issue }) {
               <button
                 onClick={(e) => { e.preventDefault(); voteMutation.mutate('UP'); }}
                 disabled={voteMutation.isPending}
-                className="p-1 text-slate-500 hover:text-primary transition-colors disabled:opacity-50"
+                className={cn(
+                  "p-1 transition-all duration-300 disabled:opacity-50",
+                  issue.userVote === 'UP' ? "text-primary scale-110" : "text-slate-500 hover:text-primary"
+                )}
               >
-                <ArrowBigUp className="h-4 w-4 fill-current" />
+                <ArrowBigUp className={cn("h-4 w-4", issue.userVote === 'UP' ? "fill-primary" : "fill-none")} />
               </button>
-              <span className="text-[10px] font-black text-white px-1 min-w-[20px] text-center">{issue.votes}</span>
+              <span className={cn(
+                "text-[10px] font-black px-1 min-w-[20px] text-center transition-colors",
+                issue.userVote ? "text-primary" : "text-white"
+              )}>
+                {issue.votes}
+              </span>
               <button
                 onClick={(e) => { e.preventDefault(); voteMutation.mutate('DOWN'); }}
                 disabled={voteMutation.isPending}
-                className="p-1 text-slate-500 hover:text-primary transition-colors disabled:opacity-50"
+                className={cn(
+                  "p-1 transition-all duration-300 disabled:opacity-50",
+                  issue.userVote === 'DOWN' ? "text-red-500 scale-110" : "text-slate-500 hover:text-red-500"
+                )}
               >
-                <ArrowBigDown className="h-4 w-4 fill-current" />
+                <ArrowBigDown className={cn("h-4 w-4", issue.userVote === 'DOWN' ? "fill-red-500" : "fill-none")} />
               </button>
            </div>
 

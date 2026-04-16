@@ -18,7 +18,7 @@ const issueRouter = Router();
 // AI Routes endpoints (must be before /:id)
 issueRouter.post("/auto-categorize", jwtAuth, autoCategorize);
 issueRouter.post("/check-duplicate", jwtAuth, duplicateCheck);
-issueRouter.get("/ai-report", jwtAuth, getCityReport);
+issueRouter.get("/ai-report", jwtAuth, getAIReport);
 
 // CRUD
 issueRouter.post("/", jwtAuth, upload.array("images", 3), createIssue);

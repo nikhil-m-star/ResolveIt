@@ -46,7 +46,7 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-black/40 backdrop-blur-2xl rounded-2xl transition-all duration-300 border border-white/5;
+    @apply bg-gradient-to-br from-primary/10 via-black to-black backdrop-blur-2xl rounded-2xl transition-all duration-300 border border-white/5;
     box-shadow:
       0 10px 30px -10px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -75,7 +75,7 @@
   .text-glow {
     text-shadow: 0 0 25px rgba(var(--accent-primary), 0.4);
   }
-  .blue-glow {
+  .green-glow {
     box-shadow: 0 0 30px rgba(var(--accent-primary), 0.2);
   }
   .text-gradient-primary {

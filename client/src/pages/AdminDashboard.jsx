@@ -77,7 +77,7 @@ export function AdminDashboard() {
     toast.success("Intelligence export complete");
   };
 
-  const COLORS = ["#3b82f6", "#06b6d4", "#6366f1", "#8b5cf6", "#ec4899", "#f59e0b"];
+  const COLORS = ["#10b981", "#14b8a6", "#84cc16", "#047857", "#22c55e", "#ffffff"];
 
   return (
     <Layout>

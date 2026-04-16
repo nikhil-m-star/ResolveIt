@@ -154,7 +154,7 @@ export function UserManagement() {
                     >
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-800 to-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl">
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 via-black to-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl">
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div>

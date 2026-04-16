@@ -121,9 +121,19 @@ export const getIssues = async (req, res) => {
       include: {
         createdBy: {
            select: { id: true, name: true, role: true }
+        },
+        voteRecords: {
+          where: { userId: req.user.id },
+          select: { type: true }
         }
       }
     });
+
+    // Flatten userVote for easier frontend consumption
+    issues = issues.map(issue => ({
+      ...issue,
+      userVote: issue.voteRecords[0]?.type || null
+    }));
 
     // Mask user details for anonymous issues
     issues = issues.map(issue => {
@@ -177,12 +187,22 @@ export const getIssueById = async (req, res) => {
         comments: {
             include: { user: { select: { name: true, role: true } }},
             orderBy: { createdAt: 'desc' }
+        },
+        voteRecords: {
+          where: { userId: req.user.id },
+          select: { type: true }
         }
       }
     });
 
     if (!issue) return res.status(404).json({ error: "Issue not found" });
-    res.json(issue);
+
+    const formattedIssue = {
+      ...issue,
+      userVote: issue.voteRecords[0]?.type || null
+    };
+
+    res.json(formattedIssue);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch issue details" });
   }

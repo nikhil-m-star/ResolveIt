@@ -67,7 +67,7 @@ export function Navbar() {
                     to={item.to}
                     className={`relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-bold transition-all duration-300 ${
                       active 
-                        ? "text-primary bg-primary/10 shadow-[inner_0_0_12px_rgba(59,130,246,0.1)]" 
+                        ? "text-primary bg-primary/10 shadow-[inner_0_0_12px_rgba(16,185,129,0.1)]" 
                         : "text-slate-400 hover:text-white hover:bg-white/5"
                     }`}
                   >

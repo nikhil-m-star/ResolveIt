@@ -84,25 +84,25 @@ export function OfficerKanban() {
           </div>
 
           {/* Graphical Metrics Summary */}
-          <div className="flex items-center gap-6 bg-black/50 border border-white/5 rounded-[2rem] px-8 py-5 backdrop-blur-3xl shadow-2xl">
-            <div className="flex flex-col gap-1">
-              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Clearance Rate</span>
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 bg-black/50 border border-white/5 rounded-[2rem] px-6 py-4 md:px-8 md:py-5 backdrop-blur-3xl shadow-2xl w-full md:w-auto">
+            <div className="flex flex-col gap-1 w-full md:w-auto">
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest text-center md:text-left">Clearance Rate</span>
               <div className="flex items-center gap-3">
-                <div className="h-1.5 w-32 bg-black rounded-full overflow-hidden border border-white/5">
+                <div className="h-1.5 flex-1 md:w-32 bg-black rounded-full overflow-hidden border border-white/5">
                   <div 
                     className="h-full bg-primary transition-all duration-1000" 
                     style={{ width: `${Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%` }}
                   />
                 </div>
-                <span className="text-sm font-black text-emerald-400">
+                <span className="text-sm font-black text-emerald-400 min-w-[3ch]">
                   {Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%
                 </span>
               </div>
             </div>
             
-            <div className="w-px h-8 bg-white/5" />
+            <div className="hidden md:block w-px h-8 bg-white/5" />
             
-            <div className="flex flex-col items-center">
+            <div className="flex md:flex-col items-center gap-6 md:gap-0 justify-between w-full md:w-auto p-4 md:p-0 bg-white/5 md:bg-transparent rounded-2xl border border-white/5 md:border-none">
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active Cases</span>
               <span className="text-xl font-black text-white">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
             </div>
@@ -111,7 +111,7 @@ export function OfficerKanban() {
 
         {/* Board */}
         <div className="flex-1 overflow-x-auto pb-6 -mx-4 px-4 scrollbar-hide">
-          <div className="grid grid-flow-col auto-cols-[minmax(320px,1fr)] gap-8 h-full">
+          <div className="flex flex-col md:flex-row gap-8 h-full min-h-[500px]">
             {COLUMNS.map((column) => {
               const columnIssues = issues?.filter((issue) => issue.status === column.id) || [];
               const Icon = column.icon;
@@ -121,7 +121,7 @@ export function OfficerKanban() {
                   key={column.id}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, column.id)}
-                  className="flex flex-col rounded-[2rem] bg-black/40 border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl"
+                  className="flex flex-col rounded-[2rem] bg-black/40 border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl w-full md:w-[320px] lg:w-[400px] shrink-0 h-full"
                 >
                   <div className="p-6 border-b border-white/5 bg-white/[0.02] flex justify-between items-center">
                     <h3 className="text-sm font-black text-white flex items-center gap-3 uppercase tracking-widest">

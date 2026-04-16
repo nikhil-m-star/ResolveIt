@@ -30,9 +30,9 @@ export function IssueDetail() {
   const isOfficial = userRole === "OFFICER" || userRole === "PRESIDENT";
 
   const voteMutation = useMutation({
-    mutationFn: () => api.post(`/issues/${id}/vote`),
+    mutationFn: (type) => api.post(`/issues/${id}/vote`, { type }),
     onSuccess: () => queryClient.invalidateQueries(["issue", id]),
-    onError: () => toast.error("Failed to vote"),
+    onError: () => toast.error("Failed to register vote"),
   });
 
   const commentMutation = useMutation({
@@ -177,27 +177,33 @@ export function IssueDetail() {
                 <button 
                    onClick={() => voteMutation.mutate('UP')}
                    disabled={voteMutation.isPending}
-                   className="w-full py-3 flex items-center justify-center text-slate-500 hover:text-primary transition-all active:scale-95 disabled:opacity-50"
+                   className={cn(
+                     "w-full py-3 flex items-center justify-center transition-all active:scale-95 disabled:opacity-50",
+                     issue.userVote === 'UP' ? "text-primary scale-110" : "text-slate-500 hover:text-primary"
+                   )}
                 >
-                   <ArrowBigUp className="w-10 h-10 fill-current" />
+                   <ArrowBigUp className={cn("w-10 h-10", issue.userVote === 'UP' ? "fill-primary" : "fill-none")} />
                 </button>
                 <div className="flex flex-col items-center">
-                   <span className="text-3xl font-black text-white">{issue.votes}</span>
+                   <span className={cn("text-3xl font-black transition-colors", issue.userVote ? "text-primary" : "text-white")}>{issue.votes}</span>
                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Net Score</span>
                 </div>
                 <button 
                    onClick={() => voteMutation.mutate('DOWN')}
                    disabled={voteMutation.isPending}
-                   className="w-full py-3 flex items-center justify-center text-slate-500 hover:text-primary transition-all active:scale-95 disabled:opacity-50"
+                   className={cn(
+                     "w-full py-3 flex items-center justify-center transition-all active:scale-95 disabled:opacity-50",
+                     issue.userVote === 'DOWN' ? "text-red-500 scale-110" : "text-slate-500 hover:text-red-500"
+                   )}
                 >
-                   <ArrowBigDown className="w-10 h-10 fill-current" />
+                   <ArrowBigDown className={cn("w-10 h-10", issue.userVote === 'DOWN' ? "fill-red-500" : "fill-none")} />
                 </button>
              </div>
 
              {/* AI Insights Card */}
              {(issue.intensity || issue.etaDays) && (
                <>
-                 {!isOfficer && (
+                 {!isOfficial && (
                    <div className="glass-card p-6 bg-gradient-to-b from-primary/10 to-black border-primary/20 relative overflow-hidden">
                      <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldAlert className="w-24 h-24 text-primary" /></div>
                      <div className="relative z-10">
