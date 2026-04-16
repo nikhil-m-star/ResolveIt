@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
-import { Loader2, User as UserIcon, Medal, Star, CheckCircle2, ShieldAlert, Shield, MapPin, Edit3, Settings, Trophy, AlertTriangle } from "lucide-react";
+import { Loader2, User as UserIcon, Medal, Star, CheckCircle2, ShieldAlert, Shield, MapPin, Edit3, Settings, Trophy, AlertTriangle, Target } from "lucide-react";
 import { useUserCompat } from "../lib/clerkCompat";
 import { useState } from "react";
 import { cn } from "../utils/helpers";
@@ -23,6 +23,8 @@ export function Profile() {
       return res.data;
     },
   });
+
+  const isOfficer = profile?.role === "OFFICER" || profile?.role === "PRESIDENT";
 
   const updateMutation = useMutation({
     mutationFn: (data) => api.patch("/users/me", data),
@@ -187,32 +189,48 @@ export function Profile() {
              )}
           </div>
 
-          {/* Activity Feed Container */}
-          <div className="md:col-span-2 glass-card p-6 flex flex-col min-h-[400px]">
-             <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" /> Recent Activity
-             </h3>
-             {((profile._count?.issues === 0 || !profile._count?.issues) && (profile._count?.resolvedIssues === 0 || !profile._count?.resolvedIssues)) ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-8 border border-white/5 rounded-xl bg-black/20">
-                   <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center">
-                      <Star className="w-6 h-6 text-gray-500" />
+          {/* Manage My Reports Container */}
+          <div className="md:col-span-2 glass-card bg-black border border-white/5 p-6 flex flex-col min-h-[500px]">
+             <div className="flex items-center justify-between mb-8">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                   <Target className="w-5 h-5 text-primary" /> Manage My Reports
+                </h3>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{profile.issues?.length || 0} Open Cases</span>
+             </div>
+
+             <div className="flex-1 space-y-4">
+                {profile.issues?.length > 0 ? (
+                   <div className="grid gap-4">
+                      {profile.issues.map((issue) => (
+                         <div key={issue.id} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-primary/20 transition-all group">
+                            <div className="flex items-center gap-4">
+                               <div className={cn("w-2 h-2 rounded-full", getStatusColor(issue.status))} />
+                               <div>
+                                  <h4 className="text-sm font-bold text-white group-hover:text-primary transition-colors">{issue.title}</h4>
+                                  <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">{issue.area || issue.city}</p>
+                               </div>
+                            </div>
+                            <Link 
+                               to={`/issues/${issue.id}`}
+                               className="px-4 py-2 bg-white/5 text-[10px] font-black uppercase tracking-widest text-slate-400 rounded-lg hover:bg-primary hover:text-white transition-all border border-white/10"
+                            >
+                               View Protocol
+                            </Link>
+                         </div>
+                      ))}
                    </div>
-                   <div>
-                      <h4 className="text-white font-medium mb-1">Begin Your Civic Journey</h4>
-                      <p className="text-sm text-gray-500 max-w-sm mx-auto">Start engaging with ResolveIt to earn activity and track your civic footprint!</p>
+                ) : (
+                   <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 border border-white/5 rounded-2xl bg-black/40">
+                      <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
+                         <Star className="w-8 h-8 text-gray-500" />
+                      </div>
+                      <div>
+                         <h4 className="text-white font-medium mb-1">No Active Deployments</h4>
+                         <p className="text-sm text-gray-500 max-w-sm mx-auto">Your reported issues will appear here for management and protocol tracking.</p>
+                      </div>
                    </div>
-                </div>
-             ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-12 border-2 border-dashed border-white/5 rounded-xl bg-black/20">
-                   <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
-                      <Star className="w-8 h-8 text-gray-500" />
-                   </div>
-                   <div>
-                      <h4 className="text-white font-medium mb-1">Your civic footprint</h4>
-                      <p className="text-sm text-gray-500 max-w-sm mx-auto">Activities, badges, and recent issue engagements will appear here as you interact with ResolveIt.</p>
-                   </div>
-                </div>
-             )}
+                )}
+             </div>
           </div>
         </div>
 

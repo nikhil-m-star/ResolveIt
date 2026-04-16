@@ -8,10 +8,10 @@ export default {
     extend: {
       colors: {
         background: "#000000",
-        primary: "#00eaff",
-        secondary: "#00eaff",
-        success: "#00eaff",
-        urgent: "#00eaff",
+        primary: "#10b981",
+        secondary: "#10b981",
+        success: "#10b981",
+        urgent: "#10b981",
       },
       fontFamily: {
         sans: ['"Nunito Sans"', '"Product Sans"', '"Google Sans"', "sans-serif"],
@@ -23,8 +23,8 @@ export default {
       },
       keyframes: {
         accentPulse: {
-          "0%, 100%": { opacity: 1, boxShadow: "0 0 14px rgba(0, 234, 255, 0.35)" },
-          "50%": { opacity: 0.75, boxShadow: "0 0 28px rgba(0, 234, 255, 0.55)" },
+          "0%, 100%": { opacity: 1, boxShadow: "0 0 14px rgba(16, 185, 129, 0.35)" },
+          "50%": { opacity: 0.75, boxShadow: "0 0 28px rgba(16, 185, 129, 0.55)" },
         },
       }
     },

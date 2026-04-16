@@ -18,10 +18,15 @@ export function Navbar() {
   
   let role = "CITIZEN";
   try {
-    const token = localStorage.getItem("resolveit_token");
-    if (token) {
-      const payload = decodeJwtPayload(token);
-      role = payload.role || "CITIZEN";
+    const storedRole = localStorage.getItem("resolveit_user_role");
+    if (storedRole) {
+      role = storedRole;
+    } else {
+      const token = localStorage.getItem("resolveit_token");
+      if (token) {
+        const payload = decodeJwtPayload(token);
+        role = payload?.role || "CITIZEN";
+      }
     }
   } catch {
     role = "CITIZEN";

@@ -6,6 +6,14 @@ export const getProfile = async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
       include: {
+        issues: {
+          take: 10,
+          orderBy: { createdAt: "desc" }
+        },
+        resolvedIssues: {
+          take: 10,
+          orderBy: { createdAt: "desc" }
+        },
         _count: {
           select: { issues: true, resolvedIssues: true, votes: true },
         },

@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
-import { Loader2, KanbanSquare, Target, Activity, CheckCircle2, GripVertical } from "lucide-react";
+import { Loader2, KanbanSquare, Target, Activity, CheckCircle2, GripVertical, MapPin, AlertTriangle } from "lucide-react";
 import { cn } from "../utils/helpers";
 import toast from "react-hot-toast";
 
 const COLUMNS = [
-  { id: "REPORTED", title: "Reported", icon: Target, color: "text-blue-400" },
+  { id: "REPORTED", title: "Reported", icon: Target, color: "text-primary/70" },
   { id: "IN_PROGRESS", title: "In Progress", icon: Activity, color: "text-amber-400" },
-  { id: "RESOLVED", title: "Resolved", icon: CheckCircle2, color: "text-emerald-400" },
+  { id: "RESOLVED", title: "Resolved", icon: CheckCircle2, color: "text-primary" },
 ];
 
 export function OfficerKanban() {

@@ -47,14 +47,14 @@ export function AIInsights() {
 
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-8 animate-in fade-in duration-700">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <h1 className="text-5xl font-heading font-black text-white mb-2 uppercase tracking-tight">AI Insights</h1>
             <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
-               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Strategic Intelligence Briefing
+               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Operational Intelligence
             </div>
           </div>
           

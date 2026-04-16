@@ -5,7 +5,7 @@ import { IssueCard } from "../components/issues/IssueCard";
 import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
 import { cn } from "../utils/helpers";
-import { RefreshCcw, CheckCircle2, Loader2, PlusCircle } from "lucide-react";
+import { RefreshCcw, CheckCircle2, Loader2, PlusCircle, Search } from "lucide-react";
 
 export function Dashboard() {
   const [filters, setFilters] = useState({
@@ -57,10 +57,18 @@ export function Dashboard() {
         
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-4">
-          <div className="space-y-1 text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Feed</h1>
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
-               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Live Grid Monitoring 
+            
+            <div className="relative w-full md:w-80 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-primary transition-colors" />
+              <input 
+                type="text"
+                placeholder="Search sector reports..."
+                value={filters.search}
+                onChange={(e) => setFilters({...filters, search: e.target.value})}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
+              />
             </div>
           </div>
 
@@ -77,16 +85,17 @@ export function Dashboard() {
         </div>
 
         <div className="mx-auto max-w-5xl w-full">
-          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-[2.5rem] bg-slate-950/40 border border-white/5 shadow-2xl backdrop-blur-3xl">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-[2.5rem] bg-black border border-white/5 shadow-2xl backdrop-blur-3xl">
             {/* Minimal Sub-header */}
-            <div className="px-8 py-5 border-b border-white/5 bg-white/[0.01] flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Chronological Intel Feed</span>
-              {isLocating && (
-                <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase animate-pulse">
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                  Triangulating Sector...
-                </div>
-              )}
+            <div className="px-8 py-3 border-b border-white/5 bg-white/[0.01] flex items-center justify-between min-h-[48px]">
+              <div className="flex items-center gap-4">
+                {isLocating && (
+                  <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase animate-pulse">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Triangulating Sector...
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="flex-1 space-y-6 overflow-y-auto px-5 py-8 sm:px-8">

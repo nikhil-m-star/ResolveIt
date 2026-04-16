@@ -104,14 +104,20 @@ model Notification {
 }
 
 model Vote {
-  id      String @id @default(cuid())
+  id      String   @id @default(cuid())
   issueId String
   userId  String
-  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type    VoteType @default(UP)
+  issue   Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([issueId, userId])
   @@map("votes")
+}
+
+enum VoteType {
+  UP
+  DOWN
 }
 
 model Comment {
