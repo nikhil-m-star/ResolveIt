@@ -37,9 +37,9 @@ export function Navbar() {
     { to: "/", label: "Dashboard", icon: LayoutDashboard },
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
     { to: "/map", label: "Map View", icon: Map },
+    { to: "/ai-insights", label: "AI Insights", icon: Sparkles },
     ...(role === "OFFICER" || role === "PRESIDENT"
       ? [
-          { to: "/ai-insights", label: "AI Insights", icon: Sparkles },
           { to: "/admin", label: "Command Center", icon: ShieldAlert },
           { to: "/kanban", label: "Board", icon: KanbanSquare },
         ]

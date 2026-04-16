@@ -234,11 +234,7 @@ export const updateStatus = async (req, res) => {
 };
 
 export const getCityReport = async (req, res) => {
-  const { role, city } = req.user;
-
-  if (!["OFFICER", "PRESIDENT"].includes(role)) {
-    return res.status(403).json({ error: "Access Denied. Only officials can access AI Reports." });
-  }
+  const { city } = req.user;
 
   try {
     // Get last 50 issues for this city to analyze
