@@ -27,8 +27,8 @@ export function IssueCard({ issue }) {
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       whileHover={{ scale: 1.008 }}
       className={cn(
-        "group relative flex flex-col gap-3 rounded-2xl border border-white/12 bg-slate-950/45 p-5 backdrop-blur-xl transition-all duration-300 z-20",
-        "shadow-[0_18px_36px_rgba(2,6,23,0.35)] hover:border-primary/35"
+        "group relative flex flex-col gap-3 rounded-2xl bg-black/55 p-5 backdrop-blur-2xl transition-all duration-300 z-20",
+        "shadow-[0_20px_38px_rgba(0,0,0,0.55)]"
       )}
     >
       <div className="flex items-center justify-between">
@@ -45,7 +45,7 @@ export function IssueCard({ issue }) {
         </div>
       </div>
 
-      <div className="mt-1">
+      <div className="mt-1 rounded-xl bg-white/5 px-3 py-3">
         <Link to={`/issues/${issue.id}`} className="block">
           <h3 className="line-clamp-2 font-heading text-lg font-semibold text-white transition-colors group-hover:text-primary">
             {issue.title}
@@ -79,22 +79,22 @@ export function IssueCard({ issue }) {
             </div>
           )}
           {issue.etaDays && !isResolved && (
-            <span className="rounded-md border border-secondary/35 bg-secondary/12 px-2 py-1 font-medium text-secondary">
+            <span className="rounded-md bg-fuchsia-500/70 px-2 py-1 font-medium text-white">
               ~{issue.etaDays}d ETA
             </span>
           )}
         </div>
       </div>
 
-      <div className="absolute right-4 top-4 flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/70 px-2 py-1 shadow-lg">
+      <div className="absolute right-4 top-4 flex items-center gap-2 rounded-full bg-primary/90 px-2 py-1 shadow-lg">
         <button
           onClick={() => voteMutation.mutate()}
           disabled={voteMutation.isPending}
-          className="rounded-full p-1.5 text-slate-300 transition hover:bg-white/10 hover:text-white disabled:opacity-70"
+          className="rounded-full p-1.5 text-black transition hover:bg-white/25 disabled:opacity-70"
         >
           {voteMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronUp className="h-4 w-4" />}
         </button>
-        <span className="text-xs font-bold text-white">{issue.votes}</span>
+        <span className="text-xs font-bold text-black">{issue.votes}</span>
       </div>
     </Motion.div>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
 import { api } from "../lib/auth";
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Bot, Loader2, Sparkles, Download, RefreshCcw, ShieldAlert, FileText, ChevronRight } from "lucide-react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
@@ -46,6 +47,12 @@ export function AIInsights() {
           </div>
           
           <div className="flex items-center gap-3">
+            <Link
+              to="/admin"
+              className="flex items-center gap-2 bg-fuchsia-500/75 hover:bg-fuchsia-500 text-white rounded-xl px-5 py-2.5 text-sm font-semibold transition-all shadow-lg"
+            >
+              Reports Hub
+            </Link>
             <button 
               onClick={fetchReport}
               disabled={isLoading}
@@ -126,6 +133,9 @@ export function AIInsights() {
                             <FileText className="w-4 h-4" /> Official City Intelligence Report
                             <ChevronRight className="w-3 h-3" /> {new Date().toLocaleDateString()}
                          </div>
+                         <p className="mb-6 text-sm text-primary">
+                           Related reports: <a href="/admin" className="underline decoration-primary/60">Open Reports Hub</a>
+                         </p>
                          
                          <ReactMarkdown 
                             components={{

@@ -65,7 +65,7 @@ export function Dashboard() {
   return (
     <Layout>
       <div className="px-4 py-6 sm:px-6 sm:py-8">
-        <div className="mb-6 rounded-2xl border border-white/10 bg-slate-950/45 p-5 backdrop-blur-xl sm:p-6">
+        <div className="mb-6 rounded-2xl bg-black/50 p-5 backdrop-blur-2xl sm:p-6 shadow-[0_18px_40px_rgba(0,0,0,0.55)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-1">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">ResolveIt Live Monitor</p>
@@ -74,7 +74,7 @@ export function Dashboard() {
             </div>
             <button
               onClick={() => refetch()}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary/85 px-4 py-2 text-sm font-semibold text-black transition hover:bg-primary"
             >
               <RefreshCcw className="h-4 w-4" />
               Refresh Feed
@@ -83,8 +83,8 @@ export function Dashboard() {
         </div>
 
         <div className="mx-auto max-w-4xl">
-          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950/45 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] backdrop-blur-3xl">
-            <div className="space-y-4 border-b border-white/10 bg-white/5 p-5 sm:p-6">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-3xl bg-black/50 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.66)] backdrop-blur-3xl">
+            <div className="space-y-4 bg-white/8 p-5 sm:p-6">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
@@ -96,12 +96,12 @@ export function Dashboard() {
               </div>
 
               <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-                <div className="flex min-w-max items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2">
+                <div className="flex min-w-max items-center gap-2 rounded-xl bg-primary/18 px-4 py-2">
                   <Filter className="h-4 w-4 text-primary" />
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-300">Filters</span>
                 </div>
                 {isLocating ? (
-                  <div className="flex min-w-max items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-slate-400">
+                  <div className="flex min-w-max items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-slate-300">
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     Locating...
                   </div>
@@ -110,8 +110,8 @@ export function Dashboard() {
                     onClick={() => setFilters((prev) => ({ ...prev, city: prev.city ? "" : detectedCity }))}
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold min-w-max transition-all ${
                       filters.city
-                        ? "bg-primary/20 text-primary border-primary/30 shadow-[0_0_12px_rgba(251,146,60,0.2)]"
-                        : "bg-white/5 text-slate-400 border-white/10 hover:border-white/20"
+                        ? "bg-primary text-black shadow-[0_0_16px_rgba(0,234,255,0.4)]"
+                        : "bg-white/10 text-slate-300 border-white/10 hover:bg-fuchsia-500/35"
                     }`}
                   >
                     <LocateFixed className="h-4 w-4" />
@@ -120,7 +120,7 @@ export function Dashboard() {
                 ) : null}
                 <select 
                   onChange={e => setFilters(f => ({ ...f, category: e.target.value }))}
-                  className="text-xs font-bold bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-slate-300 outline-none hover:border-white/20 transition-all appearance-none min-w-max cursor-pointer"
+                  className="text-xs font-bold bg-white/10 rounded-xl px-4 py-2 text-slate-200 outline-none transition-all appearance-none min-w-max cursor-pointer"
                 >
                   <option value="">All Categories</option>
                   <option value="POTHOLE">Potholes</option>
@@ -135,7 +135,7 @@ export function Dashboard() {
                 </select>
                 <select 
                   onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-                  className="text-xs font-bold bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-slate-300 outline-none hover:border-white/20 transition-all appearance-none min-w-max cursor-pointer"
+                  className="text-xs font-bold bg-white/10 rounded-xl px-4 py-2 text-slate-200 outline-none transition-all appearance-none min-w-max cursor-pointer"
                 >
                   <option value="">All Statuses</option>
                   <option value="REPORTED">Reported</option>

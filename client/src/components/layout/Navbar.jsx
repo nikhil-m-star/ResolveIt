@@ -51,9 +51,9 @@ export function Navbar() {
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed top-6 inset-x-0 mx-auto z-[1200] hidden w-[94%] max-w-5xl md:block"
+        className="fixed top-5 inset-x-0 mx-auto z-[1200] hidden w-[96%] max-w-6xl md:block"
       >
-        <nav className="glass-pill relative rounded-3xl border border-white/10 px-5 py-3 transition-all duration-500">
+        <nav className="glass-pill relative rounded-full px-6 py-3 transition-all duration-500">
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
             <Link to="/" className="flex shrink-0 items-center gap-2.5">
               <Motion.div 
@@ -68,7 +68,7 @@ export function Navbar() {
               </div>
             </Link>
 
-            <div className="hidden items-center gap-1 md:flex">
+            <div className="hidden items-center gap-2 md:flex">
               {navItems.map((item) => {
                 const active = location.pathname === item.to;
                 const Icon = item.icon;
@@ -76,20 +76,14 @@ export function Navbar() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className={`relative flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
+                    className={`relative flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                       active 
-                        ? "text-primary bg-primary/10 shadow-[inset_0_0_12px_rgba(0,234,255,0.2)]" 
-                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                        ? "text-black bg-primary shadow-[0_0_16px_rgba(0,234,255,0.35)]" 
+                        : "text-slate-200 bg-white/10 hover:text-white hover:bg-fuchsia-500/40"
                     }`}
                   >
-                    <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-current"}`} />
+                    <Icon className={`h-4 w-4 ${active ? "text-black" : "text-current"}`} />
                     {item.label}
-                    {active && (
-                      <Motion.div 
-                        layoutId="nav-active"
-                        className="absolute -bottom-1 left-1/2 h-1 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_#00eaff]"
-                      />
-                    )}
                   </Link>
                 );
               })}
@@ -98,10 +92,10 @@ export function Navbar() {
             <div className="flex items-center gap-2 sm:gap-4 ml-auto">
               {user ? (
                 <>
-                  <Link
-                    to="/report"
-                    className="glass-button text-xs font-bold sm:text-sm shadow-[0_8px_16px_-6px_rgba(0,234,255,0.35)]"
-                  >
+                <Link
+                  to="/report"
+                  className="glass-button text-xs sm:text-sm shadow-[0_8px_16px_-6px_rgba(0,234,255,0.35)]"
+                >
                     <PlusCircle className="h-4 w-4" />
                     <span className="hidden lg:inline">Quick Report</span>
                     <span className="lg:hidden">Report</span>
@@ -111,7 +105,7 @@ export function Navbar() {
                   <Link 
                     to="/profile" 
                     className={`rounded-xl p-2.5 transition-all transition-colors ${
-                      location.pathname === "/profile" ? "bg-primary/10 text-primary" : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      location.pathname === "/profile" ? "bg-fuchsia-500 text-white" : "text-slate-200 bg-white/10 hover:bg-fuchsia-500/40 hover:text-white"
                     }`}
                   >
                     <UserCircle2 className="h-5 w-5" />
@@ -144,7 +138,7 @@ export function Navbar() {
 
       {/* Mobile top-left brand chip */}
       <div className="fixed top-4 left-4 z-[1200] md:hidden">
-        <Link to="/" className="glass-pill inline-flex items-center gap-2 rounded-2xl px-3 py-2 border border-primary/30">
+        <Link to="/" className="glass-pill inline-flex items-center gap-2 rounded-2xl px-3 py-2">
           <Shield className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold text-primary">ResolveIt</span>
         </Link>
@@ -157,7 +151,7 @@ export function Navbar() {
         transition={{ duration: 0.35, ease: "easeOut" }}
         className="fixed bottom-4 left-1/2 z-[1250] w-[94%] -translate-x-1/2 md:hidden"
       >
-        <nav className="glass-pill rounded-3xl border border-primary/35 px-3 py-2">
+        <nav className="glass-pill rounded-3xl px-3 py-2">
           <div className="grid grid-cols-5 gap-1">
             {[...navItems.slice(0, 3), { to: "/report", label: "Report", icon: PlusCircle }, { to: "/profile", label: "Profile", icon: UserCircle2 }].map((item) => {
               const active = location.pathname === item.to;
@@ -167,7 +161,7 @@ export function Navbar() {
                   key={item.to}
                   to={item.to}
                   className={`flex flex-col items-center justify-center rounded-2xl px-2 py-2 text-[10px] font-semibold transition-all ${
-                    active ? "bg-primary/25 text-primary" : "text-slate-300 hover:bg-white/5"
+                    active ? "bg-primary text-black" : "text-slate-200 bg-white/10 hover:bg-fuchsia-500/45"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
