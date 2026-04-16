@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { api } from "../lib/auth";
 import toast from "react-hot-toast";
-import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert } from "lucide-react";
+import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
 import { cn } from "../utils/helpers";
 
 function LocationPicker({ position, setPosition }) {

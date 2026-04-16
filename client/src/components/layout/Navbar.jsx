@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../lib/auth";
 import { UserButtonCompat, useUserCompat } from "../../lib/clerkCompat";
 import { Link, useLocation } from "react-router-dom";
-import { PlusCircle, Compass, Shield, ShieldAlert, KanbanSquare, UserCircle2, Map, Sparkles, Users, MoreHorizontal, User, Bell, LogOut, Settings } from "lucide-react";
-import { NotificationsDropdown } from "./NotificationsDropdown";
+import { PlusCircle, Compass, Shield, ShieldAlert, KanbanSquare, UserCircle2, Map, Sparkles, Users, MoreHorizontal, User, Bell, Activity } from "lucide-react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
+import { cn } from "../../utils/helpers";
 
 const decodeJwtPayload = (token) => {
   const base64Url = token.split(".")[1];
@@ -12,6 +14,29 @@ const decodeJwtPayload = (token) => {
   const normalized = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
   return JSON.parse(atob(normalized));
 };
+
+function AlertBadge({ mobile = false }) {
+  const { data: notifications } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const res = await api.get("/notifications");
+      return res.data;
+    },
+    refetchInterval: 30000,
+  });
+
+  const unreadCount = notifications?.filter(n => !n.isRead)?.length || 0;
+  if (unreadCount === 0) return null;
+
+  return (
+    <span className={cn(
+      "absolute flex items-center justify-center bg-primary text-[8px] font-black text-black border border-black rounded-full",
+      mobile ? "-top-1 -right-1 h-5 min-w-[1.25rem] px-1" : "top-1 right-1 h-3.5 min-w-[0.875rem] px-0.5"
+    )}>
+      {unreadCount > 9 ? '9+' : unreadCount}
+    </span>
+  );
+}
 
 export function Navbar() {
   const { user } = useUserCompat();
@@ -83,14 +108,22 @@ export function Navbar() {
             <div className="flex items-center gap-2 pl-4 border-l border-white/10">
               {user ? (
                 <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 p-1">
-                  <NotificationsDropdown />
+                  <Link 
+                    to="/alerts" 
+                    className={`p-2 rounded-xl transition-all relative group ${
+                      location.pathname === "/alerts" ? "bg-primary/20 text-primary border border-primary/20" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <Bell className="h-4.5 w-4.5" />
+                    <AlertBadge />
+                  </Link>
                   <Link 
                     to="/profile" 
-                    className={`p-1.5 rounded-full transition-colors ${
+                    className={`p-2 rounded-xl transition-all ${
                       location.pathname === "/profile" ? "bg-primary text-white" : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    <UserCircle2 className="h-4 w-4" />
+                    <UserCircle2 className="h-4.5 w-4.5" />
                   </Link>
                 </div>
               ) : (
@@ -140,10 +173,15 @@ export function Navbar() {
                         <User className="h-6 w-6 text-primary" />
                         <span className="text-[10px] font-black uppercase tracking-widest">Profile</span>
                       </Link>
-                      <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 transition-all text-white relative">
-                        <NotificationsDropdown />
+                      <Link 
+                        to="/alerts" 
+                        onClick={() => setIsMobileMoreOpen(false)}
+                        className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 transition-all text-white relative"
+                      >
+                        <Bell className="h-6 w-6 text-primary" />
                         <span className="text-[10px] font-black uppercase tracking-widest">Alerts</span>
-                      </div>
+                        <AlertBadge mobile />
+                      </Link>
                    </div>
                 ) : (
                    <Link 
