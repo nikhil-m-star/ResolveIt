@@ -7,28 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#000000', // pure black
-        primary: '#00FFFF',    // primary cyan
-        secondary: '#00B4CC',  // deep teal
-        success: '#00E5FF',    
-        urgent: '#00FFFF',     
+        background: "#0b1020",
+        primary: "#fb923c",
+        secondary: "#2dd4bf",
+        success: "#34d399",
+        urgent: "#f87171",
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
-        mono: ['"Plus Jakarta Sans"', 'monospace'],
+        sans: ['"Manrope"', "sans-serif"],
+        heading: ['"Sora"', "sans-serif"],
+        mono: ['"IBM Plex Mono"', "monospace"],
       },
       animation: {
-        'cyan-pulse': 'cyanPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        "accent-pulse": "accentPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       keyframes: {
-        cyanPulse: {
-          '0%, 100%': { opacity: 1, boxShadow: '0 0 15px rgba(0, 255, 255, 0.2)' },
-          '50%': { opacity: .7, boxShadow: '0 0 35px rgba(0, 255, 255, 0.6)' },
+        accentPulse: {
+          "0%, 100%": { opacity: 1, boxShadow: "0 0 14px rgba(251, 146, 60, 0.28)" },
+          "50%": { opacity: 0.75, boxShadow: "0 0 28px rgba(45, 212, 191, 0.4)" },
         },
       }
     },
   },
   plugins: [],
 }
-

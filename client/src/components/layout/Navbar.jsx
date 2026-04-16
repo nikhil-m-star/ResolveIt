@@ -33,67 +33,89 @@ export function Navbar() {
     role = cachedRole || user?.publicMetadata?.role || "CITIZEN";
   }
 
+  const navItems = [
+    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+    ...(role === "OFFICER" || role === "PRESIDENT"
+      ? [
+          { to: "/admin", label: "Command Center", icon: ShieldAlert },
+          { to: "/kanban", label: "Board", icon: KanbanSquare },
+        ]
+      : []),
+  ];
+
   return (
     <Motion.div 
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-[1200] w-[95%] max-w-5xl"
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-[1200] w-[96%] max-w-6xl"
     >
-      <nav className="relative overflow-hidden px-6 py-3 flex items-center justify-between rounded-full shadow-[0_8px_32px_rgba(6,182,212,0.15)] bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08]">
-        {/* Dynamic gradient line overlay */}
-        <div className="absolute inset-0 rounded-full border border-transparent [background:linear-gradient(to_right,rgba(6,182,212,0.1),transparent)_border-box] pointer-events-none" style={{ WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "destination-out", maskComposite: "exclude" }} />
-        
-        <Link to="/" className="flex items-center gap-2 group relative z-10">
-          <Motion.div whileHover={{ rotate: 15 }} transition={{ type: "spring", stiffness: 300 }}>
-            <Shield className="w-8 h-8 text-primary shadow-primary/20 drop-shadow-md" />
-          </Motion.div>
-          <span className="font-heading font-extrabold text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 truncate drop-shadow-sm">
-            ResolveIt
-          </span>
-        </Link>
-        
-        <div className="flex items-center gap-2 sm:gap-4">
-          {user ? (
-            <>
-              {(role === "OFFICER" || role === "PRESIDENT") && (
-                <>
-                  <Link to="/admin" className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-colors ${location.pathname === '/admin' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-primary/5 text-primary/80 border-primary/20 hover:bg-primary/20'}`}>
-                    <ShieldAlert className="w-4 h-4" />
-                    Command Center
-                  </Link>
-                  <Link to="/kanban" className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm border transition-colors ${location.pathname === '/kanban' ? 'bg-primary/20 text-primary border-primary/30' : 'bg-primary/5 text-primary/80 border-primary/20 hover:bg-primary/20'}`}>
-                    <KanbanSquare className="w-4 h-4" />
-                    Board
-                  </Link>
-                </>
-              )}
-              <Link to="/report" className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-3 sm:px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                <PlusCircle className="w-4 h-4" />
-                <span className="hidden sm:inline">Report Issue</span>
+      <nav className="relative overflow-hidden rounded-2xl border border-white/15 bg-slate-950/70 px-4 py-3 backdrop-blur-2xl shadow-[0_24px_60px_rgba(2,6,23,0.45)]">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(110deg, rgba(251,146,60,0.08), rgba(45,212,191,0.08), transparent 72%)" }}
+        />
+
+        <div className="relative z-10 flex items-center justify-between gap-4">
+          <Link to="/" className="flex min-w-0 items-center gap-3">
+            <Motion.div whileHover={{ rotate: 10 }} transition={{ type: "spring", stiffness: 280 }}>
+              <Shield className="h-7 w-7 text-primary drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]" />
+            </Motion.div>
+            <div className="min-w-0">
+              <p className="truncate font-heading text-lg font-bold tracking-tight text-white">ResolveIt</p>
+              <p className="hidden text-[11px] text-slate-300 sm:block">Civic response command deck</p>
+            </div>
+          </Link>
+
+          <div className="flex items-center gap-2">
+            {user ? (
+              <>
+                <Link
+                  to="/report"
+                  className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/20 px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/30 sm:px-4 sm:text-sm"
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  <span className="hidden sm:inline">Report Issue</span>
+                </Link>
+                <NotificationsDropdown />
+                <Link to="/profile" className="rounded-lg p-2 text-slate-300 transition hover:bg-white/10 hover:text-white" title="Profile">
+                  <UserCircle2 className="h-5 w-5" />
+                </Link>
+                <UserButtonCompat afterSignOutUrl="/" />
+              </>
+            ) : (
+              <>
+                <Link to="/sign-in" className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10">
+                  Sign In
+                </Link>
+                <Link to="/sign-up" className="rounded-lg border border-secondary/35 bg-secondary/15 px-3 py-2 text-sm font-semibold text-secondary transition hover:bg-secondary/25">
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="relative z-10 mt-3 flex items-center gap-2 overflow-x-auto pb-1">
+          {navItems.map((item) => {
+            const active = location.pathname === item.to;
+            const IconComponent = item.icon;
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`inline-flex min-w-max items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition sm:text-sm ${
+                  active
+                    ? "border-primary/40 bg-primary/20 text-primary"
+                    : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <IconComponent className="h-4 w-4" />
+                {item.label}
               </Link>
-              <Link to="/" className="p-2 text-primary/60 hover:text-primary transition-colors" title="Dashboard">
-                <LayoutDashboard className="w-5 h-5" />
-              </Link>
-              <Link to="/leaderboard" className="p-2 text-primary/60 hover:text-primary transition-colors">
-                <Trophy className="w-5 h-5" />
-              </Link>
-              <NotificationsDropdown />
-              <Link to="/profile" className="p-2 text-primary/60 hover:text-primary transition-colors relative" title="Profile">
-                <UserCircle2 className="w-5 h-5" />
-              </Link>
-              <UserButtonCompat afterSignOutUrl="/" />
-            </>
-          ) : (
-            <>
-              <Link to="/sign-in" className="px-4 py-2 rounded-full font-medium text-sm text-primary/80 hover:text-primary transition-colors">
-                Sign In
-              </Link>
-              <Link to="/sign-up" className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-colors px-4 py-2 rounded-full font-medium text-sm shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                Get Started
-              </Link>
-            </>
-          )}
+            );
+          })}
         </div>
       </nav>
     </Motion.div>

@@ -3,7 +3,7 @@ import { Layout } from "../components/layout/Layout";
 import { IssueCard } from "../components/issues/IssueCard";
 import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
-import { Search, Filter, Loader2, RefreshCcw, CheckCircle2, MapPin, LocateFixed } from "lucide-react";
+import { Search, Filter, Loader2, RefreshCcw, CheckCircle2, LocateFixed } from "lucide-react";
 
 export function Dashboard() {
   const [filters, setFilters] = useState({
@@ -66,41 +66,45 @@ export function Dashboard() {
 
   return (
     <Layout>
-      <div className="flex flex-col md:flex-row h-full">
-        {/* LEFT PANEL - Filters & Feed */}
-        <div className="w-full md:w-3/5 lg:w-1/2 flex flex-col h-full bg-background border-r border-white/5 relative z-10 overflow-hidden">
-          
-          <div className="p-4 sm:p-6 border-b border-white/10 glass-panel sticky top-0 z-20 space-y-4 shadow-xl shadow-black/20">
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-heading font-bold text-white tracking-tight text-glow">
-                  Live Feed
-                </h1>
-                <button 
-                  onClick={() => refetch()} 
-                  className="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors group"
-                >
-                  <RefreshCcw className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
-                </button>
-              </div>
+      <div className="px-4 py-6 sm:px-6 sm:py-8">
+        <div className="mb-6 rounded-2xl border border-white/10 bg-slate-950/45 p-5 backdrop-blur-xl sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">ResolveIt Live Monitor</p>
+              <h1 className="font-heading text-2xl font-bold text-white sm:text-3xl">City Pulse Dashboard</h1>
+              <p className="text-sm text-slate-300">Track active incidents, prioritize fixes, and coordinate civic response in real time.</p>
+            </div>
+            <button
+              onClick={() => refetch()}
+              className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+            >
+              <RefreshCcw className="h-4 w-4" />
+              Refresh Feed
+            </button>
+          </div>
+        </div>
 
+        <div className="flex flex-col gap-5 xl:flex-row">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-950/45 shadow-[0_20px_44px_rgba(2,6,23,0.45)] xl:w-[52%]">
+            <div className="space-y-4 border-b border-white/10 bg-slate-950/50 p-4 sm:p-5">
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input 
-                  type="text" 
-                  placeholder="Search issues by title or description..." 
+                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search issues by title or description..."
                   onChange={handleSearch}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 text-white placeholder:text-gray-500 transition-shadow"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-slate-400 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/35"
                 />
               </div>
 
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 cursor-pointer min-w-max">
-                  <Filter className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="text-xs font-medium text-gray-300">Filters</span>
+              <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                <div className="flex min-w-max items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5">
+                  <Filter className="h-3.5 w-3.5 text-slate-300" />
+                  <span className="text-xs font-medium text-slate-200">Filters</span>
                 </div>
                 {isLocating ? (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 text-xs text-gray-300 min-w-max">
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <div className="flex min-w-max items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     Detecting location...
                   </div>
                 ) : detectedCity ? (
@@ -108,18 +112,17 @@ export function Dashboard() {
                     onClick={() => setFilters((prev) => ({ ...prev, city: prev.city ? "" : detectedCity }))}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium min-w-max transition-colors ${
                       filters.city
-                        ? "bg-primary/20 text-primary border-primary/30"
-                        : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"
+                        ? "bg-primary/20 text-primary border-primary/35"
+                        : "bg-white/5 text-slate-200 border-white/10 hover:bg-white/10"
                     }`}
                   >
-                    <LocateFixed className="w-3.5 h-3.5" />
+                    <LocateFixed className="h-3.5 w-3.5" />
                     {filters.city ? `Location: ${filters.city}` : `Use location: ${detectedCity}`}
                   </button>
                 ) : null}
-                {/* Future implementation: Dropdowns for category, status, area here */}
                 <select 
                   onChange={e => setFilters(f => ({ ...f, category: e.target.value }))}
-                  className="text-xs font-medium bg-black/50 border border-white/10 rounded-lg px-2 py-1.5 text-gray-300 outline-none hover:bg-white/5 appearance-none min-w-max pr-8"
+                  className="text-xs font-medium bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-slate-200 outline-none hover:bg-white/10 appearance-none min-w-max pr-8"
                 >
                   <option value="">All Categories</option>
                   <option value="POTHOLE">Potholes</option>
@@ -134,7 +137,7 @@ export function Dashboard() {
                 </select>
                 <select 
                   onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-                  className="text-xs font-medium bg-black/50 border border-white/10 rounded-lg px-2 py-1.5 text-gray-300 outline-none hover:bg-white/5 appearance-none min-w-max pr-8"
+                  className="text-xs font-medium bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-slate-200 outline-none hover:bg-white/10 appearance-none min-w-max pr-8"
                 >
                   <option value="">All Statuses</option>
                   <option value="REPORTED">Reported</option>
@@ -142,47 +145,45 @@ export function Dashboard() {
                   <option value="RESOLVED">Resolved</option>
                 </select>
               </div>
-          </div>
+            </div>
 
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-8 space-y-4">
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-20 text-gray-400 space-y-3">
-                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                 <p className="font-medium animate-pulse">Scanning civic grid...</p>
-              </div>
-            ) : isError ? (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-center">
-                 Failed to load issues. Try refreshing.
-              </div>
-            ) : issues?.length === 0 ? (
-               <div className="text-center py-20 text-gray-500 flex flex-col items-center gap-3">
-                 <div className="p-4 bg-white/5 border border-white/10 rounded-2xl inline-block">
-                   <CheckCircle2 className="w-8 h-8 text-emerald-500" />
-                 </div>
-                 <p className="text-lg font-medium text-white">No active issues found</p>
-                 <p className="text-sm">Enjoy the perfect infrastructure!</p>
-               </div>
-            ) : (
-               issues?.map(issue => (
-                 <IssueCard key={issue.id} issue={issue} />
-               ))
-            )}
-            <div className="h-12 w-full" /> {/* Bottom spacer for scrolling */}
-          </div>
-        </div>
+            <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-5">
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center py-20 text-slate-300 space-y-3">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <p className="font-medium">Scanning civic grid...</p>
+                </div>
+              ) : isError ? (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-red-200">
+                  Failed to load issues. Try refreshing.
+                </div>
+              ) : issues?.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 py-20 text-center text-slate-300">
+                  <div className="inline-block rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <CheckCircle2 className="h-8 w-8 text-emerald-400" />
+                  </div>
+                  <p className="text-lg font-medium text-white">No active issues found</p>
+                  <p className="text-sm">Looks calm for now. Try changing filters or location.</p>
+                </div>
+              ) : (
+                issues?.map((issue) => <IssueCard key={issue.id} issue={issue} />)
+              )}
+              <div className="h-8 w-full" />
+            </div>
+          </section>
 
-        {/* RIGHT PANEL - Tactical Map */}
-        <div className="hidden md:block md:w-2/5 lg:w-1/2 h-full bg-black relative">
-          <div className="absolute top-4 right-4 z-[400] bg-background/80 backdrop-blur-md rounded-lg px-3 py-1.5 border border-white/10 shadow-xl pointer-events-none">
-             <span className="text-xs font-bold font-heading text-white flex items-center gap-2">
+          <section className="relative min-h-[70vh] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950/45 shadow-[0_20px_44px_rgba(2,6,23,0.45)] xl:w-[48%]">
+            <div className="pointer-events-none absolute left-4 top-4 z-[400] rounded-lg border border-white/10 bg-slate-950/75 px-3 py-2 backdrop-blur">
+              <span className="flex items-center gap-2 text-xs font-bold text-white">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-secondary" />
                 </span>
                 LIVE HEATMAP
-             </span>
-          </div>
-          <IssueMap issues={issues || []} userLocation={detectedLocation} />
+              </span>
+            </div>
+            <IssueMap issues={issues || []} userLocation={detectedLocation} />
+          </section>
         </div>
       </div>
     </Layout>

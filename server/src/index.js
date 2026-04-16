@@ -17,7 +17,23 @@ import { initSLA_CronJob } from "./services/sla.js"; // Import Cron
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173", credentials: true }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "https://resolve--it.vercel.app",
+].filter(Boolean);
+
+app.use(
+  cors({
+    credentials: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("CORS blocked for origin: " + origin));
+    },
+  })
+);
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
