@@ -1,7 +1,8 @@
-import { UserButton, useUser, useClerk } from "@clerk/clerk-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { Link, useLocation } from "react-router-dom";
 import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, Bell } from "lucide-react";
 import { NotificationsDropdown } from "./NotificationsDropdown";
+import { motion } from "framer-motion";
 
 export function Navbar() {
   const { user } = useUser();
@@ -9,11 +10,21 @@ export function Navbar() {
   const role = user?.publicMetadata?.role || "CITIZEN";
 
   return (
-    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
-      <nav className="glass-panel border-primary/30 px-6 py-3 flex items-center justify-between rounded-full shadow-[0_0_15px_rgba(6,182,212,0.15)] bg-black/60 backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-2">
-          <Shield className="w-8 h-8 text-primary" />
-          <span className="font-heading font-bold text-2xl tracking-tighter text-glow truncate text-white">
+    <motion.div 
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl"
+    >
+      <nav className="relative overflow-hidden px-6 py-3 flex items-center justify-between rounded-full shadow-[0_8px_32px_rgba(6,182,212,0.15)] bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08]">
+        {/* Dynamic gradient line overlay */}
+        <div className="absolute inset-0 rounded-full border border-transparent [background:linear-gradient(to_right,rgba(6,182,212,0.1),transparent)_border-box] pointer-events-none" style={{ WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "destination-out", maskComposite: "exclude" }} />
+        
+        <Link to="/" className="flex items-center gap-2 group relative z-10">
+          <motion.div whileHover={{ rotate: 15 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Shield className="w-8 h-8 text-primary shadow-primary/20 drop-shadow-md" />
+          </motion.div>
+          <span className="font-heading font-extrabold text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 truncate drop-shadow-sm">
             ResolveIt
           </span>
         </Link>

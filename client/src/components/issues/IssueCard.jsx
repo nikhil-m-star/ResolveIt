@@ -5,6 +5,7 @@ import { cn, getCategoryColor, getCategoryIcon, getStatusColor, evaluateIntensit
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../lib/auth";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 export function IssueCard({ issue }) {
   const queryClient = useQueryClient();
@@ -20,10 +21,17 @@ export function IssueCard({ issue }) {
   });
 
   return (
-    <div className={cn(
-      "group relative flex flex-col gap-3 p-5 rounded-2xl border transition-all duration-300",
-      "bg-white/[0.03] border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.15]"
-    )}>
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+      whileHover={{ scale: 1.01, boxShadow: "0px 0px 25px rgba(0, 255, 255, 0.15)", borderColor: "rgba(0, 255, 255, 0.4)" }}
+      className={cn(
+        "group relative flex flex-col gap-3 p-5 rounded-2xl transition-all duration-300",
+        "bg-white/[0.02] border border-primary/20 backdrop-blur-xl z-20"
+      )}
+    >
       {/* Top Banner */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
