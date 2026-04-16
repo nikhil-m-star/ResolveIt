@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
@@ -21,6 +21,7 @@ export function ReportIssue() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState([]);
   
   // AI States
   const [isCategorizing, setIsCategorizing] = useState(false);
@@ -61,6 +62,15 @@ export function ReportIssue() {
       images: prev.images.filter((_, i) => i !== index)
     }));
   };
+
+  useEffect(() => {
+    const previews = formData.images.map((file) => URL.createObjectURL(file));
+    setImagePreviews(previews);
+
+    return () => {
+      previews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [formData.images]);
 
   const handleBlurAIAnalyzers = async () => {
     if (!formData.title || !formData.description || formData.title.length < 5) return;
@@ -146,7 +156,7 @@ export function ReportIssue() {
                key={num} 
                className={cn(
                  "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors border-4 border-background",
-                 step >= num ? "bg-primary text-white" : "bg-white/10 text-gray-500"
+                 step > num ? "bg-primary text-white" : step === num ? "bg-primary text-white ring-2 ring-primary ring-offset-2 ring-offset-background animate-pulse" : "bg-white/10 text-gray-500"
                )}
              >
                {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
@@ -268,7 +278,7 @@ export function ReportIssue() {
                     {formData.images.map((file, idx) => (
                       <div key={idx} className="relative group flex-shrink-0">
                         <img 
-                          src={URL.createObjectURL(file)} 
+                          src={imagePreviews[idx]} 
                           alt={`Upload preview ${idx}`} 
                           className="w-24 h-24 object-cover rounded-lg border border-white/10"
                         />
@@ -348,7 +358,12 @@ export function ReportIssue() {
             
             {step < 3 ? (
               <button 
-                onClick={() => setStep(s => Math.min(3, s + 1))}
+                onClick={() => {
+                   if (step === 1) {
+                      handleBlurAIAnalyzers();
+                   }
+                   setStep(s => Math.min(3, s + 1));
+                }}
                 disabled={(step === 1 && (!formData.title || !formData.description))}
                 className="flex items-center gap-2 bg-primary hover:bg-blue-600 disabled:opacity-50 disabled:bg-primary text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-primary/20"
               >

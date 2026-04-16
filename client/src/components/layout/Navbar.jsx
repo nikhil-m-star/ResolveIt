@@ -1,13 +1,29 @@
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { Link, useLocation } from "react-router-dom";
-import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, Bell } from "lucide-react";
+import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, UserCircle2 } from "lucide-react";
 import { NotificationsDropdown } from "./NotificationsDropdown";
 import { motion } from "framer-motion";
 
 export function Navbar() {
   const { user } = useUser();
   const location = useLocation();
-  const role = user?.publicMetadata?.role || "CITIZEN";
+  
+  // Read role from internal JWT rather than Clerk metadata to reflect immediate upgrades
+  let role = "CITIZEN";
+  try {
+    const token = localStorage.getItem("resolveit_token");
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      role = payload.role || "CITIZEN";
+    }
+    const cachedRole = localStorage.getItem("resolveit_user_role");
+    if (!token && cachedRole) {
+      role = cachedRole;
+    }
+  } catch {
+    const cachedRole = localStorage.getItem("resolveit_user_role");
+    role = cachedRole || user?.publicMetadata?.role || "CITIZEN";
+  }
 
   return (
     <motion.div 
@@ -29,7 +45,7 @@ export function Navbar() {
           </span>
         </Link>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {user ? (
             <>
               {(role === "OFFICER" || role === "PRESIDENT") && (
@@ -55,10 +71,10 @@ export function Navbar() {
                 <Trophy className="w-5 h-5" />
               </Link>
               <NotificationsDropdown />
-              <Link to="/profile" className="p-2 text-primary/60 hover:text-primary transition-colors relative">
-                <Bell className="hidden w-5 h-5" />
-                <UserButton afterSignOutUrl="/" />
+              <Link to="/profile" className="p-2 text-primary/60 hover:text-primary transition-colors relative" title="Profile">
+                <UserCircle2 className="w-5 h-5" />
               </Link>
+              <UserButton afterSignOutUrl="/" />
             </>
           ) : (
             <>

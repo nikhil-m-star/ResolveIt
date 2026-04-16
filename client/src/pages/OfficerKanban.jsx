@@ -19,13 +19,13 @@ export function OfficerKanban() {
   const { data: issues, isLoading, isError } = useQuery({
     queryKey: ["kanbanIssues"],
     queryFn: async () => {
-      const res = await api.get("/issues");
+      const res = await api.get("/issues?assignedToMe=true");
       return res.data;
     },
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ issueId, newStatus }) => api.put(`/issues/${issueId}/status`, { newStatus, note: "Status updated from Kanban." }),
+    mutationFn: ({ issueId, newStatus }) => api.patch(`/issues/${issueId}/status`, { newStatus, note: "Status updated from Kanban." }),
     onMutate: () => setMovingId(true),
     onSuccess: () => {
       queryClient.invalidateQueries(["kanbanIssues"]);
@@ -73,7 +73,8 @@ export function OfficerKanban() {
           <p className="text-gray-400 mt-1">Manage and track the progress of active civic issues through drag and drop.</p>
         </div>
 
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 overflow-hidden pb-8">
+        <div className="flex-1 overflow-x-auto pb-8 scrollbar-hide">
+          <div className="grid grid-flow-col auto-cols-[minmax(280px,1fr)] gap-6 h-full min-h-[600px]">
           {COLUMNS.map((column) => {
             const columnIssues = issues?.filter((issue) => issue.status === column.id) || [];
             const Icon = column.icon;
@@ -83,7 +84,7 @@ export function OfficerKanban() {
                 key={column.id}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => handleDrop(e, column.id)}
-                className="glass-card flex flex-col bg-white/5 border border-white/5 rounded-2xl overflow-hidden"
+                className="glass-card flex flex-col bg-white/5 border border-white/5 rounded-2xl overflow-hidden min-w-[280px] md:min-w-[320px]"
               >
                 <div className="p-4 border-b border-white/5 bg-black/20 flex justify-between items-center">
                   <h3 className="font-heading font-bold text-white flex items-center gap-2">
@@ -126,6 +127,7 @@ export function OfficerKanban() {
               </div>
             );
           })}
+          </div>
         </div>
       </div>
     </Layout>

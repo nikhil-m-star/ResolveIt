@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { MapPin, CheckCircle2, ChevronUp, Bot, FileWarning } from "lucide-react";
+import { MapPin, ChevronUp, Bot, Loader2 } from "lucide-react";
 import { cn, getCategoryColor, getCategoryIcon, getStatusColor, evaluateIntensityColor } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../lib/auth";
@@ -79,7 +79,7 @@ export function IssueCard({ issue }) {
             {issue.intensity && (
               <div className="flex items-center gap-1.5 px-2 py-1 bg-white/5 rounded-md border border-white/5" title={`AI Intensity Score: ${issue.intensity}/10`}>
                  <Bot className="w-3.5 h-3.5 text-primary" />
-                 <div className="w-1.5 h-1.5 rounded-full" className={cn("w-2 h-2 rounded-full", evaluateIntensityColor(issue.intensity))} />
+                 <div className={cn("w-2 h-2 rounded-full", evaluateIntensityColor(issue.intensity))} />
                  <span className="font-medium text-gray-300">{issue.intensity}</span>
               </div>
             )}
@@ -91,13 +91,13 @@ export function IssueCard({ issue }) {
         </div>
       </div>
 
-      <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 bg-background border border-white/10 rounded-full shadow-lg flex flex-col items-center gap-1">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-background border border-white/10 rounded-full shadow-lg flex flex-col items-center gap-1">
           <button 
              onClick={() => voteMutation.mutate()} 
              disabled={voteMutation.isPending}
-             className="p-2.5 text-gray-400 hover:text-white hover:bg-white/5 transition-all rounded-t-full rounded-b-sm"
+           className="p-2.5 text-gray-400 hover:text-white hover:bg-white/5 disabled:opacity-70 transition-all rounded-t-full rounded-b-sm"
           >
-             <ChevronUp className="w-5 h-5" />
+             {voteMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <ChevronUp className="w-5 h-5" />}
           </button>
           <span className="text-sm font-bold text-white px-2">
             {issue.votes}

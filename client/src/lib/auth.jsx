@@ -10,6 +10,7 @@ if (!CLERK_KEY) {
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -25,11 +26,12 @@ const AuthSync = ({ children }) => {
       // Setup the Axios token interceptor so all requests attach the JWT
       interceptor = api.interceptors.request.use(
         async (config) => {
-          // If we have an internal session token, use it.
-          // Fallback to clerk token to exchange for internal.
-          const token = localStorage.getItem("resolveit_token") || await getToken();
-          if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+          // Send clerk token only for /auth/session endpoint
+          if (config.url === "/auth/session") {
+            const token = await getToken();
+            if (token) {
+              config.headers.Authorization = `Bearer ${token}`;
+            }
           }
           return config;
         },
@@ -48,9 +50,10 @@ const AuthSync = ({ children }) => {
           }, {
               headers: { Authorization: `Bearer ${clerkToken}` }
           });
-          
-          localStorage.setItem("resolveit_token", data.token);
-          api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+
+          if (data?.user?.role) {
+            localStorage.setItem("resolveit_user_role", data.user.role);
+          }
           
           // Re-fetch standard user profiles after identity established
           queryClient.invalidateQueries(["userProfile"]);
@@ -58,8 +61,8 @@ const AuthSync = ({ children }) => {
             console.error("Session sync failed", err);
         }
       } else if (isLoaded && !isSignedIn) {
-          localStorage.removeItem("resolveit_token");
-          delete api.defaults.headers.common["Authorization"];
+          // Server will clear cookie or handle session expiration
+          localStorage.removeItem("resolveit_user_role");
       }
     };
 

@@ -251,6 +251,14 @@ export function IssueDetail() {
                 <textarea 
                   value={comment}
                   onChange={e => setComment(e.target.value)}
+                  onKeyDown={(e) => { 
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (comment.trim()) {
+                        handleSubmitComment(e);
+                      }
+                    }
+                  }}
                   placeholder="Add a public comment or update..."
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 resize-none"
                   rows={2}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Layout } from "../components/layout/Layout";
 import { IssueCard } from "../components/issues/IssueCard";
 import { IssueMap } from "../components/issues/IssueMap";
@@ -12,7 +12,6 @@ export function Dashboard() {
     status: "",
     search: ""
   });
-  const [isLocating, setIsLocating] = useState(true);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -27,27 +26,33 @@ export function Dashboard() {
             setFilters(prev => ({ ...prev, city }));
           } catch (error) {
             console.error("Failed to determine city:", error);
-          } finally {
-            setIsLocating(false);
           }
         },
         (error) => {
           console.warn("Geolocation denied or failed:", error);
-          setIsLocating(false);
         },
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
-    } else {
-      setIsLocating(false);
     }
   }, []);
 
   const { data: issues, isLoading, isError, refetch } = useIssues(filters);
+  const searchTimeout = useRef(null);
 
   // Simple debounced search (normally move to hook)
   const handleSearch = (e) => {
-    setFilters(prev => ({ ...prev, search: e.target.value }));
+    const value = e.target.value;
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
+      setFilters(prev => ({ ...prev, search: value }));
+    }, 300);
   };
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    };
+  }, []);
 
   return (
     <Layout>
@@ -94,6 +99,10 @@ export function Dashboard() {
                   <option value="POWER_CUT">Power Cuts</option>
                   <option value="WATER_LEAK">Water Leaks</option>
                   <option value="BRIBERY">Bribery</option>
+                  <option value="STREETLIGHT">Streetlight</option>
+                  <option value="SEWAGE">Sewage</option>
+                  <option value="TREE_FALLEN">Fallen Tree</option>
+                  <option value="OTHER">Other</option>
                 </select>
                 <select 
                   onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
@@ -107,7 +116,7 @@ export function Dashboard() {
               </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-24 space-y-4">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-8 space-y-4">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20 text-gray-400 space-y-3">
                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -130,6 +139,7 @@ export function Dashboard() {
                  <IssueCard key={issue.id} issue={issue} />
                ))
             )}
+            <div className="h-12 w-full" /> {/* Bottom spacer for scrolling */}
           </div>
         </div>
 

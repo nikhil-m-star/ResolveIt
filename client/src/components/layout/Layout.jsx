@@ -6,7 +6,7 @@ export function Layout({ children }) {
   const location = useLocation();
   
   return (
-    <div className="relative min-h-screen bg-[#020617] text-primary/90 overflow-hidden">
+    <div className="relative min-h-screen bg-[#020617] text-primary/90 overflow-x-hidden">
       {/* Noise Texture */}
       <div className="bg-noise fixed inset-0 pointer-events-none z-0" />
       
@@ -23,7 +23,7 @@ export function Layout({ children }) {
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="pt-[100px] h-[calc(100vh)] relative z-10"
+          className="pt-[100px] min-h-screen relative z-10 pb-8"
         >
           {children}
         </motion.main>

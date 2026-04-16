@@ -37,6 +37,7 @@ export function Profile() {
   const upgradeMutation = useMutation({
     mutationFn: () => api.post("/users/upgrade"),
     onSuccess: () => {
+      localStorage.setItem("resolveit_user_role", "OFFICER");
       queryClient.invalidateQueries(["profile"]);
       toast.success("Successfully upgraded to Officer! Please sign out and sign back in to refresh permissions.");
     },
@@ -229,15 +230,27 @@ export function Profile() {
              <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-primary" /> Recent Activity
              </h3>
-             <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-12 border-2 border-dashed border-white/5 rounded-xl bg-black/20">
-                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
-                   <Star className="w-8 h-8 text-gray-500" />
+             {((profile._count?.issues === 0 || !profile._count?.issues) && (profile._count?.resolvedIssues === 0 || !profile._count?.resolvedIssues)) ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-8 border border-white/5 rounded-xl bg-black/20">
+                   <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center">
+                      <Star className="w-6 h-6 text-gray-500" />
+                   </div>
+                   <div>
+                      <h4 className="text-white font-medium mb-1">Begin Your Civic Journey</h4>
+                      <p className="text-sm text-gray-500 max-w-sm mx-auto">Start engaging with ResolveIt to earn activity and track your civic footprint!</p>
+                   </div>
                 </div>
-                <div>
-                   <h4 className="text-white font-medium mb-1">Your civic footprint</h4>
-                   <p className="text-sm text-gray-500 max-w-sm mx-auto">Activities, badges, and recent issue engagements will appear here as you interact with ResolveIt.</p>
+             ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-12 border-2 border-dashed border-white/5 rounded-xl bg-black/20">
+                   <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
+                      <Star className="w-8 h-8 text-gray-500" />
+                   </div>
+                   <div>
+                      <h4 className="text-white font-medium mb-1">Your civic footprint</h4>
+                      <p className="text-sm text-gray-500 max-w-sm mx-auto">Activities, badges, and recent issue engagements will appear here as you interact with ResolveIt.</p>
+                   </div>
                 </div>
-             </div>
+             )}
           </div>
         </div>
 

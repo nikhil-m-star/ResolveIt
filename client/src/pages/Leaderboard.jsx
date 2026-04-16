@@ -102,7 +102,7 @@ export function Leaderboard() {
             </div>
 
             {/* User Rows */}
-            <div className="space-y-2 mt-4">
+            <div className="space-y-4 mt-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-hide">
               {(activeTab === "citizens" ? citizens : officers).map((user, index) => (
                 <div 
                   key={user.id} 
