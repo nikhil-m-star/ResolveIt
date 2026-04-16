@@ -8,6 +8,7 @@ import { Leaderboard } from './pages/Leaderboard';
 import { Profile } from './pages/Profile';
 import { OfficerKanban } from './pages/OfficerKanban';
 import { MapExplorer } from './pages/MapExplorer';
+import { AIInsights } from './pages/AIInsights';
 
 function App() {
   const { isLoaded, isSignedIn } = useAuthCompat();
@@ -92,6 +93,14 @@ function App() {
           element={
             isSignedIn ? 
               <MapExplorer /> : 
+              <Navigate to="/sign-in" />
+          } 
+        />
+        <Route 
+          path="/ai-insights" 
+          element={
+            isSignedIn ? 
+              <AIInsights /> : 
               <Navigate to="/sign-in" />
           } 
         />

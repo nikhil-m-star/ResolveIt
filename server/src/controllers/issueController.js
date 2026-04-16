@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import { autoCategorizIssue, checkDuplicate, assessIntensity, predictETA } from "../services/nvidia.js";
+import { autoCategorizIssue, checkDuplicate, assessIntensity, predictETA, generateCityReport } from "../services/nvidia.js";
 import { sendEmailNotification } from "../lib/email.js";
 
 // AI Endpoint: Auto-Categorize Issue
@@ -230,5 +230,42 @@ export const updateStatus = async (req, res) => {
   } catch (error) {
     console.error("Status Update Error:", error);
     res.status(500).json({ error: "Failed to update status" });
+  }
+};
+
+export const getCityReport = async (req, res) => {
+  const { role, city } = req.user;
+
+  if (!["OFFICER", "PRESIDENT"].includes(role)) {
+    return res.status(403).json({ error: "Access Denied. Only officials can access AI Reports." });
+  }
+
+  try {
+    // Get last 50 issues for this city to analyze
+    const issues = await prisma.issue.findMany({
+      where: { city },
+      take: 50,
+      orderBy: { createdAt: 'desc' },
+      select: {
+          title: true,
+          description: true,
+          category: true,
+          status: true,
+          area: true,
+          intensity: true,
+          createdAt: true
+      }
+    });
+
+    if (issues.length === 0) {
+        return res.json({ report: "No issues reported in this city yet to generate a report." });
+    }
+
+    const reportMarkdown = await generateCityReport(city, issues);
+    res.json({ report: reportMarkdown });
+
+  } catch (error) {
+    console.error("AI Report Generation Error:", error);
+    res.status(500).json({ error: "Failed to generate AI report" });
   }
 };
