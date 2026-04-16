@@ -56,7 +56,25 @@ export function Profile() {
       e.preventDefault();
       updateMutation.mutate(formData);
   };
+  return (
+    <Layout>
+      <div className="max-w-4xl mx-auto px-4 py-12 animate-in fade-in duration-700">
+        
+        {/* Profile Card */}
+        <div className="glass-card p-8 md:p-12 mb-10 flex flex-col md:flex-row items-center gap-10 border-primary/20 bg-primary/5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] pointer-events-none" />
+          
+          <div className="relative group">
+            <div className="w-32 h-32 rounded-[2.5rem] bg-slate-900 border-2 border-primary/30 flex items-center justify-center overflow-hidden shadow-2xl transition-transform group-hover:scale-105">
+               {clerkUser?.imageUrl ? (
+                 <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover" />
+               ) : (
+                 <UserIcon className="w-12 h-12 text-primary/50" />
+               )}
+            </div>
+          </div>
 
+          <div className="flex-1 text-center md:text-left space-y-4">
             <div>
               <h1 className="text-3xl font-heading font-bold text-white mb-2">{profile.name}</h1>
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">

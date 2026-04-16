@@ -50,15 +50,12 @@ export function AIInsights() {
       <div className="max-w-5xl mx-auto px-4 py-8">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-blue-500/20 flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3" /> NVIDIA NIM POWERED
-              </span>
+            <h1 className="text-5xl font-heading font-black text-white mb-2 uppercase tracking-tight">AI Insights</h1>
+            <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
+               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Strategic Intelligence Briefing
             </div>
-            <h1 className="text-4xl font-heading font-bold text-white mb-2">Strategic Intelligence</h1>
-            <p className="text-gray-400">Advanced civic analysis for strategic planning and resolution tracking.</p>
           </div>
           
           <div className="flex items-center gap-3">

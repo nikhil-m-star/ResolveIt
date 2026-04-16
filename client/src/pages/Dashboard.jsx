@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Layout } from "../components/layout/Layout";
 import { IssueCard } from "../components/issues/IssueCard";
 import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
-import { RefreshCcw, CheckCircle2, Loader2 } from "lucide-react";
+import { cn } from "../utils/helpers";
+import { RefreshCcw, CheckCircle2, Loader2, PlusCircle } from "lucide-react";
 
 export function Dashboard() {
   const [filters, setFilters] = useState({
@@ -49,27 +50,28 @@ export function Dashboard() {
 
   const { data: issues, isLoading, isError, refetch } = useIssues(filters);
 
-  return (
     <Layout>
-    <Layout>
-      <div className="px-4 py-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
+      <div className="px-4 py-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700">
         
         {/* Dashboard Header */}
-        <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border-primary/20 bg-primary/5">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
-               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Live Monitoring
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-4">
+          <div className="space-y-1 text-center md:text-left">
+            <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Feed</h1>
+            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
+               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Live Grid Monitoring 
             </div>
-            <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">City Pulse Monitor</h1>
-            <p className="text-slate-400 font-medium">Real-time situational awareness and civic response coordination.</p>
           </div>
-          <button
-            onClick={() => refetch()}
-            className="flex items-center gap-2 rounded-2xl bg-primary px-8 py-3.5 text-sm font-black text-white transition-all hover:brightness-110 shadow-xl shadow-primary/25 active:scale-95"
+
+          <Link
+            to="/report"
+            className="group relative flex items-center gap-4 bg-primary text-white pl-8 pr-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-primary/25 overflow-hidden"
           >
-            <RefreshCcw className={cn("h-4 w-4", isLoading && "animate-spin")} />
-            Refresh Sector
-          </button>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 group-hover:rotate-90 transition-transform">
+               <PlusCircle className="h-5 w-5" />
+            </div>
+            Report Issue
+          </Link>
         </div>
 
         <div className="mx-auto max-w-5xl w-full">

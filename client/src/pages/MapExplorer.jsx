@@ -43,9 +43,9 @@ export function MapExplorer() {
               <MapIcon className="h-4 w-4" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xs font-black text-white uppercase tracking-widest">Global Grid</h1>
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter flex items-center gap-1.5">
-                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Telemetry
+              <h1 className="text-xs font-black text-white uppercase tracking-widest">Map</h1>
+              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter flex items-center gap-1.5 focus:text-primary">
+                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Telemetry 
               </p>
             </div>
           </Motion.div>

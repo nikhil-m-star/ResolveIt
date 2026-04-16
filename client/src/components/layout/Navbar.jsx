@@ -73,27 +73,20 @@ export function Navbar() {
               })}
             </div>
 
-            <div className="flex items-center gap-3 pl-4 border-l border-white/10">
+            <div className="flex items-center gap-2 pl-4 border-l border-white/10">
               {user ? (
-                <>
-                  <Link
-                    to="/report"
-                    className="flex items-center gap-2 px-4 py-1.5 bg-primary text-white text-sm font-bold rounded-full hover:brightness-110 shadow-lg shadow-primary/20 transition-all active:scale-95"
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                    <span>Report</span>
-                  </Link>
+                <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 p-1">
                   <NotificationsDropdown />
                   <Link 
                     to="/profile" 
-                    className={`p-2 rounded-full transition-colors ${
-                      location.pathname === "/profile" ? "bg-primary/10 text-primary border border-primary/20" : "text-slate-400 hover:text-white hover:bg-white/5"
+                    className={`p-1.5 rounded-full transition-colors ${
+                      location.pathname === "/profile" ? "bg-primary text-white" : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    <UserCircle2 className="h-5 w-5" />
+                    <UserCircle2 className="h-4 w-4" />
                   </Link>
-                  <UserButtonCompat appearance={{ elements: { userButtonAvatarBox: "h-8 w-8 rounded-full border border-white/10" } }} />
-                </>
+                  <UserButtonCompat appearance={{ elements: { userButtonAvatarBox: "h-7 w-7 rounded-full border border-white/10" } }} />
+                </div>
               ) : (
                 <Link to="/sign-in" className="text-sm font-bold text-slate-400 hover:text-white px-3 py-1.5">
                   Sign In
@@ -118,33 +111,27 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed bottom-6 left-0 right-0 z-[1250] flex justify-center px-4 md:hidden"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-3xl px-1.5 py-1.5">
-          <div className="flex justify-around items-center">
-            {navItems.slice(0, 4).map((item) => {
+        <nav className="glass-pill w-full max-w-sm rounded-[2rem] px-2 py-2">
+          <div className="flex justify-around items-center gap-1">
+            {navItems.map((item) => {
               const active = location.pathname === item.to;
               const Icon = item.icon;
               return (
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`flex flex-col items-center justify-center rounded-2xl flex-1 py-2 text-[10px] font-bold transition-all duration-300 ${
-                    active ? "text-primary" : "text-slate-400"
+                  className={`flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300 ${
+                    active ? "text-primary bg-primary/10" : "text-slate-500 hover:text-slate-300"
                   }`}
                 >
-                  <Icon className={`h-5 w-5 ${active ? "text-primary" : "text-slate-400"}`} />
+                  <Icon className="h-5 w-5" />
                 </Link>
               );
             })}
             <Link
-              to="/report"
-              className="flex items-center justify-center bg-primary text-white h-11 w-11 rounded-2xl shadow-lg shadow-primary/25"
-            >
-              <PlusCircle className="h-6 w-6" />
-            </Link>
-            <Link
               to="/profile"
-              className={`flex flex-col items-center justify-center rounded-2xl flex-1 py-2 text-[10px] font-bold transition-all duration-300 ${
-                location.pathname === "/profile" ? "text-primary" : "text-slate-400"
+              className={`flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300 ${
+                location.pathname === "/profile" ? "text-primary bg-primary/10" : "text-slate-500 hover:text-slate-300"
               }`}
             >
               <UserCircle2 className="h-5 w-5" />
@@ -152,10 +139,6 @@ export function Navbar() {
           </div>
         </nav>
       </Motion.div>
-    </>
-  );
-}
-
     </>
   );
 }

@@ -496,9 +496,3 @@ export function ReportIssue() {
     </Layout>
   );
 }
-          
-        </div>
-      </div>
-    </Layout>
-  );
-}

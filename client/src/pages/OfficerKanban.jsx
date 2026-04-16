@@ -75,13 +75,37 @@ export function OfficerKanban() {
       <div className="max-w-7xl mx-auto px-4 py-12 h-[calc(100vh-120px)] flex flex-col space-y-8 animate-in fade-in duration-700">
         
         {/* Kanban Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
-               <KanbanSquare className="w-3.5 h-3.5" /> Operations Board
+        <div className="flex flex-col md:flex-row justify-between items-end gap-8 pb-4">
+          <div className="space-y-1 text-center md:text-left">
+            <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Board</h1>
+            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
+               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Operational Situational Awareness
             </div>
-            <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">Deployment Strategy</h1>
-            <p className="text-slate-400 font-medium">Coordinate and track field operations through real-time case orchestration.</p>
+          </div>
+
+          {/* Graphical Metrics Summary */}
+          <div className="flex items-center gap-6 bg-slate-900/50 border border-white/5 rounded-[2rem] px-8 py-5 backdrop-blur-3xl shadow-2xl">
+            <div className="flex flex-col gap-1">
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Clearance Rate</span>
+              <div className="flex items-center gap-3">
+                <div className="h-1.5 w-32 bg-slate-800 rounded-full overflow-hidden border border-white/5">
+                  <div 
+                    className="h-full bg-emerald-500 transition-all duration-1000" 
+                    style={{ width: `${Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%` }}
+                  />
+                </div>
+                <span className="text-sm font-black text-emerald-400">
+                  {Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%
+                </span>
+              </div>
+            </div>
+            
+            <div className="w-px h-8 bg-white/5" />
+            
+            <div className="flex flex-col items-center">
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active Cases</span>
+              <span className="text-xl font-black text-white">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
+            </div>
           </div>
         </div>
 
