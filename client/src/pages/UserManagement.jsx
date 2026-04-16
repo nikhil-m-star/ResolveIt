@@ -79,13 +79,7 @@ export function UserManagement() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
-              <ShieldCheck className="w-3 h-3" /> Root Access Active
-            </div>
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Manage</h1>
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
-               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Personnel Control Center
-            </div>
           </div>
 
           <div className="flex items-center gap-3">

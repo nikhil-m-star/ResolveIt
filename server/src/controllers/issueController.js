@@ -115,24 +115,30 @@ export const getIssues = async (req, res) => {
     }
     if (req.query.assignedToMe === "true") filter.assignedToId = req.user.id;
 
+    const include = {
+      createdBy: {
+        select: { id: true, name: true, role: true }
+      }
+    };
+
+    // Only include user-specific vote context if we have a valid user session
+    if (req.user?.id) {
+      include.voteRecords = {
+        where: { userId: req.user.id },
+        select: { type: true }
+      };
+    }
+
     let issues = await prisma.issue.findMany({
       where: filter,
       orderBy: { createdAt: 'desc' },
-      include: {
-        createdBy: {
-           select: { id: true, name: true, role: true }
-        },
-        voteRecords: {
-          where: { userId: req.user.id },
-          select: { type: true }
-        }
-      }
+      include
     });
 
     // Flatten userVote for easier frontend consumption
     issues = issues.map(issue => ({
       ...issue,
-      userVote: issue.voteRecords[0]?.type || null
+      userVote: issue.voteRecords?.[0]?.type || null
     }));
 
     // Mask user details for anonymous issues
@@ -175,24 +181,29 @@ export const getIssues = async (req, res) => {
 
 export const getIssueById = async (req, res) => {
   try {
+    const include = {
+      createdBy: { select: { name: true, id: true }},
+      assignedTo: { select: { name: true, id: true }},
+      statusHistory: { 
+          include: { user: { select: { name: true, role: true } }},
+          orderBy: { createdAt: 'asc' }
+      },
+      comments: {
+          include: { user: { select: { name: true, role: true } }},
+          orderBy: { createdAt: 'desc' }
+      }
+    };
+
+    if (req.user?.id) {
+      include.voteRecords = {
+        where: { userId: req.user.id },
+        select: { type: true }
+      };
+    }
+
     const issue = await prisma.issue.findUnique({
       where: { id: req.params.id },
-      include: {
-        createdBy: { select: { name: true, id: true }},
-        assignedTo: { select: { name: true, id: true }},
-        statusHistory: { 
-            include: { user: { select: { name: true, role: true } }},
-            orderBy: { createdAt: 'asc' }
-        },
-        comments: {
-            include: { user: { select: { name: true, role: true } }},
-            orderBy: { createdAt: 'desc' }
-        },
-        voteRecords: {
-          where: { userId: req.user.id },
-          select: { type: true }
-        }
-      }
+      include
     });
 
     if (!issue) return res.status(404).json({ error: "Issue not found" });
