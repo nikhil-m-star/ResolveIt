@@ -113,7 +113,9 @@ export const getIssues = async (req, res) => {
         { city: { contains: search, mode: "insensitive" } },
       ];
     }
-    if (req.query.assignedToMe === "true") filter.assignedToId = req.user.id;
+    if (req.query.assignedToMe === "true" && req.user?.id) {
+       filter.assignedToId = req.user.id;
+    }
 
     const include = {
       createdBy: {
@@ -150,9 +152,11 @@ export const getIssues = async (req, res) => {
     });
 
     // Geospatial Sorting: Nearest to location first
-    if (lat && lng) {
-      const uLat = parseFloat(lat);
-      const uLng = parseFloat(lng);
+    const uLat = parseFloat(lat);
+    const uLng = parseFloat(lng);
+    
+    // Safety check: only sort if coordinates are valid numbers
+    if (lat && lng && !isNaN(uLat) && !isNaN(uLng)) {
       
       const getDistance = (lat1, lon1, lat2, lon2) => {
         const R = 6371; // km

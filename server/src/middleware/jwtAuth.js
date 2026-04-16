@@ -30,3 +30,26 @@ export const jwtAuth = (req, res, next) => {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
 };
+export const optionalJwtAuth = (req, res, next) => {
+  let token = req.cookies?.resolveit_token;
+
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+  }
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    // Graceful fallback for guests with expired tokens
+    next();
+  }
+};

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middleware/multer.js";
-import { jwtAuth } from "../middleware/jwtAuth.js";
+import { optionalJwtAuth, jwtAuth } from "../middleware/jwtAuth.js";
 import {
   createIssue,
   getIssues,
@@ -22,7 +22,7 @@ issueRouter.get("/ai-report", jwtAuth, getAIReport);
 
 // CRUD
 issueRouter.post("/", jwtAuth, upload.array("images", 3), createIssue);
-issueRouter.get("/", jwtAuth, getIssues);
+issueRouter.get("/", optionalJwtAuth, getIssues);
 issueRouter.get("/:id", jwtAuth, getIssueById);
 
 // Votes
