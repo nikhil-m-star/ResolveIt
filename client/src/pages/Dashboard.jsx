@@ -50,6 +50,7 @@ export function Dashboard() {
 
   const { data: issues, isLoading, isError, refetch } = useIssues(filters);
 
+  return (
     <Layout>
       <div className="px-4 py-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700">
         
