@@ -104,6 +104,6 @@ export function IssueCard({ issue }) {
           </span>
           <div className="h-2" />
       </div>
-    </div>
+    </motion.div>
   );
 }
