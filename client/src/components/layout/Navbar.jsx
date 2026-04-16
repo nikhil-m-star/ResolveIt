@@ -130,29 +130,20 @@ export function Navbar() {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed bottom-24 left-4 right-4 z-[1245] md:hidden"
             >
-              <div className="glass-panel rounded-[2rem] p-4 flex flex-col gap-2 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden">
-                <div className="px-4 py-2 border-b border-white/5 flex items-center justify-between">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Command Hub</span>
-                  {user && <UserButtonCompat appearance={{ elements: { userButtonAvatarBox: "h-8 w-8 rounded-full border border-primary/20" } }} />}
-                </div>
-
+              <div className="glass-panel rounded-[2rem] p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] border border-white/10 flex flex-col gap-6">
                 {user ? (
-                   <div className="grid grid-cols-2 gap-2">
+                   <div className="grid grid-cols-2 gap-4">
                       <Link 
                         to="/profile" 
                         onClick={() => setIsMobileMoreOpen(false)}
-                        className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/20 transition-all text-white"
+                        className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 transition-all text-white"
                       >
-                         <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                            <User className="h-6 w-6" />
-                         </div>
-                         <span className="text-xs font-black uppercase tracking-widest">Account</span>
+                        <User className="h-6 w-6 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Profile</span>
                       </Link>
-                      <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/20 transition-all text-white relative">
-                         <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                            <NotificationsDropdown />
-                         </div>
-                         <span className="text-xs font-black uppercase tracking-widest">Alerts</span>
+                      <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 transition-all text-white relative">
+                        <NotificationsDropdown />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Alerts</span>
                       </div>
                    </div>
                 ) : (
@@ -161,16 +152,12 @@ export function Navbar() {
                      onClick={() => setIsMobileMoreOpen(false)}
                      className="flex items-center justify-center p-8 rounded-2xl bg-primary/10 border border-primary/20 text-primary font-black uppercase tracking-widest"
                    >
-                     Authorize Access
+                     Sign In
                    </Link>
                 )}
                 
-                <div className="mt-2 pt-4 border-t border-white/5 flex justify-between items-center px-2">
-                   <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                      <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Grid Encrypted</span>
-                   </div>
-                   <button onClick={() => setIsMobileMoreOpen(false)} className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white">Close</button>
+                <div className="flex justify-center">
+                   <button onClick={() => setIsMobileMoreOpen(false)} className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors">Close</button>
                 </div>
               </div>
             </Motion.div>

@@ -82,13 +82,10 @@ export function NotificationsDropdown() {
             className="fixed md:absolute right-4 md:right-0 top-20 md:mt-4 w-[calc(100vw-2rem)] md:w-96 glass-panel border border-white/10 rounded-[1.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] overflow-hidden z-[1300]"
           >
             {/* Header */}
-            <div className="p-5 border-b border-white/10 bg-gradient-to-r from-primary/10 via-transparent to-transparent backdrop-blur-3xl flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
-                   <Activity className="w-4 h-4 text-primary" /> Intelligence Feed
-                </h3>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Tactical Deployment Updates</p>
-              </div>
+            <div className="p-5 border-b border-white/10 bg-white/[0.01] backdrop-blur-3xl flex items-center justify-between">
+              <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                 <Activity className="w-3.5 h-3.5 text-primary" /> Alerts
+              </h3>
               <div className="flex items-center gap-3">
                 {unreadCount > 0 && (
                   <button 
