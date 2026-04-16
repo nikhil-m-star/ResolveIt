@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ClerkProviderCompat, useAuthCompat } from "./clerkCompat";
+import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat";
 
 const isLocalHost =
   typeof window !== "undefined" &&
@@ -19,7 +19,8 @@ export const api = axios.create({
 
 // A component that intercepts Clerk state and Syncs it with our internal API session
 const AuthSync = ({ children }) => {
-  const { getToken, isSignedIn, isLoaded, user } = useAuthCompat();
+  const { getToken, isSignedIn, isLoaded } = useAuthCompat();
+  const { user, isLoaded: isUserLoaded } = useUserCompat();
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const AuthSync = ({ children }) => {
       );
 
       // Once standard auth finishes loading & user is signed in...
-      if (isLoaded && isSignedIn && user) {
+      if (isLoaded && isUserLoaded && isSignedIn && user) {
         try {
           // Exchange clerk token for an internal JWT session token
           const clerkToken = await getToken();
@@ -74,7 +75,7 @@ const AuthSync = ({ children }) => {
     return () => {
       if (interceptor) api.interceptors.request.eject(interceptor);
     };
-  }, [isSignedIn, isLoaded, getToken, user, queryClient]);
+  }, [isSignedIn, isLoaded, isUserLoaded, getToken, user, queryClient]);
 
   return children;
 };
