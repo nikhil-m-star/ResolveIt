@@ -1,23 +1,25 @@
 /* eslint-disable react-refresh/only-export-components */
-import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { ClerkProviderCompat, useAuthCompat } from "./clerkCompat";
 
-const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-if (!CLERK_KEY) {
-  throw new Error("Missing Publishable Key");
-}
+const isLocalHost =
+  typeof window !== "undefined" &&
+  ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const DEFAULT_API_URL = isLocalHost
+  ? "http://localhost:5000/api"
+  : "https://resolveit-cyhu.onrender.com/api";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL || DEFAULT_API_URL,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
 
 // A component that intercepts Clerk state and Syncs it with our internal API session
 const AuthSync = ({ children }) => {
-  const { getToken, isSignedIn, isLoaded, user } = useAuth();
+  const { getToken, isSignedIn, isLoaded, user } = useAuthCompat();
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -80,10 +82,10 @@ const AuthSync = ({ children }) => {
 // Wrap the generic configured Clerk Provider
 export const ResolveItAuthProvider = ({ children }) => {
   return (
-    <ClerkProvider publishableKey={CLERK_KEY}>
+    <ClerkProviderCompat>
       <AuthSync>
         {children}
       </AuthSync>
-    </ClerkProvider>
+    </ClerkProviderCompat>
   );
 };

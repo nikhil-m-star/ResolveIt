@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth, SignIn, SignUp } from '@clerk/clerk-react';
+import { useAuthCompat, SignInCompat, SignUpCompat } from './lib/clerkCompat';
 import { Dashboard } from './pages/Dashboard';
 import { ReportIssue } from './pages/ReportIssue';
 import { IssueDetail } from './pages/IssueDetail';
@@ -9,7 +9,7 @@ import { Profile } from './pages/Profile';
 import { OfficerKanban } from './pages/OfficerKanban';
 
 function App() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuthCompat();
 
   if (!isLoaded) {
     return (
@@ -24,11 +24,11 @@ function App() {
       <Routes>
         <Route 
           path="/sign-in/*" 
-          element={<div className="flex min-h-screen items-center justify-center py-20"><SignIn routing="path" path="/sign-in" /></div>} 
+          element={<div className="flex min-h-screen items-center justify-center py-20"><SignInCompat routing="path" path="/sign-in" /></div>} 
         />
         <Route 
           path="/sign-up/*" 
-          element={<div className="flex min-h-screen items-center justify-center py-20"><SignUp routing="path" path="/sign-up" /></div>} 
+          element={<div className="flex min-h-screen items-center justify-center py-20"><SignUpCompat routing="path" path="/sign-up" /></div>} 
         />
         <Route 
           path="/" 

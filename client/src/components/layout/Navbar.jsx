@@ -1,11 +1,11 @@
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { UserButtonCompat, useUserCompat } from "../../lib/clerkCompat";
 import { Link, useLocation } from "react-router-dom";
 import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, UserCircle2 } from "lucide-react";
 import { NotificationsDropdown } from "./NotificationsDropdown";
 import { motion as Motion } from "framer-motion";
 
 export function Navbar() {
-  const { user } = useUser();
+  const { user } = useUserCompat();
   const location = useLocation();
   
   // Read role from internal JWT rather than Clerk metadata to reflect immediate upgrades
@@ -74,7 +74,7 @@ export function Navbar() {
               <Link to="/profile" className="p-2 text-primary/60 hover:text-primary transition-colors relative" title="Profile">
                 <UserCircle2 className="w-5 h-5" />
               </Link>
-              <UserButton afterSignOutUrl="/" />
+              <UserButtonCompat afterSignOutUrl="/" />
             </>
           ) : (
             <>

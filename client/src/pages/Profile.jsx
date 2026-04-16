@@ -2,13 +2,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
 import { Loader2, User as UserIcon, Medal, Star, CheckCircle2, ShieldAlert, Shield, MapPin, Edit3, Settings, Trophy, AlertTriangle } from "lucide-react";
-import { useUser } from "@clerk/clerk-react";
+import { useUserCompat } from "../lib/clerkCompat";
 import { useState } from "react";
 import { cn } from "../utils/helpers";
 import toast from "react-hot-toast";
 
 export function Profile() {
-  const { user: clerkUser } = useUser();
+  const { user: clerkUser } = useUserCompat();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ city: "", area: "" });

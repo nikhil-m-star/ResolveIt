@@ -15,16 +15,26 @@ L.Icon.Default.mergeOptions({
 const MapUpdater = ({ issues }) => {
   const map = useMap();
   useEffect(() => {
-    if (issues && issues.length > 0) {
-      const bounds = L.latLngBounds(issues.map((i) => [i.latitude, i.longitude]));
+    const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
+    if (issuesWithCoords.length > 0) {
+      const bounds = L.latLngBounds(issuesWithCoords.map((i) => [i.latitude, i.longitude]));
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
   }, [issues, map]);
   return null;
 };
 
+const isFiniteNumber = (value) => Number.isFinite(Number(value));
+const isValidIssueCoordinate = (issue) =>
+  issue &&
+  isFiniteNumber(issue.latitude) &&
+  isFiniteNumber(issue.longitude) &&
+  Math.abs(Number(issue.latitude)) <= 90 &&
+  Math.abs(Number(issue.longitude)) <= 180;
+
 export function IssueMap({ issues }) {
   const defaultCenter = [12.9716, 77.5946]; // Bengaluru default
+  const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
 
   return (
     <div className="w-full h-full min-h-[400px] sm:min-h-[500px] md:h-screen rounded-2xl md:rounded-none overflow-hidden border border-white/10 md:border-l relative z-0">
@@ -38,7 +48,7 @@ export function IssueMap({ issues }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        {issues?.map((issue) => (
+        {issuesWithCoords.map((issue) => (
           <Marker key={issue.id} position={[issue.latitude, issue.longitude]}>
             <Popup className="glass-popup bg-background border border-white/10 text-white rounded-xl shadow-2xl p-0 overflow-hidden">
               <div className="p-3 bg-gray-900 shadow-xl border border-white/5 rounded-xl min-w-[200px]">
