@@ -54,10 +54,6 @@ export function Navbar() {
       className="fixed top-6 inset-x-0 mx-auto z-[1200] w-[94%] max-w-5xl"
     >
       <nav className="glass-pill relative rounded-3xl border border-white/10 px-5 py-3 transition-all duration-500">
-        <div
-          className="absolute inset-0 pointer-events-none rounded-[inherit] opacity-40"
-          style={{ background: "radial-gradient(120% 120% at 50% 0%, rgba(251,146,60,0.15) 0%, transparent 80%)" }}
-        />
 
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
           <Link to="/" className="flex shrink-0 items-center gap-2.5">
@@ -65,10 +61,10 @@ export function Navbar() {
               whileHover={{ rotate: [-5, 5, -5] }} 
               transition={{ duration: 0.5, repeat: Infinity, repeatType: "mirror" }}
             >
-              <Shield className="h-7 w-7 text-primary filter drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]" />
+              <Shield className="h-7 w-7 text-primary filter drop-shadow-[0_0_8px_rgba(0,234,255,0.45)]" />
             </Motion.div>
             <div className="hidden min-w-0 flex-col sm:flex">
-              <span className="text-gradient-primary font-heading text-xl font-extrabold tracking-tight leading-none">ResolveIt</span>
+              <span className="text-primary font-heading text-xl font-extrabold tracking-tight leading-none">ResolveIt</span>
               <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-0.5">Control Deck</span>
             </div>
           </Link>
@@ -84,7 +80,7 @@ export function Navbar() {
                   to={item.to}
                   className={`relative flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                     active 
-                      ? "text-primary bg-primary/10 shadow-[inset_0_0_12px_rgba(251,146,60,0.1)]" 
+                      ? "text-primary bg-primary/10 shadow-[inset_0_0_12px_rgba(0,234,255,0.2)]" 
                       : "text-slate-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
@@ -93,7 +89,7 @@ export function Navbar() {
                   {active && (
                     <Motion.div 
                       layoutId="nav-active"
-                      className="absolute -bottom-1 left-1/2 h-1 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_#fb923c]"
+                      className="absolute -bottom-1 left-1/2 h-1 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_#00eaff]"
                     />
                   )}
                 </Link>
@@ -106,7 +102,7 @@ export function Navbar() {
               <>
                 <Link
                   to="/report"
-                  className="glass-button text-xs font-bold sm:text-sm shadow-[0_8px_16px_-6px_rgba(251,146,60,0.3)]"
+                  className="glass-button text-xs font-bold sm:text-sm shadow-[0_8px_16px_-6px_rgba(0,234,255,0.35)]"
                 >
                   <PlusCircle className="h-4 w-4" />
                   <span className="hidden lg:inline">Quick Report</span>
@@ -138,7 +134,7 @@ export function Navbar() {
                 <Link to="/sign-in" className="rounded-xl px-4 py-2 text-sm font-bold text-slate-300 transition-all hover:bg-white/5 active:scale-95">
                   Access
                 </Link>
-                <Link to="/sign-up" className="glass-button border-secondary/30 bg-secondary/10 text-secondary hover:bg-secondary/20 shadow-[0_8px_16px_-6px_rgba(45,212,191,0.25)]">
+                <Link to="/sign-up" className="glass-button border-secondary/30 bg-secondary/10 text-secondary hover:bg-secondary/20 shadow-[0_8px_16px_-6px_rgba(0,234,255,0.35)]">
                   Sign Up
                 </Link>
               </div>

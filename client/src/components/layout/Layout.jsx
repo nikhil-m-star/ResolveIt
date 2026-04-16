@@ -6,14 +6,9 @@ export function Layout({ children }) {
   const location = useLocation();
   
   return (
-    <div className="relative min-h-screen text-slate-100 overflow-x-hidden selection:bg-primary/30">
+    <div className="relative min-h-screen bg-background text-slate-100 overflow-x-hidden selection:bg-primary/30">
       {/* Noise Texture */}
       <div className="bg-noise fixed inset-0 pointer-events-none z-0" />
-      
-      {/* Ambient gradients - More vibrant "Elite" orbs */}
-      <div className="fixed top-[-10%] left-[-5%] h-[40rem] w-[40rem] rounded-full bg-primary/15 blur-[120px] pointer-events-none z-0 animate-pulse" />
-      <div className="fixed top-[20%] right-[-10%] h-[35rem] w-[35rem] rounded-full bg-secondary/10 blur-[140px] pointer-events-none z-0" />
-      <div className="fixed bottom-[-10%] left-[10%] h-[30rem] w-[30rem] rounded-full bg-primary/10 blur-[130px] pointer-events-none z-0" />
 
       <Navbar />
       <AnimatePresence mode="wait">

@@ -386,7 +386,10 @@ export function ReportIssue() {
                     zoom={15} 
                     className="w-full h-full"
                   >
-                    <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
                     <LocationPicker 
                        position={[formData.latitude, formData.longitude]} 
                        setPosition={(coords) => {

@@ -7,15 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#0b1020",
-        primary: "#fb923c",
-        secondary: "#2dd4bf",
-        success: "#34d399",
-        urgent: "#f87171",
+        background: "#000000",
+        primary: "#00eaff",
+        secondary: "#00eaff",
+        success: "#00eaff",
+        urgent: "#00eaff",
       },
       fontFamily: {
-        sans: ['"Manrope"', "sans-serif"],
-        heading: ['"Sora"', "sans-serif"],
+        sans: ['"Nunito Sans"', '"Product Sans"', '"Google Sans"', "sans-serif"],
+        heading: ['"Nunito Sans"', '"Product Sans"', '"Google Sans"', "sans-serif"],
         mono: ['"IBM Plex Mono"', "monospace"],
       },
       animation: {
@@ -23,8 +23,8 @@ export default {
       },
       keyframes: {
         accentPulse: {
-          "0%, 100%": { opacity: 1, boxShadow: "0 0 14px rgba(251, 146, 60, 0.28)" },
-          "50%": { opacity: 0.75, boxShadow: "0 0 28px rgba(45, 212, 191, 0.4)" },
+          "0%, 100%": { opacity: 1, boxShadow: "0 0 14px rgba(0, 234, 255, 0.35)" },
+          "50%": { opacity: 0.75, boxShadow: "0 0 28px rgba(0, 234, 255, 0.55)" },
         },
       }
     },

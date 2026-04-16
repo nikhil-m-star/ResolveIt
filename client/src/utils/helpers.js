@@ -35,33 +35,33 @@ export function getCategoryIconNode(category, className = "") {
 }
 
 export function getCategoryColor(category) {
-  switch (category) {
-    case "POTHOLE": return "text-orange-500 bg-orange-500/10 border-orange-500/20";
-    case "GARBAGE": return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
-    case "WATER_LEAK": return "text-blue-500 bg-blue-500/10 border-blue-500/20";
-    case "POWER_CUT": return "text-yellow-500 bg-yellow-500/10 border-yellow-500/20";
-    case "STREETLIGHT": return "text-yellow-300 bg-yellow-300/10 border-yellow-300/20";
-    case "BRIBERY": return "text-red-500 bg-red-500/10 border-red-500/20";
-    case "SEWAGE": return "text-purple-500 bg-purple-500/10 border-purple-500/20";
-    case "TREE_FALLEN": return "text-green-600 bg-green-600/10 border-green-600/20";
-    default: return "text-gray-400 bg-gray-400/10 border-gray-400/20";
-  }
+  const variants = {
+    POTHOLE: "text-primary bg-primary/16 border-primary/45",
+    GARBAGE: "text-primary bg-primary/14 border-primary/38",
+    WATER_LEAK: "text-primary bg-primary/20 border-primary/50",
+    POWER_CUT: "text-primary bg-primary/10 border-primary/32",
+    STREETLIGHT: "text-primary bg-primary/18 border-primary/44",
+    BRIBERY: "text-primary bg-primary/12 border-primary/35",
+    SEWAGE: "text-primary bg-primary/15 border-primary/40",
+    TREE_FALLEN: "text-primary bg-primary/17 border-primary/42",
+  };
+  return variants[category] || "text-primary bg-primary/10 border-primary/30";
 }
 
 export function getStatusColor(status) {
-  switch (status) {
-    case "REPORTED": return "text-blue-400 border-blue-400/30";
-    case "IN_PROGRESS": return "text-yellow-400 border-yellow-400/30";
-    case "RESOLVED": return "text-emerald-400 border-emerald-400/30";
-    case "REJECTED": return "text-red-400 border-red-400/30";
-    default: return "text-gray-400 border-gray-400/30";
-  }
+  const variants = {
+    REPORTED: "text-primary border-primary/30",
+    IN_PROGRESS: "text-primary border-primary/45",
+    RESOLVED: "text-primary border-primary/60",
+    REJECTED: "text-primary border-primary/25",
+  };
+  return variants[status] || "text-primary border-primary/30";
 }
 
 export function evaluateIntensityColor(score) {
-  if (!score) return "bg-gray-500";
-  if (score <= 3) return "bg-emerald-500";
-  if (score <= 6) return "bg-yellow-500";
-  if (score <= 8) return "bg-orange-500";
-  return "bg-red-500";
+  if (!score) return "bg-primary/40";
+  if (score <= 3) return "bg-primary/35";
+  if (score <= 6) return "bg-primary/55";
+  if (score <= 8) return "bg-primary/75";
+  return "bg-primary";
 }
