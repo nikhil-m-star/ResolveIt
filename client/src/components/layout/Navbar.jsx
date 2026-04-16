@@ -49,7 +49,7 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-[1200] w-[94%] max-w-5xl"
+      className="fixed top-6 inset-x-0 mx-auto z-[1200] w-[94%] max-w-5xl"
     >
       <nav className="glass-pill relative rounded-3xl border border-white/10 px-5 py-3 transition-all duration-500">
         <div
