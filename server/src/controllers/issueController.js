@@ -132,31 +132,58 @@ export const getIssues = async (req, res) => {
   try {
     const { city, area, category, status, search, lat, lng } = req.query;
     
-    // Recovery check: IF database is empty, auto-seed core tactical reports
+    // Self-Bootstrapping: IF database is empty, auto-populate situational grid
     const count = await prisma.issue.count();
     if (count === 0) {
-      console.log("Emergency Recovery: Database empty. Seeding core reports...");
-      const sysAdmin = await prisma.user.findFirst({ where: { role: 'PRESIDENT' } });
-      const adminId = sysAdmin?.id;
+      console.log("Self-Bootstrapping: No data detected. Initializing metropolitan grid...");
       
-      if (adminId) {
-        await prisma.issue.createMany({
-          data: [
-            { 
-              title: 'SEED - Massive Pothole on 80ft Road', 
-              description: 'Large crater formed after rain. Two-wheelers are skidding.',
-              category: 'POTHOLE', status: 'REPORTED', city: 'Bengaluru', area: 'Koramangala',
-              latitude: 12.9352, longitude: 77.6245, intensity: 8, createdById: adminId
-            },
-            { 
-              title: 'SEED - Overflowing garbage point', 
-              description: 'Collection point blocking the road edge.',
-              category: 'GARBAGE', status: 'RESOLVED', city: 'Bengaluru', area: 'HSR Layout',
-              latitude: 12.9116, longitude: 77.6474, intensity: 5, createdById: adminId
-            }
-          ]
-        });
-      }
+      // 1. Ensure Administrative Personnel exist
+      const admin = await prisma.user.upsert({
+        where: { email: 'admin@resolveit.com' },
+        update: {},
+        create: {
+          clerkId: 'sys_admin_root',
+          name: 'Central Command',
+          email: 'admin@resolveit.com',
+          role: 'PRESIDENT',
+          city: 'Bengaluru',
+          area: 'HQ'
+        }
+      });
+
+      const officer = await prisma.user.upsert({
+        where: { email: 'officer@resolveit.com' },
+        update: {},
+        create: {
+          clerkId: 'sys_officer_1',
+          name: 'Sector Officer Raj',
+          email: 'officer@resolveit.com',
+          role: 'OFFICER',
+          city: 'Bengaluru',
+          area: 'Koramangala'
+        }
+      });
+
+      // 2. Deploy Initial Situational Reports
+      await prisma.issue.createMany({
+        data: [
+          { 
+            title: 'SEED - Major Pothole on 80ft Road', 
+            description: 'Critical road damage impacting metropolitan flow. Dispatch required.',
+            category: 'POTHOLE', status: 'REPORTED', city: 'Bengaluru', area: 'Koramangala',
+            latitude: 12.9352, longitude: 77.6245, intensity: 8, createdById: admin.id,
+            assignedToId: officer.id
+          },
+          { 
+            title: 'SEED - Overflowing Sanitation Point', 
+            description: 'Environmental hazard detected at sector boundary.',
+            category: 'GARBAGE', status: 'RESOLVED', city: 'Bengaluru', area: 'HSR Layout',
+            latitude: 12.9116, longitude: 77.6474, intensity: 5, createdById: admin.id,
+            resolvedById: officer.id
+          }
+        ]
+      });
+      console.log("Metropolitan Grid Initialized.");
     }
 
     const filter = {};

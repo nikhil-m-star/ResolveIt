@@ -92,7 +92,6 @@ export function Navbar() {
                   >
                     <UserCircle2 className="h-4 w-4" />
                   </Link>
-                  <UserButtonCompat appearance={{ elements: { userButtonAvatarBox: "h-7 w-7 rounded-full border border-white/10" } }} />
                 </div>
               ) : (
                 <Link to="/sign-in" className="text-sm font-bold text-slate-400 hover:text-white px-3 py-1.5">
