@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { MapPin, ChevronUp, Bot, Loader2 } from "lucide-react";
-import { cn, getCategoryColor, getCategoryIcon, getStatusColor, evaluateIntensityColor } from "../../utils/helpers";
+import { cn, getCategoryColor, getCategoryIconNode, getStatusColor, evaluateIntensityColor } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../lib/auth";
 import toast from "react-hot-toast";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 
 export function IssueCard({ issue }) {
   const queryClient = useQueryClient();
-  const Icon = getCategoryIcon(issue.category);
   const isResolved = issue.status === "RESOLVED";
 
   const voteMutation = useMutation({
@@ -21,7 +20,7 @@ export function IssueCard({ issue }) {
   });
 
   return (
-    <motion.div 
+    <Motion.div 
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -36,7 +35,7 @@ export function IssueCard({ issue }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className={cn("p-2 rounded-lg border", getCategoryColor(issue.category))}>
-            <Icon className="w-4 h-4" />
+            {getCategoryIconNode(issue.category, "w-4 h-4")}
           </div>
           <span className="text-sm font-semibold capitalize tracking-wide opacity-90">
             {issue.category.replace(/_/g, " ")}
@@ -104,6 +103,6 @@ export function IssueCard({ issue }) {
           </span>
           <div className="h-2" />
       </div>
-    </motion.div>
+    </Motion.div>
   );
 }

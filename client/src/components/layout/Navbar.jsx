@@ -2,7 +2,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { Link, useLocation } from "react-router-dom";
 import { PlusCircle, LayoutDashboard, Shield, ShieldAlert, Trophy, KanbanSquare, UserCircle2 } from "lucide-react";
 import { NotificationsDropdown } from "./NotificationsDropdown";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 
 export function Navbar() {
   const { user } = useUser();
@@ -26,7 +26,7 @@ export function Navbar() {
   }
 
   return (
-    <motion.div 
+    <Motion.div 
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -37,9 +37,9 @@ export function Navbar() {
         <div className="absolute inset-0 rounded-full border border-transparent [background:linear-gradient(to_right,rgba(6,182,212,0.1),transparent)_border-box] pointer-events-none" style={{ WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "destination-out", maskComposite: "exclude" }} />
         
         <Link to="/" className="flex items-center gap-2 group relative z-10">
-          <motion.div whileHover={{ rotate: 15 }} transition={{ type: "spring", stiffness: 300 }}>
+          <Motion.div whileHover={{ rotate: 15 }} transition={{ type: "spring", stiffness: 300 }}>
             <Shield className="w-8 h-8 text-primary shadow-primary/20 drop-shadow-md" />
-          </motion.div>
+          </Motion.div>
           <span className="font-heading font-extrabold text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 truncate drop-shadow-sm">
             ResolveIt
           </span>
@@ -88,6 +88,6 @@ export function Navbar() {
           )}
         </div>
       </nav>
-    </motion.div>
+    </Motion.div>
   );
 }

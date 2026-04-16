@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 import axios from "axios";
 import { useEffect } from "react";

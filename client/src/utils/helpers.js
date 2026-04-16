@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { AlertCircle, Droplets, Zap, Trash2, Lightbulb, MapPin, TreePine, AlertTriangle } from "lucide-react";
+import { createElement } from "react";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -26,6 +27,11 @@ export function getCategoryIcon(category) {
     case "TREE_FALLEN": return TreePine;
     default: return MapPin;
   }
+}
+
+export function getCategoryIconNode(category, className = "") {
+  const Icon = getCategoryIcon(category);
+  return createElement(Icon, { className });
 }
 
 export function getCategoryColor(category) {

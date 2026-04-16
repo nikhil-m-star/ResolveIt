@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";

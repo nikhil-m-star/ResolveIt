@@ -6,7 +6,7 @@ import { api } from "../lib/auth";
 import { formatDistanceToNow } from "date-fns";
 import toast from "react-hot-toast";
 import { Bot, MapPin, ChevronUp, Clock, AlertTriangle, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
-import { cn, getCategoryIcon, getCategoryColor, getStatusColor, evaluateIntensityColor } from "../utils/helpers";
+import { cn, getCategoryIconNode, getCategoryColor, getStatusColor, evaluateIntensityColor } from "../utils/helpers";
 import { useState } from "react";
 
 export function IssueDetail() {
@@ -56,7 +56,6 @@ export function IssueDetail() {
     );
   }
 
-  const Icon = getCategoryIcon(issue.category);
   const isResolved = issue.status === "RESOLVED";
 
   return (
@@ -69,7 +68,7 @@ export function IssueDetail() {
           <div className="flex-1 space-y-4 w-full">
             <div className="flex flex-wrap items-center gap-3">
               <div className={cn("px-3 py-1.5 rounded-lg border flex items-center gap-2 text-sm font-bold capitalize", getCategoryColor(issue.category))}>
-                <Icon className="w-4 h-4" /> {issue.category.replace(/_/g, " ")}
+                {getCategoryIconNode(issue.category, "w-4 h-4")} {issue.category.replace(/_/g, " ")}
               </div>
               <div className={cn("px-3 py-1.5 rounded-lg border text-sm font-bold", getStatusColor(issue.status))}>
                 {issue.status.replace(/_/g, " ")}
@@ -182,7 +181,7 @@ export function IssueDetail() {
                </div>
 
                {/* Map Status Updates */}
-               {issue.statusHistory?.map((history, i) => (
+               {issue.statusHistory?.map((history) => (
                  <div key={history.id} className="relative pl-8">
                     <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-background border border-white/20 flex items-center justify-center -ml-px z-10">
                        {history.newStatus === "RESOLVED" ? (

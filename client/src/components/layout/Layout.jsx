@@ -1,5 +1,5 @@
 import { Navbar } from "./Navbar";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion as Motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
 export function Layout({ children }) {
@@ -17,7 +17,7 @@ export function Layout({ children }) {
 
       <Navbar />
       <AnimatePresence mode="wait">
-        <motion.main 
+        <Motion.main 
           key={location.pathname}
           initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -26,7 +26,7 @@ export function Layout({ children }) {
           className="pt-[100px] min-h-screen relative z-10 pb-8"
         >
           {children}
-        </motion.main>
+        </Motion.main>
       </AnimatePresence>
     </div>
   );

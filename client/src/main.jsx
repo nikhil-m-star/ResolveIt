@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { ResolveItAuthProvider, api } from './lib/auth.jsx'
+import { ResolveItAuthProvider } from './lib/auth.jsx'
 import App from './App.jsx'
 import './index.css'
 
