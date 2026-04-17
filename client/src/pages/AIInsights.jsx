@@ -86,12 +86,12 @@ export function AIInsights() {
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-3 p-1.5 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-xl shadow-2xl"
+              className="flex flex-col sm:flex-row w-full md:w-auto items-stretch sm:items-center gap-2 sm:gap-3 p-1.5 rounded-[20px] bg-white/5 border border-white/5 backdrop-blur-xl shadow-2xl"
             >
               <select 
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-                className="bg-transparent border-none rounded-xl px-5 py-3 text-[11px] font-black uppercase tracking-widest text-white/70 focus:text-white focus:outline-none transition-colors cursor-pointer"
+                className="bg-transparent border-none rounded-xl px-5 py-4 sm:py-3 text-[11px] font-black uppercase tracking-widest text-white/70 focus:text-white focus:outline-none transition-colors cursor-pointer w-full text-center sm:text-left"
               >
                 <option value="" className="bg-slate-900">City Wide</option>
                 {availableAreas.map(a => <option key={a} value={a} className="bg-slate-900">{a}</option>)}
@@ -99,7 +99,7 @@ export function AIInsights() {
               <button 
                 onClick={fetchReport}
                 disabled={isLoading}
-                className="flex items-center gap-3 bg-primary hover:bg-emerald-400 rounded-xl px-8 py-3.5 text-[11px] font-black uppercase tracking-[0.2em] text-black transition-all shadow-[0_10px_30px_-10px_#10b981] disabled:opacity-50 disabled:shadow-none active:scale-95 group"
+                className="flex items-center justify-center gap-3 bg-primary hover:bg-emerald-400 rounded-xl px-8 py-4 sm:py-3.5 text-[11px] font-black uppercase tracking-[0.2em] text-black transition-all shadow-[0_10px_30px_-10px_#10b981] disabled:opacity-50 disabled:shadow-none active:scale-95 group w-full sm:w-auto"
               >
                 <RefreshCcw className={cn("w-4 h-4 transition-transform group-hover:rotate-180 duration-500", isLoading && "animate-spin")} />
                 {isLoading ? 'Processing...' : 'Generate Report'}
