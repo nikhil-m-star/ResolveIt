@@ -140,8 +140,7 @@ async function main() {
       votes: 21,
       createdById: citizen.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?pothole,road',
-        'https://source.unsplash.com/1600x900/?damaged,street'
+        '/seeds/pothole.png'
       ],
     },
     {
@@ -159,8 +158,7 @@ async function main() {
       createdById: citizenTwo.id,
       assignedToId: officer.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?streetlight,night,city',
-        'https://source.unsplash.com/1600x900/?dark,street,night'
+        '/seeds/streetlight.png'
       ],
     },
     {
@@ -180,8 +178,7 @@ async function main() {
       resolvedById: officer.id,
       resolvedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?garbage,street',
-        'https://source.unsplash.com/1600x900/?waste,cleanup,city'
+        '/seeds/garbage.png'
       ],
     },
     {
@@ -198,8 +195,7 @@ async function main() {
       votes: 10,
       createdById: citizenTwo.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?water,leak,road',
-        'https://source.unsplash.com/1600x900/?pipe,water,street'
+        '/seeds/water_leak.png'
       ],
     },
     {
@@ -217,8 +213,7 @@ async function main() {
       createdById: citizen.id,
       assignedToId: officer.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?fallen,tree,road',
-        'https://source.unsplash.com/1600x900/?storm,tree,street'
+        '/seeds/tree_fallen.png'
       ],
     },
     {
@@ -236,8 +231,7 @@ async function main() {
       slaBreached: true,
       createdById: citizenTwo.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?sewage,street,drain',
-        'https://source.unsplash.com/1600x900/?dirty,drain,road'
+        '/seeds/sewage.png'
       ],
     },
     {
@@ -255,8 +249,7 @@ async function main() {
       createdById: citizen.id,
       assignedToId: officer.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?power,line,city',
-        'https://source.unsplash.com/1600x900/?electricity,substation'
+        '/seeds/power_cut.png'
       ],
     },
     {
@@ -274,7 +267,7 @@ async function main() {
       isAnonymous: true,
       createdById: citizenTwo.id,
       imageUrls: [
-        'https://source.unsplash.com/1600x900/?office,documents,desk'
+        '/seeds/bribery.png'
       ],
     },
   ];
