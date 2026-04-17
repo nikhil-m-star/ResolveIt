@@ -77,7 +77,7 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed top-6 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
       >
-        <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border-white/20 bg-black/40 backdrop-blur-3xl">
+        <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 bg-white/[0.02] backdrop-blur-3xl">
           <div className="flex items-center gap-6">
             <Link to="/" className="flex shrink-0 items-center gap-3 pl-4 pr-6 border-r border-white/10 hover:opacity-80 transition-opacity">
               <Shield className="h-6 w-6 text-primary shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
@@ -221,7 +221,7 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed bottom-8 left-0 right-0 z-1250 flex justify-center px-6 md:hidden"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-full px-2 py-2 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] border-white/20 bg-black/30 backdrop-blur-3xl">
+        <nav className="glass-pill w-full max-w-sm rounded-full px-2 py-2 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 bg-white/[0.02] backdrop-blur-3xl">
           <div className="flex justify-between items-center relative h-14">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
