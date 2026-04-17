@@ -155,8 +155,10 @@ async function main() {
       etaDays: 3,
       votes: 12,
       createdById: citizen.id,
-      assignedToId: officer.id,
-      imageUrls: ['https://res.cloudinary.com/demo/image/upload/sample.jpg'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1506152983178-5db0d45da8c4?auto=format&fit=crop&w=1200&q=80'
+      ],
     },
     {
       title: 'SEED - Streetlights not working near metro station',
@@ -172,7 +174,7 @@ async function main() {
       votes: 9,
       createdById: citizenTwo.id,
       assignedToId: officer.id,
-      imageUrls: [],
+      imageUrls: ['https://images.unsplash.com/photo-1494522358652-330b6cba186e?auto=format&fit=crop&w=1200&q=80'],
     },
     {
       title: 'SEED - Overflowing garbage point near market',
@@ -190,7 +192,10 @@ async function main() {
       assignedToId: officer.id,
       resolvedById: officer.id,
       resolvedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      imageUrls: [],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=1200&q=80'
+      ],
     },
     {
       title: 'SEED - Water leakage at junction',
@@ -205,7 +210,7 @@ async function main() {
       etaDays: 4,
       votes: 4,
       createdById: citizenTwo.id,
-      imageUrls: [],
+      imageUrls: ['https://images.unsplash.com/photo-1504626815340-0255b6fc9df9?auto=format&fit=crop&w=1200&q=80'],
     },
     {
       title: 'SEED - Fallen tree branch blocking lane',
@@ -221,7 +226,10 @@ async function main() {
       votes: 7,
       createdById: citizen.id,
       assignedToId: officer.id,
-      imageUrls: [],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1516024925406-8c8f000b209a?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1563242200-a61621bfdfb9?auto=format&fit=crop&w=1200&q=80'
+      ],
     },
   ];
 
