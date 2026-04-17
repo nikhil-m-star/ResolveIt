@@ -95,12 +95,6 @@ export function Dashboard() {
                     Searching location...
                   </div>
                 )}
-                {!isLocating && detectedCity && (
-                  <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                    <RefreshCcw className="h-3 w-3" />
-                    Area: {detectedCity}
-                  </div>
-                )}
               </div>
             </div>
 
