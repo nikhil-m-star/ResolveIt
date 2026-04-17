@@ -46,8 +46,6 @@ async function main() {
       role: 'PRESIDENT',
       city: CITY,
       area: 'HQ',
-      tier: 'PLATINUM',
-      points: 1200,
       resolvedCount: 130,
       assignedCount: 75,
       avgRating: 4.9,
@@ -59,8 +57,6 @@ async function main() {
       role: 'PRESIDENT',
       city: CITY,
       area: 'HQ',
-      tier: 'PLATINUM',
-      points: 1200,
       resolvedCount: 130,
       assignedCount: 75,
       avgRating: 4.9,
@@ -74,8 +70,6 @@ async function main() {
       role: 'OFFICER',
       city: CITY,
       area: 'Koramangala',
-      tier: 'GOLD',
-      points: 820,
       resolvedCount: 46,
       assignedCount: 22,
       avgRating: 4.7,
@@ -87,8 +81,6 @@ async function main() {
       role: 'OFFICER',
       city: CITY,
       area: 'Koramangala',
-      tier: 'GOLD',
-      points: 820,
       resolvedCount: 46,
       assignedCount: 22,
       avgRating: 4.7,
@@ -102,8 +94,6 @@ async function main() {
       role: 'CITIZEN',
       city: CITY,
       area: 'Koramangala',
-      points: 145,
-      tier: 'SILVER',
     },
     create: {
       clerkId: 'seed_citizen_1',
@@ -112,8 +102,6 @@ async function main() {
       role: 'CITIZEN',
       city: CITY,
       area: 'Koramangala',
-      points: 145,
-      tier: 'SILVER',
     },
   });
 
@@ -124,8 +112,6 @@ async function main() {
       role: 'CITIZEN',
       city: CITY,
       area: 'Indiranagar',
-      points: 88,
-      tier: 'SILVER',
     },
     create: {
       clerkId: 'seed_citizen_2',
@@ -134,8 +120,6 @@ async function main() {
       role: 'CITIZEN',
       city: CITY,
       area: 'Indiranagar',
-      points: 88,
-      tier: 'SILVER',
     },
   });
 
@@ -143,8 +127,8 @@ async function main() {
   const createdIssues = [];
   const issueSpecs = [
     {
-      title: 'SEED - Massive Pothole on 80ft Road',
-      description: 'Large crater formed after rain. Two-wheelers are skidding during peak hours.',
+      title: 'SEED - Deep pothole outside Sony Signal flyover turn',
+      description: 'A deep pothole has opened up near the left-turn lane and riders are swerving abruptly in peak traffic.',
       category: 'POTHOLE',
       status: 'REPORTED',
       city: CITY,
@@ -153,16 +137,16 @@ async function main() {
       longitude: 77.6245,
       intensity: 8,
       etaDays: 3,
-      votes: 12,
+      votes: 21,
       createdById: citizen.id,
       imageUrls: [
-        'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1506152983178-5db0d45da8c4?auto=format&fit=crop&w=1200&q=80'
+        'https://source.unsplash.com/1600x900/?pothole,road',
+        'https://source.unsplash.com/1600x900/?damaged,street'
       ],
     },
     {
-      title: 'SEED - Streetlights not working near metro station',
-      description: 'Three consecutive streetlights are off making the footpath unsafe at night.',
+      title: 'SEED - Dark stretch due to failed streetlights near Metro exit',
+      description: 'Four streetlights are non-functional near the station exit, reducing pedestrian visibility after 8 PM.',
       category: 'STREETLIGHT',
       status: 'IN_PROGRESS',
       city: CITY,
@@ -171,14 +155,17 @@ async function main() {
       longitude: 77.6408,
       intensity: 6,
       etaDays: 2,
-      votes: 9,
+      votes: 14,
       createdById: citizenTwo.id,
       assignedToId: officer.id,
-      imageUrls: ['https://images.unsplash.com/photo-1494522358652-330b6cba186e?auto=format&fit=crop&w=1200&q=80'],
+      imageUrls: [
+        'https://source.unsplash.com/1600x900/?streetlight,night,city',
+        'https://source.unsplash.com/1600x900/?dark,street,night'
+      ],
     },
     {
-      title: 'SEED - Overflowing garbage point near market',
-      description: 'Collection point has not been cleared for 4 days and is blocking the road edge.',
+      title: 'SEED - Overflowing garbage skip beside weekly market',
+      description: 'Garbage collection has been missed for multiple days; spillover is blocking shop-front access.',
       category: 'GARBAGE',
       status: 'RESOLVED',
       city: CITY,
@@ -187,19 +174,19 @@ async function main() {
       longitude: 77.6474,
       intensity: 5,
       etaDays: 1,
-      votes: 6,
+      votes: 11,
       createdById: citizen.id,
       assignedToId: officer.id,
       resolvedById: officer.id,
       resolvedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
       imageUrls: [
-        'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=1200&q=80'
+        'https://source.unsplash.com/1600x900/?garbage,street',
+        'https://source.unsplash.com/1600x900/?waste,cleanup,city'
       ],
     },
     {
-      title: 'SEED - Water leakage at junction',
-      description: 'Continuous underground pipeline leak creating waterlogging and traffic slowdowns.',
+      title: 'SEED - Continuous pipeline leakage causing waterlogging',
+      description: 'Water is flowing from the manhole edge all day and creating slippery patches near the signal.',
       category: 'WATER_LEAK',
       status: 'REPORTED',
       city: CITY,
@@ -208,13 +195,16 @@ async function main() {
       longitude: 77.6101,
       intensity: 7,
       etaDays: 4,
-      votes: 4,
+      votes: 10,
       createdById: citizenTwo.id,
-      imageUrls: ['https://images.unsplash.com/photo-1504626815340-0255b6fc9df9?auto=format&fit=crop&w=1200&q=80'],
+      imageUrls: [
+        'https://source.unsplash.com/1600x900/?water,leak,road',
+        'https://source.unsplash.com/1600x900/?pipe,water,street'
+      ],
     },
     {
-      title: 'SEED - Fallen tree branch blocking lane',
-      description: 'Major branch collapsed after storm and blocks one side of the lane.',
+      title: 'SEED - Fallen tree branch blocking one carriageway',
+      description: 'A large branch collapsed after rain and now blocks one lane, forcing traffic into oncoming flow.',
       category: 'TREE_FALLEN',
       status: 'IN_PROGRESS',
       city: CITY,
@@ -223,12 +213,68 @@ async function main() {
       longitude: 77.5838,
       intensity: 6,
       etaDays: 2,
-      votes: 7,
+      votes: 13,
       createdById: citizen.id,
       assignedToId: officer.id,
       imageUrls: [
-        'https://images.unsplash.com/photo-1516024925406-8c8f000b209a?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1563242200-a61621bfdfb9?auto=format&fit=crop&w=1200&q=80'
+        'https://source.unsplash.com/1600x900/?fallen,tree,road',
+        'https://source.unsplash.com/1600x900/?storm,tree,street'
+      ],
+    },
+    {
+      title: 'SEED - Open sewage line and foul smell near school wall',
+      description: 'Sewage line is partially open and wastewater is overflowing onto the sidewalk used by students.',
+      category: 'SEWAGE',
+      status: 'REPORTED',
+      city: CITY,
+      area: 'Banaswadi',
+      latitude: 13.0126,
+      longitude: 77.6511,
+      intensity: 9,
+      etaDays: 5,
+      votes: 18,
+      slaBreached: true,
+      createdById: citizenTwo.id,
+      imageUrls: [
+        'https://source.unsplash.com/1600x900/?sewage,street,drain',
+        'https://source.unsplash.com/1600x900/?dirty,drain,road'
+      ],
+    },
+    {
+      title: 'SEED - Frequent power cuts in residential block C',
+      description: 'Residents report repeated outages every evening, affecting lifts and common-area safety lights.',
+      category: 'POWER_CUT',
+      status: 'IN_PROGRESS',
+      city: CITY,
+      area: 'Whitefield',
+      latitude: 12.9698,
+      longitude: 77.7499,
+      intensity: 7,
+      etaDays: 2,
+      votes: 16,
+      createdById: citizen.id,
+      assignedToId: officer.id,
+      imageUrls: [
+        'https://source.unsplash.com/1600x900/?power,line,city',
+        'https://source.unsplash.com/1600x900/?electricity,substation'
+      ],
+    },
+    {
+      title: 'SEED - Bribery attempt reported at permit desk',
+      description: 'Citizen reported unofficial cash demand for document processing. Escalated for vigilance review.',
+      category: 'BRIBERY',
+      status: 'REJECTED',
+      city: CITY,
+      area: 'Shivajinagar',
+      latitude: 12.9868,
+      longitude: 77.6039,
+      intensity: 8,
+      etaDays: 7,
+      votes: 9,
+      isAnonymous: true,
+      createdById: citizenTwo.id,
+      imageUrls: [
+        'https://source.unsplash.com/1600x900/?office,documents,desk'
       ],
     },
   ];

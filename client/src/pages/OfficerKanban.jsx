@@ -106,10 +106,10 @@ export function OfficerKanban() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-6 py-16 min-h-screen flex flex-col space-y-12 animate-in fade-in duration-1000">
+      <div className="max-w-7xl mx-auto px-4 py-8 md:py-16 min-h-screen flex flex-col space-y-8 animate-in fade-in duration-1000">
         
         {/* Kanban Header & Metrics HUD */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-3">
              <div className="flex items-center gap-3 mb-2">
                 <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-[8px] font-black text-primary uppercase tracking-[0.2em]">Live Data</div>
@@ -128,7 +128,7 @@ export function OfficerKanban() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row items-center gap-8 bg-black/40 border border-white/10 rounded-[40px] px-10 py-6 backdrop-blur-3xl shadow-2xl w-full md:w-auto relative group overflow-hidden"
+            className="flex flex-col md:flex-row items-center gap-6 bg-black/40 border border-white/10 rounded-[28px] px-5 py-4 backdrop-blur-3xl shadow-2xl w-full md:w-auto relative group overflow-hidden"
           >
             <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             
@@ -152,52 +152,52 @@ export function OfficerKanban() {
             
             <div className="hidden md:block w-px h-10 bg-white/10" />
             
-            <div className="flex items-center gap-10 w-full md:w-auto">
+            <div className="flex items-center justify-between md:justify-start gap-6 w-full md:w-auto">
               <div className="flex flex-col">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">In Handling</span>
-                <span className="text-2xl font-black text-white tracking-tighter">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
+                <span className="text-xl font-black text-white tracking-tighter">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Metropolitan SLA</span>
-                <span className="text-2xl font-black text-primary tracking-tighter">Optimal</span>
+                <span className="text-xl font-black text-primary tracking-tighter">Optimal</span>
               </div>
             </div>
           </motion.div>
         </div>
 
         {!isOfficer && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
                 <Users className="w-3.5 h-3.5 text-cyan-300" /> Total Cases
               </div>
-              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-white">{issues?.length || 0}</div>
+              <div className="mt-2 text-2xl font-black tracking-tighter text-white">{issues?.length || 0}</div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
                 <Clock3 className="w-3.5 h-3.5 text-amber-400" /> Open Cases
               </div>
-              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-white">{unresolvedCount}</div>
+              <div className="mt-2 text-2xl font-black tracking-tighter text-white">{unresolvedCount}</div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
                 <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Resolved
               </div>
-              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-primary">{resolvedCount}</div>
+              <div className="mt-2 text-2xl font-black tracking-tighter text-primary">{resolvedCount}</div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
                 <Activity className="w-3.5 h-3.5 text-primary" /> Resolution Rate
               </div>
-              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-white">{resolutionRate}%</div>
+              <div className="mt-2 text-2xl font-black tracking-tighter text-white">{resolutionRate}%</div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
                 <Flame className="w-3.5 h-3.5 text-red-400" /> SLA Breaches
               </div>
-              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-red-400">{slaBreachedCount}</div>
+              <div className="mt-2 text-2xl font-black tracking-tighter text-red-400">{slaBreachedCount}</div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
                 <MapPin className="w-3.5 h-3.5 text-cyan-300" /> Hotspot
               </div>
@@ -208,8 +208,8 @@ export function OfficerKanban() {
         )}
 
         {/* Board Environment - Snap X implementation */}
-        <div className="flex-1 overflow-x-auto pb-10 -mx-6 px-6 scrollbar-hide snap-x snap-mandatory">
-          <div className="flex flex-row gap-8 h-full min-h-[600px] w-fit">
+        <div className="flex-1 overflow-x-auto pb-8 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
+          <div className="flex flex-row gap-4 h-full min-h-[500px] w-fit">
             {COLUMNS.map((column) => {
               const columnIssues = issues?.filter((issue) => issue.status === column.id) || [];
               const Icon = column.icon;
@@ -225,7 +225,7 @@ export function OfficerKanban() {
                   onDragLeave={() => setDraggedOver(null)}
                   onDrop={(e) => handleDrop(e, column.id)}
                   className={cn(
-                    "relative flex flex-col rounded-[48px] bg-black/40 border transition-all duration-500 w-[92vw] md:w-[380px] shrink-0 h-fit min-h-[340px] md:min-h-[300px] snap-center",
+                    "relative flex flex-col rounded-[32px] bg-black/40 border transition-all duration-500 w-[85vw] shrink-0 h-fit min-h-[300px] snap-center",
                     isOver ? "border-primary bg-primary/5 scale-[1.02] shadow-[0_0_40px_rgba(16,185,129,0.1)]" : "border-white/5 shadow-2xl"
                   )}
                 >
@@ -236,8 +236,8 @@ export function OfficerKanban() {
                     column.id === "IN_PROGRESS" ? "bg-amber-500" : "bg-emerald-500"
                   )} />
 
-                  <div className="p-9 md:p-8 border-b border-white/5 bg-white/5 backdrop-blur-xl flex justify-between items-center relative z-10 rounded-t-[48px]">
-                    <h3 className="text-[11px] font-black text-white flex items-center gap-4 uppercase tracking-[0.2em]">
+                  <div className="p-5 border-b border-white/5 bg-white/5 backdrop-blur-xl flex justify-between items-center relative z-10 rounded-t-[32px]">
+                    <h3 className="text-[10px] font-black text-white flex items-center gap-3 uppercase tracking-[0.2em]">
                        <div className={cn("p-2.5 rounded-2xl bg-black/60 border border-white/10 shadow-2xl", column.color)}>
                           <Icon className="w-4 h-4" />
                        </div>
@@ -248,7 +248,7 @@ export function OfficerKanban() {
                     </span>
                   </div>
 
-                  <div className="p-9 md:p-8 flex flex-col gap-6 relative z-10">
+                  <div className="p-5 flex flex-col gap-4 relative z-10">
                      {columnIssues.map((issue) => (
                        <motion.div 
                           key={issue.id}
@@ -260,7 +260,7 @@ export function OfficerKanban() {
                             e.dataTransfer.setData("currentStatus", issue.status);
                           }}
                           className={cn(
-                            "p-8 md:p-7 bg-black/60 border border-white/5 hover:border-primary/40 transition-all rounded-[32px] relative group shadow-2xl hover:shadow-primary/10 overflow-hidden",
+                            "p-5 bg-black/60 border border-white/5 hover:border-primary/40 transition-all rounded-[24px] relative group shadow-2xl hover:shadow-primary/10 overflow-hidden",
                             isOfficer ? "cursor-grab active:cursor-grabbing" : "cursor-default"
                           )}
                         >
@@ -283,11 +283,11 @@ export function OfficerKanban() {
                              )}
                           </div>
                           
-                          <h4 className="text-lg font-heading font-black text-white mb-4 leading-[1.3] group-hover:text-primary/90 transition-colors">
+                          <h4 className="text-lg font-heading font-black text-white mb-3 leading-[1.3] group-hover:text-primary/90 transition-colors">
                             {issue.title}
                           </h4>
                           
-                          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
+                          <div className="flex items-center justify-between mt-5 pt-4 border-t border-white/5">
                              <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                 <MapPin className="w-3.5 h-3.5 text-primary/60" /> {issue.area || "City Wide"}
                              </div>

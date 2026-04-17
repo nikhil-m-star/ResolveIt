@@ -72,17 +72,17 @@ export function Profile() {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 py-12 animate-in fade-in duration-700">
+      <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 animate-in fade-in duration-700">
         
         {/* Profile Card */}
-        <div className="glass-card p-10 md:p-14 mb-12 flex flex-col md:flex-row items-center gap-12 border-l-[8px] border-primary bg-black/60 relative overflow-hidden group shadow-[0_0_50px_-12px_rgba(16,185,129,0.2)]">
+        <div className="glass-card p-5 md:p-14 mb-8 md:mb-12 flex flex-col md:flex-row items-center gap-6 md:gap-12 border-l-[6px] border-primary bg-black/60 relative overflow-hidden group shadow-[0_0_50px_-12px_rgba(16,185,129,0.2)]">
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
              <Fingerprint className="w-48 h-48 text-primary" />
           </div>
           <div className="absolute top-0 left-0 w-full h-1 bg-primary/30" />
           
           <div className="relative">
-            <div className="w-40 h-40 rounded-3xl bg-black border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-2xl relative">
+            <div className="w-28 h-28 md:w-40 md:h-40 rounded-3xl bg-black border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-2xl relative">
                {/* Removed scan gradient */}
                {clerkUser?.imageUrl ? (
                  <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
@@ -90,12 +90,12 @@ export function Profile() {
                  <UserIcon className="w-16 h-16 text-primary/30" />
                )}
             </div>
-            <div className="absolute -bottom-3 -right-3 px-3 py-1.5 bg-primary text-black text-[9px] font-black uppercase tracking-widest rounded-lg shadow-xl border border-primary/50">
+            <div className="absolute -bottom-2 -right-2 px-2.5 py-1 bg-primary text-black text-[8px] font-black uppercase tracking-widest rounded-lg shadow-xl border border-primary/50">
                VERIFIED
             </div>
           </div>
 
-          <div className="flex-1 text-center md:text-left space-y-6 relative z-10">
+          <div className="flex-1 text-center md:text-left space-y-4 relative z-10">
             <div className="space-y-2">
               <div className="flex items-center justify-center md:justify-start gap-3 text-slate-500">
                 <Terminal className="w-3.5 h-3.5" />
@@ -113,10 +113,10 @@ export function Profile() {
                </div>
             </div>
 
-            <div className="flex items-center justify-center md:justify-start gap-6 pt-2">
+            <div className="flex items-center justify-center md:justify-start gap-4 pt-1">
                <div className="flex items-center gap-2 text-slate-500 group-hover:text-primary transition-colors">
                   <MapPin className="w-4 h-4" /> 
-                  <span className="text-[10px] font-black uppercase tracking-widest">
+                  <span className="text-[9px] font-black uppercase tracking-widest">
                      {profile.city && profile.area ? `${profile.area} // ${profile.city}` : "LOCATION_NOT_SET"}
                   </span>
                </div>
@@ -124,7 +124,7 @@ export function Profile() {
           </div>
 
           <div className="flex flex-col gap-3 z-10 w-full md:w-auto">
-             <div className="flex items-center justify-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+             <div className="flex items-center justify-center gap-4 bg-white/5 p-3 rounded-2xl border border-white/5">
                 <UserButtonCompat appearance={{ elements: { userButtonAvatarBox: "h-10 w-10 rounded-xl border-2 border-primary/20 shadow-2xl" } }} />
                 <div className="text-right hidden sm:block">
                    <p className="text-[9px] font-black text-white uppercase tracking-widest">Account Status</p>
@@ -134,7 +134,7 @@ export function Profile() {
             <button 
                onClick={() => setIsEditing(!isEditing)}
                className={cn(
-                 "w-full px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 border shadow-xl",
+                 "w-full px-5 py-2.5 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 border shadow-xl",
                  isEditing ? "bg-primary text-black border-primary" : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
                )}
             >
@@ -181,10 +181,10 @@ export function Profile() {
           </form>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Stats Containers */}
-          <div className="space-y-8 md:col-span-1">
-             <div className="glass-card bg-black/40 border border-white/5 p-8 flex flex-col gap-8">
+          <div className="space-y-5 md:col-span-1">
+             <div className="glass-card bg-black/40 border border-white/5 p-5 flex flex-col gap-5">
                 <div className="flex items-center justify-between">
                    <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em] flex items-center gap-3">
                       <Activity className="w-4 h-4 text-primary" /> My Impact
@@ -204,7 +204,7 @@ export function Profile() {
                            </div>
                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{stat.label}</span>
                         </div>
-                        <span className="text-2xl font-heading font-black text-white">{stat.value}</span>
+                        <span className="text-xl font-heading font-black text-white">{stat.value}</span>
                      </div>
                    ))}
                 </div>
@@ -212,7 +212,7 @@ export function Profile() {
 
              {/* Deployment Authorization */}
              {!isOfficer && (
-               <div className="glass-card p-8 bg-black/60 border-primary/20 relative overflow-hidden group shadow-2xl">
+               <div className="glass-card p-5 bg-black/60 border-primary/20 relative overflow-hidden group shadow-2xl">
                  <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                     <ShieldAlert className="w-32 h-32 text-primary" />
                  </div>
@@ -235,17 +235,17 @@ export function Profile() {
           </div>
 
           {/* Reports Ledger Container */}
-          <div className="md:col-span-2 glass-card bg-black/40 border border-white/5 p-8 flex flex-col min-h-600 overflow-hidden relative group/ledger">
+          <div className="md:col-span-2 glass-card bg-black/40 border border-white/5 p-5 flex flex-col min-h-500 overflow-hidden relative group/ledger">
              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-3xl opacity-0 group-hover/ledger:opacity-100 transition-opacity" />
              
-             <div className="flex items-center justify-between mb-10 relative z-10">
+             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-10 relative z-10">
                 <div className="space-y-1">
-                   <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-4">
-                      <Target className="w-6 h-6 text-primary" /> My Reports
+                   <h3 className="text-lg font-black text-white uppercase tracking-tight flex items-center gap-3">
+                      <Target className="w-5 h-5 text-primary" /> My Reports
                    </h3>
                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest pl-10">Issues you have reported</span>
                 </div>
-                <div className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-primary uppercase tracking-widest">
+                <div className="w-fit px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-primary uppercase tracking-widest">
                    {profile.issues?.length || 0} Open Cases
                 </div>
              </div>
@@ -254,11 +254,11 @@ export function Profile() {
                 {profile.issues?.length > 0 ? (
                    <div className="grid gap-4">
                       {profile.issues.map((issue, idx) => (
-                         <div key={issue.id} className="flex flex-col sm:flex-row items-center justify-between p-6 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] hover:border-primary/30 transition-all group overflow-hidden relative">
+                         <div key={issue.id} className="flex flex-col md:flex-row items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] hover:border-primary/30 transition-all group overflow-hidden relative">
                             <div className="absolute top-0 right-0 p-4 text-[40px] font-black text-white opacity-[0.02] group-hover:opacity-[0.05] pointer-events-none select-none">
                                0{idx + 1}
                             </div>
-                            <div className="flex items-center gap-6 w-full sm:w-auto mb-4 sm:mb-0">
+                            <div className="flex items-center gap-4 w-full md:w-auto mb-4 md:mb-0">
                                <div className={cn(
                                  "w-12 h-12 rounded-xl flex items-center justify-center border transition-all shadow-2xl",
                                  issue.status === 'RESOLVED' ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" : "bg-primary/10 border-primary/30 text-primary"
@@ -266,9 +266,9 @@ export function Profile() {
                                   {issue.status === 'RESOLVED' ? <CheckCircle2 className="w-6 h-6" /> : <Activity className="w-6 h-6" />}
                                </div>
                                <div className="space-y-1">
-                                  <h4 className="text-lg font-black text-white hover:text-primary transition-colors uppercase tracking-tight truncate max-w-[200px] sm:max-w-md">{issue.title}</h4>
-                                  <div className="flex items-center gap-4">
-                                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{issue.area || issue.city}</span>
+                                  <h4 className="text-base font-black text-white hover:text-primary transition-colors uppercase tracking-tight truncate max-w-[180px] md:max-w-md">{issue.title}</h4>
+                                  <div className="flex items-center gap-2.5">
+                                     <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{issue.area || issue.city}</span>
                                      <div className="w-1 h-1 rounded-full bg-white/10" />
                                      <span className={cn("text-[9px] font-black uppercase tracking-widest", issue.status === 'RESOLVED' ? "text-emerald-500" : "text-primary")}>{issue.status}</span>
                                   </div>
@@ -276,7 +276,7 @@ export function Profile() {
                             </div>
                             <Link 
                                to={`/issues/${issue.id}`}
-                               className="w-full sm:w-auto px-8 py-3 bg-black/40 text-[10px] font-black uppercase tracking-[0.2em] text-white rounded-xl hover:bg-primary hover:text-black transition-all border border-white/10 shadow-lg flex items-center justify-center gap-3 group/btn"
+                               className="w-full md:w-auto px-6 py-3 bg-black/40 text-[9px] font-black uppercase tracking-[0.2em] text-white rounded-xl hover:bg-primary hover:text-black transition-all border border-white/10 shadow-lg flex items-center justify-center gap-3 group/btn"
                             >
                                View Details <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                             </Link>

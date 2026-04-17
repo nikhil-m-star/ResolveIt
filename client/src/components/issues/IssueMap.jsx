@@ -4,7 +4,7 @@ import L from "leaflet";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { ChevronRight } from "lucide-react";
-import { cn, getStatusColor, getCategoryColor } from "../../utils/helpers";
+import { cn, getCategoryColor } from "../../utils/helpers";
 
 // Fix Leaflet's default icon path issues
 delete L.Icon.Default.prototype._getIconUrl;
@@ -15,10 +15,10 @@ L.Icon.Default.mergeOptions({
 });
 
 const STATUS_MARKER_STYLE = {
-  REPORTED: { core: "#06b6d4", glow: "rgba(6,182,212,0.75)", ring: "rgba(6,182,212,0.30)" },
-  IN_PROGRESS: { core: "#f59e0b", glow: "rgba(245,158,11,0.75)", ring: "rgba(245,158,11,0.30)" },
-  RESOLVED: { core: "#10b981", glow: "rgba(16,185,129,0.75)", ring: "rgba(16,185,129,0.30)" },
-  REJECTED: { core: "#ef4444", glow: "rgba(239,68,68,0.75)", ring: "rgba(239,68,68,0.30)" },
+  REPORTED: { core: "#3b82f6", glow: "rgba(59,130,246,0.78)", ring: "rgba(59,130,246,0.30)" },
+  IN_PROGRESS: { core: "#f59e0b", glow: "rgba(245,158,11,0.78)", ring: "rgba(245,158,11,0.30)" },
+  RESOLVED: { core: "#22c55e", glow: "rgba(34,197,94,0.78)", ring: "rgba(34,197,94,0.30)" },
+  REJECTED: { core: "#f43f5e", glow: "rgba(244,63,94,0.78)", ring: "rgba(244,63,94,0.30)" },
 };
 
 const createCustomMarker = (status) => {
@@ -33,6 +33,8 @@ const createCustomMarker = (status) => {
     iconAnchor: [16, 16],
   });
 };
+
+const getStatusDotColor = (status) => (STATUS_MARKER_STYLE[status] || STATUS_MARKER_STYLE.REPORTED).core;
 
 const isFiniteNumber = (value) => Number.isFinite(Number(value));
 const isValidIssueCoordinate = (issue) =>
@@ -96,7 +98,7 @@ export function IssueMap({ issues, userLocation }) {
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   
                   <div className="flex items-center gap-2 mb-3">
-                     <div className={cn("w-2 h-2 rounded-full animate-pulse", getStatusColor(issue.status).replace('text-', 'bg-'))} />
+                     <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: getStatusDotColor(issue.status) }} />
                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Report Located</span>
                   </div>
                   <h4 className="font-heading font-black text-md mb-2 text-white uppercase tracking-tight leading-tight">
