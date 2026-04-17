@@ -53,79 +53,91 @@ export function Dashboard() {
 
   return (
     <Layout>
-      <div className="px-4 py-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700">
+      <div className="px-4 py-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700 relative">
+        {/* Background Glow Effect - Perfect for depth */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
         
-        {/* Dashboard Header - purified */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+        {/* Dashboard Header - purified & perfected */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 relative z-10">
           <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
-            <div className="relative w-full md:w-[500px] group/search">
-              <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-focus-within/search:opacity-100 transition-opacity" />
+            <div className="relative w-full md:w-[550px] group/search">
+              <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-focus-within/search:opacity-100 transition-all duration-500" />
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
               <input 
                 type="text"
-                placeholder="Search issues..."
+                placeholder="Search for issues..."
                 value={filters.search || ""}
                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-13 pr-6 py-4 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all shadow-2xl backdrop-blur-xl"
+                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-13 pr-6 py-4 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all shadow-2xl backdrop-blur-2xl"
               />
             </div>
           </div>
 
           <Link
             to="/report"
-            className="group relative flex items-center gap-4 bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(16,185,129,0.2)] overflow-hidden shrink-0"
+            className="group relative flex items-center gap-4 bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_10px_40px_-10px_rgba(16,185,129,0.4)] overflow-hidden shrink-0"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <PlusCircle className="h-5 w-5" />
             Report Issue
           </Link>
         </div>
 
 
-        <div className="mx-auto max-w-5xl w-full">
-          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-5xl bg-black border border-white/5 shadow-2xl backdrop-blur-3xl">
+        <div className="mx-auto max-w-5xl w-full relative z-10">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-[40px] bg-black/40 border border-white/5 shadow-2xl backdrop-blur-3xl">
             {/* Minimal Sub-header */}
-            <div className="px-8 py-3 border-b border-white/5 bg-white/5 flex items-center justify-between min-h-[48px]">
+            <div className="px-8 py-4 border-b border-white/5 bg-white/5 flex items-center justify-between min-h-[56px]">
               <div className="flex items-center gap-4">
-
                 {isLocating && (
                   <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase animate-pulse">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    Triangulating Sector...
+                    Searching location...
+                  </div>
+                )}
+                {!isLocating && detectedCity && (
+                  <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                    <RefreshCcw className="h-3 w-3" />
+                    Area: {detectedCity}
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="flex-1 space-y-6 overflow-y-auto px-5 py-8 sm:px-8">
+            <div className="flex-1 space-y-6 overflow-y-auto px-5 py-10 sm:px-10">
               {isLoading ? (
-                <div className="flex flex-col items-center justify-center py-20 text-slate-400 space-y-4">
+                <div className="flex flex-col items-center justify-center py-32 text-slate-500 space-y-6">
                   <div className="relative">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                    <Loader2 className="h-10 w-10 animate-spin text-primary absolute inset-0" style={{ animationDirection: 'reverse', animationDuration: '3s' }} />
+                    <Loader2 className="h-12 w-12 animate-spin text-primary opacity-20" />
+                    <Loader2 className="h-12 w-12 animate-spin text-primary absolute inset-0" style={{ animationDirection: 'reverse', animationDuration: '2.5s' }} />
                   </div>
-                  <p className="font-heading text-lg font-bold">Syncing Feed...</p>
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="font-heading text-xl font-black uppercase tracking-tighter text-white">Updating Feed</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Connecting to secure city network...</p>
+                  </div>
                 </div>
               ) : isError ? (
-                <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-center text-red-400 font-bold">
-                  Grid connection failure. Please signal again.
+                <div className="mx-auto max-w-md rounded-2xl border border-red-500/20 bg-red-500/5 p-8 text-center">
+                  <p className="text-red-400 font-black uppercase tracking-widest text-xs">Connection Warning</p>
+                  <p className="text-slate-400 text-sm mt-2">Could not sync area reports. Please try refreshing.</p>
                 </div>
               ) : issues?.length === 0 ? (
-                <div className="flex flex-col items-center gap-4 py-20 text-center text-slate-400">
-                  <div className="inline-block rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl">
-                    <CheckCircle2 className="h-10 w-10 text-emerald-400/50" />
+                <div className="flex flex-col items-center gap-6 py-32 text-center">
+                  <div className="inline-flex rounded-full border border-white/10 bg-white/5 p-8 shadow-2xl relative">
+                    <div className="absolute inset-0 bg-primary/10 blur-xl animate-pulse rounded-full" />
+                    <CheckCircle2 className="h-12 w-12 text-primary relative z-10" />
                   </div>
-                  <div>
-                    <p className="text-xl font-heading font-bold text-white">Grid Secured</p>
-                    <p className="text-sm mt-2">No active reports detected in this sector.</p>
+                  <div className="space-y-2">
+                    <p className="text-2xl font-heading font-black text-white uppercase tracking-tighter">City is Clear</p>
+                    <p className="text-sm text-slate-500">No active reports detected in this area.</p>
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {issues?.map((issue) => <IssueCard key={issue.id} issue={issue} />)}
                 </div>
               )}
-              <div className="h-12 w-full" />
+              <div className="h-16 w-full" />
             </div>
           </section>
         </div>

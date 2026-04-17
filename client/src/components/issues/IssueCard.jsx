@@ -36,11 +36,11 @@ export function IssueCard({ issue }) {
           <img 
             src={issue.imageUrls[0]} 
             alt={issue.title} 
-            className="h-full w-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" 
+            className="h-full w-full object-cover saturate-[0.4] opacity-80 group-hover:saturate-100 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" 
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-white/5">
-             <div className="p-4 rounded-2xl bg-black border border-white/5 opacity-50">
+          <div className="flex h-full w-full items-center justify-center bg-white/5 saturate-[0.4] group-hover:saturate-100 transition-all">
+             <div className="p-4 rounded-2xl bg-black border border-white/5 opacity-50 group-hover:opacity-100 transition-opacity">
                {getCategoryIconNode(issue.category, "w-10 h-10 text-primary")}
              </div>
           </div>
