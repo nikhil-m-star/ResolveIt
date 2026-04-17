@@ -202,14 +202,22 @@ export const getIssues = async (req, res) => {
     }
     if (req.query.assignedToMe === "true" && req.user?.id) filter.assignedToId = req.user.id;
 
-    // 3. Data Retrieval
+    // 3. Data Retrieval with Dynamic Include
+    const queryInclude = {
+      createdBy: { select: { id: true, name: true, role: true } }
+    };
+
+    if (req.user?.id) {
+      queryInclude.voteRecords = { 
+        where: { userId: req.user.id }, 
+        select: { type: true } 
+      };
+    }
+
     let issues = await prisma.issue.findMany({
       where: filter,
       orderBy: { createdAt: 'desc' },
-      include: {
-        createdBy: { select: { id: true, name: true, role: true } },
-        voteRecords: req.user?.id ? { where: { userId: req.user.id }, select: { type: true } } : false
-      }
+      include: queryInclude
     });
 
     // 4. Force Global Fallback if filter too strict
