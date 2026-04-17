@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../utils/helpers";
+import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -110,22 +111,11 @@ export function UserManagement() {
                     </div>
 
                     <div className="w-full space-y-5">
-                       <div className="relative group">
-                          <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary opacity-60 group-focus-within:opacity-100 transition-opacity" />
-                          <input 
-                            type="text"
-                            placeholder="Enter area..."
-                            value={promoArea}
-                            onChange={(e) => setPromoArea(e.target.value)}
-                            onKeyDown={(e) => {
-                               if (e.key === 'Enter' && promoArea.trim()) {
-                                  roleMutation.mutate({ userId: promotingUserId, role: 'OFFICER', area: promoArea.trim() });
-                               }
-                            }}
-                            autoFocus
-                            className="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-6 py-4.5 text-white text-sm placeholder:text-slate-700 focus:outline-none focus:border-primary/40 focus:bg-black/60 transition-all font-black uppercase tracking-widest"
-                          />
-                       </div>
+                        <LocationAutocomplete 
+                          value={promoArea}
+                          onChange={(val) => setPromoArea(val)}
+                          placeholder="Search operational area..."
+                        />
 
                        <div className="flex gap-4">
                           <button 

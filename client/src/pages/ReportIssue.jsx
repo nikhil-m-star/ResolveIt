@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
 import { cn } from "../utils/helpers";
 import { motion, AnimatePresence } from "framer-motion";
+import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
 
 function LocationPicker({ position, setPosition }) {
   useMapEvents({
@@ -408,12 +409,10 @@ export function ReportIssue() {
                  </div>
                  <div className="space-y-3">
                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Area / Neighborhood</label>
-                    <input 
-                      type="text" 
+                    <LocationAutocomplete 
                       value={formData.area} 
-                      onChange={(e) => updateForm("area", e.target.value)}
+                      onChange={(val) => updateForm("area", val)}
                       placeholder="e.g. Koramangala"
-                      className="w-full bg-black border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all font-medium shadow-inner"
                     />
                  </div>
               </div>

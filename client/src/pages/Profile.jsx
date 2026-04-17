@@ -7,6 +7,7 @@ import { useState } from "react";
 import { cn } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
 
 export function Profile() {
   const { user: clerkUser } = useUserCompat();
@@ -160,12 +161,11 @@ export function Profile() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Area / District</label>
-                <input 
-                  type="text" 
+                <LocationAutocomplete 
                   value={formData.area}
-                  onChange={(e) => setFormData({...formData, area: e.target.value})}
+                  onChange={(val) => setFormData({...formData, area: val})}
                   placeholder="e.g., Downtown"
-                  className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                  className="!rounded-xl"
                 />
               </div>
             </div>

@@ -4,6 +4,7 @@ import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
 import { Filter, Loader2, LocateFixed, Search, Map as MapIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
 
 export function MapExplorer() {
   const [filters, setFilters] = useState({
@@ -58,13 +59,11 @@ export function MapExplorer() {
             transition={{ delay: 0.1 }}
             className="relative w-full md:w-80 pointer-events-auto"
           >
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-primary" />
-            <input 
-              type="text"
-              placeholder="Search by area or type..."
+            <LocationAutocomplete 
               value={filters.search}
-              onChange={(e) => setFilters({...filters, search: e.target.value})}
-              className="w-full bg-black/60 border border-white/10 rounded-[20px] pl-14 pr-6 py-4 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-primary/40 focus:bg-black/80 transition-all shadow-[0_20px_40px_rgba(0,0,0,0.4)] backdrop-blur-3xl"
+              onChange={(val) => setFilters({...filters, search: val})}
+              placeholder="Search by area..."
+              icon={Search}
             />
           </motion.div>
         </div>
