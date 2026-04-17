@@ -45,8 +45,8 @@ export function AreaSelector({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full bg-black/40 border rounded-2xl px-6 py-4.5 text-left transition-all backdrop-blur-3xl group",
-          isOpen ? "border-primary/40 bg-black/60 shadow-[0_0_30px_rgba(16,185,129,0.1)]" : "border-white/10 hover:border-white/20",
+          "w-full bg-[#121212] border rounded-2xl px-6 py-4.5 text-left transition-all group",
+          isOpen ? "border-primary/40 bg-[#1a1a1a] shadow-[0_0_30px_rgba(16,185,129,0.1)]" : "border-white/10 hover:border-white/20",
           error ? "border-red-500/50" : ""
         )}
       >

@@ -13,5 +13,20 @@ export const OPERATIONAL_AREAS = [
   { name: "Kalyan Nagar", lat: 13.0232, lng: 77.6501 },
   { name: "Banashankari", lat: 12.9250, lng: 77.5460 },
   { name: "Hebbal", lat: 13.0350, lng: 77.5970 },
-  { name: "Yeshwanthpur", lat: 13.0235, lng: 77.5500 }
+  { name: "Yeshwanthpur", lat: 13.0235, lng: 77.5500 },
+  { name: "Basavanagudi", lat: 12.9421, lng: 77.5753 },
+  { name: "MG Road", lat: 12.9733, lng: 77.6117 },
+  { name: "Sarjapur Road", lat: 12.9130, lng: 77.6782 },
+  { name: "JP Nagar", lat: 12.9063, lng: 77.5857 },
+  { name: "Bellandur", lat: 12.9304, lng: 77.6784 },
+  { name: "Ulsoor", lat: 12.9817, lng: 77.6285 },
+  { name: "Sadashivnagar", lat: 13.0068, lng: 77.5813 },
+  { name: "Banaswadi", lat: 13.0126, lng: 77.6511 },
+  { name: "Bommanahalli", lat: 12.9030, lng: 77.6242 },
+  { name: "Richmond Town", lat: 12.9647, lng: 77.5983 },
+  { name: "Cooke Town", lat: 12.9972, lng: 77.6144 },
+  { name: "AECS Layout", lat: 12.9562, lng: 77.7126 },
+  { name: "Varthur", lat: 12.9406, lng: 77.7470 },
+  { name: "Arekere", lat: 12.8885, lng: 77.5999 },
+  { name: "Sahakar Nagar", lat: 13.0623, lng: 77.5871 }
 ];

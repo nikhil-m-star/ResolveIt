@@ -37,10 +37,9 @@ export function MapExplorer() {
       <div className="relative h-map-mobile md:h-map-desktop w-full overflow-hidden rounded-[40px] border border-white/5 bg-black/40 shadow-[0_32px_64px_rgba(0,0,0,0.8)]">
         {/* Immersive Map Header */}
         <div className="absolute left-6 top-6 right-6 md:right-auto z-map-ui flex flex-col md:flex-row items-start md:items-center gap-4 pointer-events-none md:top-8 w-[calc(100%-48px)] md:w-auto">
-          <motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="flex items-center gap-5 w-full md:w-auto overflow-hidden rounded-[24px] border border-white/10 bg-black/60 px-6 py-3.5 backdrop-blur-3xl shadow-2xl pointer-events-auto shrink-0"
+            className="flex items-center gap-5 w-full md:w-auto overflow-hidden rounded-[24px] border border-white/10 bg-[#121212] px-6 py-3.5 shadow-2xl pointer-events-auto shrink-0"
           >
             <div className="h-10 w-10 flex items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-[0_0_20px_rgba(16,185,129,0.2)]">
               <MapIcon className="h-5 w-5" />
@@ -77,10 +76,9 @@ export function MapExplorer() {
 
         {/* Loading Indicator - Simplified Language */}
         {isLoading && (
-          <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-24 left-1/2 z-400 -translate-x-1/2 rounded-full border border-white/10 bg-black/80 px-8 py-3.5 backdrop-blur-3xl shadow-[0_24px_48px_rgba(0,0,0,0.8)]"
+            className="absolute bottom-24 left-1/2 z-400 -translate-x-1/2 rounded-full border border-white/10 bg-[#0a0a0a] px-8 py-3.5 shadow-[0_24px_48px_rgba(0,0,0,0.8)]"
           >
              <div className="flex items-center gap-4 text-[11px] font-black text-primary uppercase tracking-[0.2em]">
                 <Loader2 className="h-4 w-4 animate-spin text-primary" />

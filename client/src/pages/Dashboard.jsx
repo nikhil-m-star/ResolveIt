@@ -47,7 +47,7 @@ export function Dashboard() {
                  placeholder="Search keywords..."
                  value={filters.search}
                  onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                 className="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-primary/40 transition-all font-black uppercase tracking-widest placeholder:text-slate-700"
+                 className="w-full bg-[#121212] border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-primary/40 transition-all font-black uppercase tracking-widest placeholder:text-slate-700"
                />
             </div>
             
