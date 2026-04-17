@@ -870,7 +870,7 @@ table {
 .h-\[2px\] { height: 2px; }
 
 /* Custom Map Heights */
-.h-map-mobile { min-height: 400px; height: 50vh; }
+.h-map-mobile { min-height: 65vh; height: calc(100vh - 180px); }
 
 /* Misc positioning */
 .top-\[-20\%\] { top: -20%; }
