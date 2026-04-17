@@ -5,6 +5,7 @@ import { Layout } from "../components/layout/Layout";
 import { Loader2, KanbanSquare, Target, Activity, CheckCircle2, GripVertical, MapPin, AlertTriangle, AlertCircle } from "lucide-react";
 import { cn } from "../utils/helpers";
 import toast from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 const COLUMNS = [
   { id: "REPORTED", title: "Reported", icon: Target, color: "text-primary/70" },

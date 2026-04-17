@@ -1,5 +1,5 @@
 import { Navbar } from "./Navbar";
-import { motion as Motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
 export function Layout({ children }) {

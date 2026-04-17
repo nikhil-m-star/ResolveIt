@@ -3,7 +3,7 @@ import { Layout } from "../components/layout/Layout";
 import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
 import { Filter, Loader2, LocateFixed, Search, Map as MapIcon } from "lucide-react";
-import { motion as Motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function MapExplorer() {
   const [filters, setFilters] = useState({

@@ -5,7 +5,7 @@ import { cn, getCategoryColor, getCategoryIconNode, getStatusColor, evaluateInte
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../lib/auth";
 import toast from "react-hot-toast";
-import { motion as Motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export function IssueCard({ issue }) {
   const queryClient = useQueryClient();

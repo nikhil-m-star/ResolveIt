@@ -4,7 +4,7 @@ import { api } from "../lib/auth";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Bot, Loader2, Sparkles, Download, RefreshCcw, ShieldAlert, FileText, ChevronRight } from "lucide-react";
-import { motion as Motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "../utils/helpers";
 

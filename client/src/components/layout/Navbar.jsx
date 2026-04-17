@@ -4,7 +4,7 @@ import { api } from "../../lib/auth";
 import { UserButtonCompat, useUserCompat } from "../../lib/clerkCompat";
 import { Link, useLocation } from "react-router-dom";
 import { PlusCircle, Compass, Shield, ShieldAlert, KanbanSquare, UserCircle2, Map, Sparkles, Users, MoreHorizontal, User, Bell, Activity } from "lucide-react";
-import { motion as Motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../utils/helpers";
 
 const decodeJwtPayload = (token) => {
