@@ -229,6 +229,3 @@ export function OfficerKanban() {
     </Layout>
   );
 }
-
-  );
-}
