@@ -75,7 +75,7 @@ export function Navbar() {
       <Motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed top-4 inset-x-0 mx-auto z-[1200] hidden w-fit max-w-full md:block"
+        className="fixed top-4 inset-x-0 mx-auto z-1200 hidden w-fit max-w-full md:block"
       >
         <nav className="glass-pill rounded-full px-5 py-2.5 transition-all duration-500">
           <div className="flex items-center gap-6">
@@ -92,11 +92,12 @@ export function Navbar() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className={`relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-bold transition-all duration-300 ${
+                    className={cn(
+                      "relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-bold transition-all duration-300",
                       active 
-                        ? "text-primary bg-primary/10 shadow-[inner_0_0_12px_rgba(16,185,129,0.1)]" 
+                        ? "text-primary bg-primary/10 shadow-inner" 
                         : "text-slate-400 hover:text-white hover:bg-white/5"
-                    }`}
+                    )}
                   >
                     <Icon className="h-4 w-4" />
                     {item.label}
@@ -110,20 +111,22 @@ export function Navbar() {
                 <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 p-1">
                   <Link 
                     to="/alerts" 
-                    className={`p-2 rounded-xl transition-all relative group ${
+                    className={cn(
+                      "p-2 rounded-xl transition-all relative group",
                       location.pathname === "/alerts" ? "bg-primary/20 text-primary border border-primary/20" : "text-slate-400 hover:text-white"
-                    }`}
+                    )}
                   >
-                    <Bell className="h-4.5 w-4.5" />
+                    <Bell className="h-4 w-4" />
                     <AlertBadge />
                   </Link>
                   <Link 
                     to="/profile" 
-                    className={`p-2 rounded-xl transition-all ${
+                    className={cn(
+                      "p-2 rounded-xl transition-all",
                       location.pathname === "/profile" ? "bg-primary text-white" : "text-slate-400 hover:text-white"
-                    }`}
+                    )}
                   >
-                    <UserCircle2 className="h-4.5 w-4.5" />
+                    <UserCircle2 className="h-4 w-4" />
                   </Link>
                 </div>
               ) : (
@@ -137,7 +140,7 @@ export function Navbar() {
       </Motion.div>
 
       {/* Mobile top-left brand chip */}
-      <div className="fixed top-4 left-4 z-[1200] md:hidden">
+      <div className="fixed top-4 left-4 z-1200 md:hidden">
         <Link to="/" className="glass-pill inline-flex items-center gap-2 rounded-2xl px-3 py-2">
           <Shield className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold text-white">ResolveIt</span>
@@ -153,16 +156,16 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMoreOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1240] md:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-1240 md:hidden"
             />
             <Motion.div
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed bottom-24 left-4 right-4 z-[1245] md:hidden"
+              className="fixed bottom-24 left-4 right-4 z-1245 md:hidden"
             >
-              <div className="glass-panel rounded-[2rem] p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] border border-white/10 flex flex-col gap-6">
+              <div className="glass-panel rounded-4xl p-6 shadow-2xl border border-white/10 flex flex-col gap-6">
                 {user ? (
                    <div className="grid grid-cols-2 gap-4">
                       <Link 
@@ -206,9 +209,9 @@ export function Navbar() {
       <Motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed bottom-6 left-0 right-0 z-[1250] flex justify-center px-4 md:hidden"
+        className="fixed bottom-6 left-0 right-0 z-1250 flex justify-center px-4 md:hidden"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-[2rem] px-2 py-2">
+        <nav className="glass-pill w-full max-w-sm rounded-4xl px-2 py-2">
           <div className="flex justify-around items-center gap-1">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
@@ -217,9 +220,10 @@ export function Navbar() {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300 ${
+                  className={cn(
+                    "flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300",
                     active ? "text-primary bg-primary/10" : "text-slate-500 hover:text-slate-300"
-                  }`}
+                  )}
                 >
                   <Icon className="h-5 w-5" />
                 </Link>
@@ -227,9 +231,10 @@ export function Navbar() {
             })}
             <button
               onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
-              className={`flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300 ${
+              className={cn(
+                "flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300",
                 isMobileMoreOpen ? "text-primary bg-primary/10" : "text-slate-500 hover:text-slate-300"
-              }`}
+              )}
             >
               <MoreHorizontal className="h-5 w-5" />
             </button>

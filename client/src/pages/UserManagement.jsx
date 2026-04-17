@@ -90,14 +90,14 @@ export function UserManagement() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setPromotingUserId(null)}
-                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] flex items-center justify-center p-6"
+                className="fixed inset-0 bg-black/80 backdrop-blur-md z-2000 flex items-center justify-center p-6"
               >
                 <motion.div 
-                  initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="w-full max-w-md glass-panel rounded-[2.5rem] p-8 border border-primary/20 shadow-[0_32px_64px_-16px_rgba(16,185,129,0.3)]"
+                   initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                   animate={{ scale: 1, opacity: 1, y: 0 }}
+                   exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                   onClick={(e) => e.stopPropagation()}
+                   className="w-full max-w-md glass-card rounded-6xl p-8 border border-primary/20 shadow-primary-lg"
                 >
                   <div className="flex flex-col items-center text-center gap-6">
                     <div className="p-4 rounded-3xl bg-primary/10 border border-primary/20">
@@ -110,7 +110,7 @@ export function UserManagement() {
 
                     <div className="w-full space-y-4">
                        <div className="relative group">
-                          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors" />
+                          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group:focus-within:text-primary transition-colors" />
                           <input 
                             type="text"
                             placeholder="e.g. Koramangala"
@@ -122,7 +122,7 @@ export function UserManagement() {
                                }
                             }}
                             autoFocus
-                            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-4 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all font-bold"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all font-bold"
                           />
                        </div>
 
@@ -135,7 +135,7 @@ export function UserManagement() {
                              }
                           }}
                           disabled={roleMutation.isPending}
-                          className="w-full py-4 bg-primary hover:bg-emerald-400 text-black font-black uppercase tracking-[0.2em] text-xs rounded-2xl transition-all shadow-xl shadow-primary/20 disabled:opacity-50"
+                          className="w-full py-4 bg-primary hover:brightness-110 text-black font-black uppercase tracking-extra-wide text-xs rounded-2xl transition-all shadow-lg disabled:opacity-50"
                        >
                           {roleMutation.isPending ? "Syncing..." : "Confirm Elevation"}
                        </button>
@@ -175,16 +175,16 @@ export function UserManagement() {
         {/* Controls */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-1 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group:focus-within:text-primary transition-colors" />
             <input 
               type="text"
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black/50 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
+              className="w-full bg-black border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
             />
           </div>
-          <div className="flex items-center gap-2 bg-black/50 border border-white/10 rounded-2xl px-4 p-1">
+          <div className="flex items-center gap-2 bg-black border border-white/10 rounded-2xl px-4 p-1">
              <Filter className="w-4 h-4 text-slate-500" />
              {["ALL", "CITIZEN", "OFFICER", "PRESIDENT"].map((role) => (
                <button
@@ -202,18 +202,18 @@ export function UserManagement() {
         </div>
 
         {/* User Table */}
-        <div className="glass-card overflow-hidden">
+        <div className="glass-card overflow-hidden bg-black border border-white/5">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/5 bg-white/[0.02] text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                <tr className="border-b border-white/5 bg-white/5 text-[10px] font-black text-slate-500 uppercase tracking-widest">
                   <th className="px-8 py-5">Personnel</th>
                   <th className="px-8 py-5">Jurisdiction</th>
                   <th className="px-8 py-5">Performance</th>
                   <th className="px-8 py-5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-white-5">
                 <AnimatePresence mode="popLayout">
                   {filteredUsers?.map((u) => (
                     <motion.tr 
@@ -222,11 +222,11 @@ export function UserManagement() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       key={u.id} 
-                      className="group hover:bg-white/[0.02] transition-all"
+                      className="group hover:bg-white/5 transition-all"
                     >
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 via-black to-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl">
+                          <div className="w-12 h-12 rounded-2xl bg-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl">
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
@@ -242,7 +242,7 @@ export function UserManagement() {
                            <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
                               <MapPin className="w-3.5 h-3.5 text-primary" /> {u.area || u.city}
                            </div>
-                           <div className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[9px] font-black uppercase tracking-wider", 
+                           <div className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[9px] font-black uppercase tracking-widest", 
                              u.role === 'PRESIDENT' ? "text-yellow-500 bg-yellow-500/10 border-yellow-500/20" :
                              u.role === 'OFFICER' ? "text-primary bg-primary/10 border-primary/20" :
                              "text-slate-400 bg-slate-400/10 border-slate-400/20"
@@ -299,5 +299,6 @@ export function UserManagement() {
 
       </div>
     </Layout>
+
   );
 }

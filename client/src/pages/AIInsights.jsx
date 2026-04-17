@@ -69,9 +69,9 @@ export function AIInsights() {
             <button 
               onClick={fetchReport}
               disabled={isLoading}
-              className="flex items-center gap-2 bg-primary hover:brightness-110 rounded-xl px-6 py-3 text-sm font-black uppercase tracking-widest text-white transition-all shadow-xl shadow-primary/20 disabled:opacity-50"
+              className="flex items-center gap-2 bg-primary hover:brightness-110 rounded-xl px-6 py-3 text-sm font-black uppercase tracking-widest text-white transition-all shadow-xl disabled:opacity-50"
             >
-              <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCcw className={cn("w-4 h-4", isLoading && "animate-spin")} />
               {isLoading ? 'Processing...' : 'Generate Intelligence'}
             </button>
           </div>
@@ -83,7 +83,7 @@ export function AIInsights() {
               {isLoading ? (
                  <div className="py-32 flex flex-col items-center justify-center gap-6 text-slate-500">
                     <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Syncing Sector Data...</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest animate-pulse">Syncing Sector Data...</span>
                  </div>
               ) : !report ? (
                  <div className="flex flex-col items-center justify-center py-32 text-center border-2 border-dashed border-white/5 rounded-3xl">
@@ -94,8 +94,8 @@ export function AIInsights() {
                    <p className="text-sm text-slate-600 mt-2 max-w-xs">Initialize city-wide analysis for executive briefing.</p>
                  </div>
               ) : (
-                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 prose prose-invert prose-slate max-w-none">
-                    <div className="flex items-center gap-2 mb-12 text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">
+                 <div className="animate-in fade-in duration-1000 prose prose-invert max-w-none">
+                    <div className="flex items-center gap-2 mb-12 text-slate-600 text-[10px] font-black uppercase tracking-widest">
                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Sector Briefing Protocol
                        <ChevronRight className="w-2.5 h-2.5" /> {new Date().toLocaleDateString()}
                     </div>
@@ -107,7 +107,7 @@ export function AIInsights() {
                            h3: ({node, ...props}) => <h3 className="text-xl font-heading font-bold text-slate-200 mt-8 mb-4 uppercase tracking-wide" {...props} />,
                            p: ({node, ...props}) => <p className="text-slate-300 leading-relaxed mb-6 font-medium text-lg" {...props} />,
                            ul: ({node, ...props}) => <ul className="list-disc list-inside space-y-3 mb-8 text-slate-300 font-medium" {...props} />,
-                           li: ({node, ...props}) => <li className="marker:text-primary list-item" {...props} />,
+                           li: ({node, ...props}) => <li className="list-item" {...props} />,
                            strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-sm tracking-widest" {...props} />,
                            a: ({node, ...props}) => <Link to={props.href} className="text-primary font-bold hover:brightness-125 transition-all underline decoration-primary/30" {...props} />,
                            blockquote: ({node, ...props}) => (
@@ -123,5 +123,6 @@ export function AIInsights() {
         </div>
       </div>
     </Layout>
+
   );
 }

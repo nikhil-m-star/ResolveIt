@@ -72,19 +72,19 @@ export function OfficerKanban() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 py-12 h-[calc(100vh-120px)] flex flex-col space-y-8 animate-in fade-in duration-700">
+      <div className="max-w-7xl mx-auto px-4 py-12 h-map-mobile md:h-map-desktop flex flex-col space-y-8 animate-in fade-in duration-700">
         
         {/* Kanban Header */}
         <div className="flex flex-col md:flex-row justify-between items-end gap-8 pb-4">
           <div className="space-y-1 text-center md:text-left">
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Board</h1>
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-extra-wide opacity-80">
                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Operational Situational Awareness
             </div>
           </div>
 
           {/* Graphical Metrics Summary */}
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 bg-black/50 border border-white/5 rounded-[2rem] px-6 py-4 md:px-8 md:py-5 backdrop-blur-3xl shadow-2xl w-full md:w-auto">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 bg-black/50 border border-white/5 rounded-6xl px-6 py-4 md:px-8 md:py-5 backdrop-blur-3xl shadow-2xl w-full md:w-auto">
             <div className="flex flex-col gap-1 w-full md:w-auto">
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest text-center md:text-left">Clearance Rate</span>
               <div className="flex items-center gap-3">
@@ -100,7 +100,7 @@ export function OfficerKanban() {
               </div>
             </div>
             
-            <div className="hidden md:block w-px h-8 bg-white/5" />
+            <div className="hidden md:block w-[1px] h-8 bg-white/5" />
             
             <div className="flex md:flex-col items-center gap-6 md:gap-0 justify-between w-full md:w-auto p-4 md:p-0 bg-white/5 md:bg-transparent rounded-2xl border border-white/5 md:border-none">
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active Cases</span>
@@ -111,7 +111,7 @@ export function OfficerKanban() {
 
         {/* Board */}
         <div className="flex-1 overflow-x-auto pb-6 -mx-4 px-4 scrollbar-hide">
-          <div className="flex flex-col md:flex-row gap-8 h-full min-h-[500px]">
+          <div className="flex flex-col md:flex-row gap-8 h-full min-h-500">
             {COLUMNS.map((column) => {
               const columnIssues = issues?.filter((issue) => issue.status === column.id) || [];
               const Icon = column.icon;
@@ -121,9 +121,9 @@ export function OfficerKanban() {
                   key={column.id}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, column.id)}
-                  className="flex flex-col rounded-[2rem] bg-black/40 border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl w-full md:w-[320px] lg:w-[400px] shrink-0 h-full"
+                  className="flex flex-col rounded-6xl bg-black/40 border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl w-full md:w-kanban-md lg:w-kanban-lg shrink-0 h-full"
                 >
-                  <div className="p-6 border-b border-white/5 bg-white/[0.02] flex justify-between items-center">
+                  <div className="p-6 border-b border-white/5 bg-white/5 flex justify-between items-center">
                     <h3 className="text-sm font-black text-white flex items-center gap-3 uppercase tracking-widest">
                        <div className={cn("p-2 rounded-xl bg-black border border-white/5 shadow-inner", column.color)}>
                           <Icon className="w-4 h-4" />
@@ -144,14 +144,14 @@ export function OfficerKanban() {
                             e.dataTransfer.setData("issueId", issue.id);
                             e.dataTransfer.setData("currentStatus", issue.status);
                           }}
-                          className="p-5 bg-black/60 border border-white/5 hover:border-primary/50 hover:bg-black transition-all cursor-grab active:cursor-grabbing rounded-2xl relative group shadow-xl"
+                          className="p-5 bg-black border border-white/5 hover:border-primary/50 hover:bg-black transition-all cursor-grab active:cursor-grabbing rounded-2xl relative group shadow-xl"
                        >
                           {movingId && <div className="absolute inset-0 bg-black/40 z-10 rounded-2xl animate-pulse" />}
                           <div className="flex justify-between items-start mb-4">
                              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 bg-black/50 px-2.5 py-1 rounded-lg border border-white/5">
                                {issue.category.replace(/_/g, " ")}
                              </span>
-                             <GripVertical className="w-4 h-4 text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity" />
+                             <GripVertical className="w-4 h-4 text-slate-700 opacity-0 group:hover:opacity-100 transition-opacity" />
                           </div>
                           <h4 className="text-sm font-bold text-white mb-2 leading-snug line-clamp-2">{issue.title}</h4>
                           <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
@@ -174,5 +174,6 @@ export function OfficerKanban() {
         </div>
       </div>
     </Layout>
+
   );
 }

@@ -90,7 +90,7 @@ export function AdminDashboard() {
                <Activity className="w-3.5 h-3.5" /> Sector Intelligence Active
             </div>
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Admin</h1>
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black text-primary uppercase tracking-extra-wide opacity-80">
                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" /> Strategic Command & Intelligence
             </div>
           </div>
@@ -135,8 +135,8 @@ export function AdminDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Data Visualization */}
-          <div className="lg:col-span-2 glass-card overflow-hidden h-[450px] flex flex-col p-8">
-            <h3 className="text-sm font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Category Distribution</h3>
+          <div className="lg:col-span-2 glass-card h-450 flex flex-col p-8 bg-black border border-white/5 overflow-hidden">
+            <h3 className="text-sm font-black text-slate-500 uppercase tracking-extra-wide mb-8">Category Distribution</h3>
             <div className="flex-1 w-full">
               {stats.categoryBreakdown?.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
@@ -157,8 +157,8 @@ export function AdminDashboard() {
             </div>
           </div>
 
-          <div className="glass-card overflow-hidden h-[450px] flex flex-col p-8">
-            <h3 className="text-sm font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Resource Spread</h3>
+          <div className="glass-card h-450 flex flex-col p-8 bg-black border border-white/5 overflow-hidden">
+            <h3 className="text-sm font-black text-slate-500 uppercase tracking-extra-wide mb-8">Resource Spread</h3>
             <div className="flex-1 w-full flex items-center justify-center">
                {stats.categoryBreakdown?.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
@@ -189,6 +189,7 @@ export function AdminDashboard() {
 
       </div>
     </Layout>
+
   );
 }
 

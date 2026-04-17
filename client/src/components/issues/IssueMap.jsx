@@ -52,7 +52,7 @@ export function IssueMap({ issues, userLocation }) {
   const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
 
   return (
-    <div className="w-full h-full min-h-[400px] sm:min-h-[500px] md:h-screen rounded-2xl md:rounded-none overflow-hidden border border-white/10 md:border-l relative z-0">
+    <div className="w-full h-full min-h-400 sm:min-h-500 md:h-screen rounded-2xl md:rounded-none overflow-hidden border border-white/10 md:border-l relative z-0">
       <MapContainer
         center={defaultCenter}
         zoom={12}
@@ -65,8 +65,8 @@ export function IssueMap({ issues, userLocation }) {
         />
         {issuesWithCoords.map((issue) => (
           <Marker key={issue.id} position={[issue.latitude, issue.longitude]}>
-            <Popup className="glass-popup bg-background border border-white/10 text-white rounded-xl shadow-2xl p-0 overflow-hidden">
-              <div className="p-3 bg-gray-900 shadow-xl border border-white/5 rounded-xl min-w-[200px]">
+            <Popup className="glass-popup bg-black border border-white/10 text-white rounded-xl shadow-2xl p-0 overflow-hidden">
+              <div className="p-3 bg-black shadow-xl border border-white/5 rounded-xl min-w-200">
                   <h4 className="font-heading font-bold text-base mb-1 truncate text-white">
                       {issue.title}
                   </h4>
@@ -74,7 +74,7 @@ export function IssueMap({ issues, userLocation }) {
                       <span className="px-2 py-0.5 bg-primary/20 text-primary rounded-md font-medium border border-primary/30 uppercase">
                           {issue.category.replace(/_/g, " ")}
                       </span>
-                      <span className="text-gray-400 capitalize">{issue.status.replace(/_/g, " ").toLowerCase()}</span>
+                      <span className="text-slate-400 capitalize">{issue.status.replace(/_/g, " ").toLowerCase()}</span>
                   </div>
                   <Link 
                      to={`/issues/${issue.id}`}
@@ -100,3 +100,4 @@ export function IssueMap({ issues, userLocation }) {
     </div>
   );
 }
+

@@ -25,7 +25,7 @@ export function IssueCard({ issue }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="group relative flex flex-col overflow-hidden rounded-[1.5rem] border border-white/5 bg-black hover:border-primary/30 transition-all duration-500 shadow-2xl max-w-md mx-auto w-full"
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/5 bg-black hover-border-primary-30 transition-all duration-500 shadow-2xl max-w-md mx-auto w-full"
     >
       {/* Hero Image Section - Top Stack */}
       <div className="relative aspect-video w-full overflow-hidden shrink-0">
@@ -36,17 +36,17 @@ export function IssueCard({ issue }) {
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-white/[0.02]">
+          <div className="flex h-full w-full items-center justify-center bg-white/5">
              {getCategoryIconNode(issue.category, "w-8 h-8 text-slate-800")}
           </div>
         )}
         
         <div className="absolute inset-x-4 top-4">
-           <div className={cn("inline-block rounded-full px-2 py-0.5 text-[7px] font-black uppercase tracking-[0.2em] border border-white/10 shadow-sm backdrop-blur-md", getStatusColor(issue.status))}>
+           <div className={cn("inline-block rounded-full px-2 py-0.5 text-[7px] font-black uppercase tracking-extra-wide border border-white/10 shadow-sm backdrop-blur-md", getStatusColor(issue.status))}>
               {issue.status}
            </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black-60 to-transparent opacity-60" />
       </div>
 
       <div className="p-5 flex flex-col gap-4">
@@ -57,8 +57,8 @@ export function IssueCard({ issue }) {
             </span>
           </div>
 
-          <Link to={`/issues/${issue.id}`} className="block group/link">
-            <h3 className="line-clamp-2 font-heading text-lg font-bold text-white group-hover/link:text-primary transition-colors leading-tight">
+          <Link to={`/issues/${issue.id}`} className="block">
+            <h3 className="line-clamp-2 font-heading text-lg font-bold text-white group-hover:text-primary transition-colors leading-tight">
               {issue.title}
             </h3>
           </Link>
@@ -69,9 +69,9 @@ export function IssueCard({ issue }) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-white/[0.03]">
+        <div className="flex items-center justify-between pt-4 border-t border-white/5">
            {/* Reddit Style Voting Pill */}
-           <div className="flex items-center gap-1 bg-white/[0.03] border border-white/5 rounded-full px-2 py-1">
+           <div className="flex items-center gap-1 bg-white/5 border border-white/5 rounded-full px-2 py-1">
               <button
                 onClick={(e) => { e.preventDefault(); voteMutation.mutate('UP'); }}
                 disabled={voteMutation.isPending}
@@ -109,3 +109,4 @@ export function IssueCard({ issue }) {
     </Motion.div>
   );
 }
+

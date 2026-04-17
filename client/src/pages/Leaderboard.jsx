@@ -60,7 +60,7 @@ export function Leaderboard() {
               onClick={() => setActiveTab("citizens")}
               className={cn(
                 "px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-300",
-                activeTab === "citizens" ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-slate-500 hover:text-slate-300"
+                activeTab === "citizens" ? "bg-primary text-white shadow-lg" : "text-slate-500 hover:text-slate-300"
               )}
             >
               Citizens
@@ -69,7 +69,7 @@ export function Leaderboard() {
               onClick={() => setActiveTab("officers")}
               className={cn(
                 "px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-300",
-                activeTab === "officers" ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-slate-500 hover:text-slate-300"
+                activeTab === "officers" ? "bg-primary text-white shadow-lg" : "text-slate-500 hover:text-slate-300"
               )}
             >
               Officials
@@ -78,27 +78,27 @@ export function Leaderboard() {
         </div>
 
         {/* Impact Table */}
-        <div className="glass-card overflow-hidden">
+        <div className="glass-card overflow-hidden bg-black border border-white/5">
           <div className="min-w-full inline-block align-middle">
-            <div className="grid grid-cols-12 gap-4 px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5 bg-white/[0.02]">
+            <div className="grid grid-cols-12 gap-4 px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5 bg-white/5">
               <div className="col-span-1">Rank</div>
               <div className="col-span-5">Member</div>
               <div className="col-span-3 text-center">Primary Contribution</div>
               <div className="col-span-3 text-right">Performance</div>
             </div>
 
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-white-5">
               {(activeTab === "citizens" ? citizens : officers).map((user, index) => (
                 <div 
                   key={user.id} 
-                  className="grid grid-cols-12 gap-4 px-8 py-6 items-center hover:bg-white/[0.02] transition-all"
+                  className="grid grid-cols-12 gap-4 px-8 py-6 items-center hover:bg-white/5 transition-all"
                 >
                   <div className="col-span-1 flex items-center">
                     {getRankIcon(index)}
                   </div>
                   
                   <div className="col-span-5 flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-800 to-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl flex-shrink-0">
+                    <div className="w-11 h-11 rounded-2xl bg-black border border-white/5 flex items-center justify-center font-bold text-white shadow-xl shrink-0">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
@@ -130,7 +130,7 @@ export function Leaderboard() {
                          <span className="text-xs font-bold">{user._count?.votes || 0} Votes</span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-500/10 rounded-xl border border-yellow-500/10 text-yellow-500">
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-500-10 rounded-xl border border-yellow-500-10 text-yellow-500">
                          <Star className="w-3.5 h-3.5 fill-current" />
                          <span className="text-xs font-bold">{Number(user.avgRating || 0).toFixed(1)} Rating</span>
                       </div>
@@ -153,16 +153,3 @@ export function Leaderboard() {
   );
 }
 
-              {(activeTab === "citizens" ? citizens : officers).length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  No {activeTab} available for the leaderboard yet.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </Layout>
-  );
-}

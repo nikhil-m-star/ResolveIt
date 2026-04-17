@@ -1,10 +1,9 @@
 import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { AlertCircle, Droplets, Zap, Trash2, Lightbulb, MapPin, TreePine, AlertTriangle } from "lucide-react";
 import { createElement } from "react";
 
 export function cn(...inputs) {
-  return twMerge(clsx(inputs));
+  return clsx(inputs);
 }
 
 export function formatDate(dateString) {

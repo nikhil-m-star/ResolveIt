@@ -6,7 +6,7 @@ export function Layout({ children }) {
   const location = useLocation();
   
   return (
-    <div className="relative min-h-screen bg-background text-slate-100 overflow-x-hidden selection:bg-primary/30">
+    <div className="relative min-h-screen bg-black text-white overflow-x-hidden selection:bg-primary/30">
       {/* Noise Texture */}
       <div className="bg-noise fixed inset-0 pointer-events-none z-0" />
 
@@ -18,7 +18,7 @@ export function Layout({ children }) {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 1.02, filter: "blur(8px)" }}
           transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
-          className="pt-[100px] md:pt-[100px] min-h-screen relative z-10 pb-16 px-4 sm:px-6"
+          className="pt-100 min-h-screen relative z-10 pb-16 px-4 sm:px-6"
         >
           <div className="mx-auto max-w-7xl">
             {children}

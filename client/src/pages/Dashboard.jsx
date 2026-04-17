@@ -61,22 +61,22 @@ export function Dashboard() {
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Feed</h1>
             
             <div className="relative w-full md:w-80 group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-primary transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group:focus-within:text-primary transition-colors" />
               <input 
                 type="text"
                 placeholder="Search sector reports..."
                 value={filters.search || ""}
                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-inner"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all shadow-sm"
               />
             </div>
           </div>
 
           <Link
             to="/report"
-            className="group relative flex items-center gap-4 bg-primary text-white pl-8 pr-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-primary/25 overflow-hidden"
+            className="group relative flex items-center gap-4 bg-primary text-white pl-8 pr-10 py-5 rounded-4xl font-black uppercase text-xs tracking-widest transition-all hover:scale-105 active:scale-95 shadow-2xl overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group:hover .-translate-x-full transition-transform duration-1000" />
             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 group-hover:rotate-90 transition-transform">
                <PlusCircle className="h-5 w-5" />
             </div>
@@ -84,11 +84,13 @@ export function Dashboard() {
           </Link>
         </div>
 
+
         <div className="mx-auto max-w-5xl w-full">
-          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-[2.5rem] bg-black border border-white/5 shadow-2xl backdrop-blur-3xl">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-5xl bg-black border border-white/5 shadow-2xl backdrop-blur-3xl">
             {/* Minimal Sub-header */}
-            <div className="px-8 py-3 border-b border-white/5 bg-white/[0.01] flex items-center justify-between min-h-[48px]">
+            <div className="px-8 py-3 border-b border-white/5 bg-white/5 flex items-center justify-between min-h-[48px]">
               <div className="flex items-center gap-4">
+
                 {isLocating && (
                   <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase animate-pulse">
                     <Loader2 className="h-3 w-3 animate-spin" />

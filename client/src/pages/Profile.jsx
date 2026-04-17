@@ -58,16 +58,26 @@ export function Profile() {
       e.preventDefault();
       updateMutation.mutate(formData);
   };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "RESOLVED": return "bg-emerald-500";
+      case "IN_PROGRESS": return "bg-primary";
+      case "REJECTED": return "bg-red-500";
+      default: return "bg-slate-500";
+    }
+  };
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 py-12 animate-in fade-in duration-700">
         
         {/* Profile Card */}
         <div className="glass-card p-8 md:p-12 mb-10 flex flex-col md:flex-row items-center gap-10 border-primary/20 bg-primary/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-huge pointer-events-none" />
           
           <div className="relative group">
-            <div className="w-32 h-32 rounded-[2.5rem] bg-black border-2 border-primary/30 flex items-center justify-center overflow-hidden shadow-2xl transition-transform group-hover:scale-105">
+            <div className="w-32 h-32 rounded-5xl bg-black border-2 border-primary/30 flex items-center justify-center overflow-hidden shadow-2xl transition-transform group:hover:scale-105">
                {clerkUser?.imageUrl ? (
                  <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover" />
                ) : (
@@ -80,7 +90,7 @@ export function Profile() {
             <div>
               <h1 className="text-3xl font-heading font-bold text-white mb-2">{profile.name}</h1>
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                 <span className="px-4 py-1.5 bg-primary/10 border border-primary/20 text-primary rounded-lg text-sm font-bold uppercase tracking-wider">
+                 <span className="px-4 py-1.5 bg-primary/10 border border-primary/20 text-primary rounded-lg text-sm font-bold uppercase tracking-widest">
                     {profile.role}
                  </span>
                  <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-400 font-bold uppercase tracking-widest">
@@ -89,7 +99,7 @@ export function Profile() {
               </div>
             </div>
 
-            <p className="text-gray-400 text-sm flex items-center justify-center md:justify-start gap-2 pt-2">
+            <p className="text-slate-400 text-sm flex items-center justify-center md:justify-start gap-2 pt-2">
               <MapPin className="w-4 h-4" /> 
               {profile.city && profile.area ? `${profile.area}, ${profile.city}` : "Location not set"}
             </p>
@@ -113,23 +123,23 @@ export function Profile() {
             <h3 className="text-lg font-medium text-white mb-4">Edit Location Preferences</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">City</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">City</label>
                 <input 
                   type="text" 
                   value={formData.city}
                   onChange={(e) => setFormData({...formData, city: e.target.value})}
                   placeholder="e.g., San Francisco"
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Area / District</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Area / District</label>
                 <input 
                   type="text" 
                   value={formData.area}
                   onChange={(e) => setFormData({...formData, area: e.target.value})}
                   placeholder="e.g., Downtown"
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
                 />
               </div>
             </div>
@@ -137,7 +147,7 @@ export function Profile() {
               <button 
                 type="submit" 
                 disabled={updateMutation.isPending}
-                className="px-6 py-2.5 bg-primary hover:brightness-110 text-white rounded-lg font-medium transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                className="px-6 py-2.5 bg-primary hover:brightness-110 text-white rounded-lg font-medium transition-all shadow-lg disabled:opacity-50"
               >
                 {updateMutation.isPending ? "Saving..." : "Save Changes"}
               </button>
@@ -154,21 +164,21 @@ export function Profile() {
                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                       <div className="flex items-center gap-3">
                          <div className="p-2 bg-primary/20 text-primary rounded-lg"><AlertTriangle className="w-5 h-5" /></div>
-                         <span className="text-gray-300 text-sm">Issues Reported</span>
+                         <span className="text-slate-300 text-sm">Issues Reported</span>
                       </div>
                       <span className="font-bold text-white font-heading text-lg">{profile._count?.issues || 0}</span>
                    </div>
                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                       <div className="flex items-center gap-3">
                          <div className="p-2 bg-purple-500/20 text-purple-400 rounded-lg"><CheckCircle2 className="w-5 h-5" /></div>
-                         <span className="text-gray-300 text-sm">Issues Resolved</span>
+                         <span className="text-slate-300 text-sm">Issues Resolved</span>
                       </div>
                       <span className="font-bold text-white font-heading text-lg">{profile._count?.resolvedIssues || 0}</span>
                    </div>
                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                       <div className="flex items-center gap-3">
                          <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg"><Medal className="w-5 h-5" /></div>
-                         <span className="text-gray-300 text-sm">Upvotes Given</span>
+                         <span className="text-slate-300 text-sm">Upvotes Given</span>
                       </div>
                       <span className="font-bold text-white font-heading text-lg">{profile._count?.votes || 0}</span>
                    </div>
@@ -177,7 +187,7 @@ export function Profile() {
 
              {/* Officer Upgrade Banner */}
              {!isOfficer && (
-               <div className="glass-card p-6 bg-gradient-to-b from-primary/10 to-black border-primary/20 relative overflow-hidden">
+               <div className="glass-card p-6 bg-black border-primary/20 relative overflow-hidden">
                  <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldAlert className="w-24 h-24 text-primary" /></div>
                  <div className="relative z-10">
                    <h3 className="text-lg font-bold text-primary flex items-center gap-2 mb-2">
@@ -195,7 +205,7 @@ export function Profile() {
           </div>
 
           {/* Manage My Reports Container */}
-          <div className="md:col-span-2 glass-card bg-black border border-white/5 p-6 flex flex-col min-h-[500px]">
+          <div className="md:col-span-2 glass-card bg-black border border-white/5 p-6 flex flex-col min-h-500">
              <div className="flex items-center justify-between mb-8">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                    <Target className="w-5 h-5 text-primary" /> Manage My Reports
@@ -207,11 +217,11 @@ export function Profile() {
                 {profile.issues?.length > 0 ? (
                    <div className="grid gap-4">
                       {profile.issues.map((issue) => (
-                         <div key={issue.id} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-primary/20 transition-all group">
+                         <div key={issue.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl hover:border-primary/20 transition-all group">
                             <div className="flex items-center gap-4">
                                <div className={cn("w-2 h-2 rounded-full", getStatusColor(issue.status))} />
                                <div>
-                                  <h4 className="text-sm font-bold text-white group-hover:text-primary transition-colors">{issue.title}</h4>
+                                  <h4 className="text-sm font-bold text-white group:hover:text-primary transition-colors">{issue.title}</h4>
                                   <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">{issue.area || issue.city}</p>
                                </div>
                             </div>
@@ -227,11 +237,11 @@ export function Profile() {
                 ) : (
                    <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 border border-white/5 rounded-2xl bg-black/40">
                       <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
-                         <Star className="w-8 h-8 text-gray-500" />
+                         <Star className="w-8 h-8 text-slate-500" />
                       </div>
                       <div>
                          <h4 className="text-white font-medium mb-1">No Active Deployments</h4>
-                         <p className="text-sm text-gray-500 max-w-sm mx-auto">Your reported issues will appear here for management and protocol tracking.</p>
+                         <p className="text-sm text-slate-500 max-w-sm mx-auto">Your reported issues will appear here for management and protocol tracking.</p>
                       </div>
                    </div>
                 )}
@@ -241,5 +251,6 @@ export function Profile() {
 
       </div>
     </Layout>
+
   );
 }
