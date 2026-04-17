@@ -30,8 +30,11 @@ export function IssueDetail() {
     } catch { return {}; }
   };
   const token = localStorage.getItem("resolveit_token");
-  const userRole = token ? decodeJwtPayload(token).role : "CITIZEN";
+  const userData = token ? decodeJwtPayload(token) : {};
+  const userRole = userData.role || "CITIZEN";
+  const userArea = userData.area || "";
   const isOfficial = userRole === "OFFICER" || userRole === "PRESIDENT";
+  const canUpdateStatus = userRole === "PRESIDENT" || (userRole === "OFFICER" && String(issue?.area || "").trim().toLowerCase() === String(userArea).trim().toLowerCase());
 
   const voteMutation = useMutation({
     mutationFn: (type) => api.post(`/issues/${id}/vote`, { type }),
@@ -93,59 +96,73 @@ export function IssueDetail() {
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         
-        {/* Status Update (Officials Only) */}
+        {/* Status Update (Officials with Permission Only) */}
         {isOfficial && (
-          <div className="glass-card bg-black/60 border-l-[6px] border-primary p-6 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
-                <Terminal className="w-32 h-32 text-primary" />
-             </div>
-             
-             <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
-                <div className="flex items-center gap-4 shrink-0">
-                   <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-xl shadow-lg">
-                      <Shield className="w-6 h-6 text-black" />
+          canUpdateStatus ? (
+            <div className="glass-card bg-black/60 border-l-[6px] border-primary p-6 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
+                  <Terminal className="w-32 h-32 text-primary" />
+               </div>
+               
+               <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                  <div className="flex items-center gap-4 shrink-0">
+                     <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-xl shadow-lg">
+                        <Shield className="w-6 h-6 text-black" />
+                     </div>
+                     <div>
+                        <h3 className="text-sm font-black text-white uppercase tracking-widest">Update Status</h3>
+                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Role: {userRole} | Sector: {userArea}</p>
+                     </div>
+                  </div>
+
+                  <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                     <div className="md:col-span-3">
+                        <select 
+                          value={selectedStatus}
+                          onChange={(e) => setSelectedStatus(e.target.value)}
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/40 transition-all"
+                        >
+                           <option value="REPORTED">Reported</option>
+                           <option value="IN_PROGRESS">Processing</option>
+                           <option value="RESOLVED">Resolved</option>
+                           <option value="REJECTED">Cancelled</option>
+                        </select>
+                     </div>
+                     <div className="md:col-span-6 relative group/input">
+                        <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-primary transition-colors" />
+                        <input 
+                          type="text"
+                          value={statusNote}
+                          onChange={(e) => setStatusNote(e.target.value)}
+                          placeholder="ADD A NOTE..."
+                          className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[10px] font-black uppercase tracking-widest text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/40 transition-all"
+                        />
+                     </div>
+                     <div className="md:col-span-3">
+                        <button 
+                          onClick={handleUpdateStatus}
+                          disabled={statusMutation.isPending || selectedStatus === issue.status}
+                          className="w-full py-3 bg-primary hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl transition-all disabled:opacity-50 active:scale-95"
+                        >
+                           {statusMutation.isPending ? "Saving..." : "Update"}
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          ) : (
+             <div className="glass-card bg-red-500/10 border-l-[6px] border-red-500 p-6 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden group">
+                <div className="flex items-center gap-6">
+                   <div className="w-12 h-12 bg-red-500/20 flex items-center justify-center rounded-xl">
+                      <ShieldAlert className="w-6 h-6 text-red-500" />
                    </div>
                    <div>
-                      <h3 className="text-sm font-black text-white uppercase tracking-widest">Update Status</h3>
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Role: {userRole}</p>
-                   </div>
-                </div>
-
-                <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                   <div className="md:col-span-3">
-                      <select 
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/40 transition-all"
-                      >
-                         <option value="REPORTED">Reported</option>
-                         <option value="IN_PROGRESS">Processing</option>
-                         <option value="RESOLVED">Resolved</option>
-                         <option value="REJECTED">Cancelled</option>
-                      </select>
-                   </div>
-                   <div className="md:col-span-6 relative group/input">
-                      <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-primary transition-colors" />
-                      <input 
-                        type="text"
-                        value={statusNote}
-                        onChange={(e) => setStatusNote(e.target.value)}
-                        placeholder="ADD A NOTE..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[10px] font-black uppercase tracking-widest text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/40 transition-all"
-                      />
-                   </div>
-                   <div className="md:col-span-3">
-                      <button 
-                        onClick={handleUpdateStatus}
-                        disabled={statusMutation.isPending || selectedStatus === issue.status}
-                        className="w-full py-3 bg-primary hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl transition-all disabled:opacity-50 active:scale-95"
-                      >
-                         {statusMutation.isPending ? "Saving..." : "Update"}
-                      </button>
+                      <h3 className="text-sm font-black text-red-400 uppercase tracking-widest">Permission Restricted</h3>
+                      <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider mt-1">This report is in {issue.area || issue.city}, which is outside your assigned sector ({userArea}).</p>
                    </div>
                 </div>
              </div>
-          </div>
+          )
         )}
 
         {/* Diagnostic Header Block */}

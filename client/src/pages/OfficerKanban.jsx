@@ -17,16 +17,28 @@ export function OfficerKanban() {
   const queryClient = useQueryClient();
   const [movingId, setMovingId] = useState(null);
   const [draggedOver, setDraggedOver] = useState(null);
-  const userRole = localStorage.getItem("resolveit_user_role") || "CITIZEN";
+  const decodeJwtPayload = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(atob(base64));
+    } catch { return {}; }
+  };
+
+  const token = localStorage.getItem("resolveit_token");
+  const userData = decodeJwtPayload(token || "");
+  const userRole = userData.role || "CITIZEN";
+  const userArea = userData.area || "";
   const isOfficer = ["OFFICER", "PRESIDENT"].includes(userRole);
 
   const { data: issues, isLoading, isError } = useQuery({
     queryKey: ["kanbanIssues"],
     queryFn: async () => {
-      // If officer, try fetching assigned. If empty or not officer, fetch all.
+      // If officer, prioritize sector-wide reports. 
       if (isOfficer) {
-        const assignedRes = await api.get("/issues?assignedToMe=true");
-        if (assignedRes.data?.length > 0) return assignedRes.data;
+        const res = await api.get("/issues?areaReports=true");
+        // Only return if we actually have area-specific data, else fall back to global visibility
+        if (res.data?.length > 0) return res.data;
       }
       return (await api.get("/issues")).data;
     },
@@ -56,7 +68,14 @@ export function OfficerKanban() {
     setDraggedOver(null);
     const issueId = e.dataTransfer.getData("issueId");
     const currentStatus = e.dataTransfer.getData("currentStatus");
+    const issueArea = e.dataTransfer.getData("issueArea");
     
+    // UI check before firing mutation
+    if (userRole === "OFFICER" && issueArea !== userArea) {
+      toast.error(`Operational Breach: Incident ${issueId.slice(-4)} is outside your sector.`);
+      return;
+    }
+
     if (currentStatus !== newStatus) {
       updateStatusMutation.mutate({ issueId, newStatus });
     }
@@ -256,12 +275,22 @@ export function OfficerKanban() {
                           draggable={isOfficer}
                           onDragStart={(e) => {
                             if (!isOfficer) return;
+                            
+                            // Check permission
+                            const hasPermission = userRole === "PRESIDENT" || issue.area === userArea;
+                            if (!hasPermission) {
+                               toast.error("Sector Restricted: High-clearance transfer required.");
+                               e.preventDefault();
+                               return;
+                            }
+
                             e.dataTransfer.setData("issueId", issue.id);
                             e.dataTransfer.setData("currentStatus", issue.status);
+                            e.dataTransfer.setData("issueArea", issue.area || "");
                           }}
                           className={cn(
                             "p-5 bg-black/60 border border-white/5 hover:border-primary/40 transition-all rounded-[24px] relative group shadow-2xl hover:shadow-primary/10 overflow-hidden",
-                            isOfficer ? "cursor-grab active:cursor-grabbing" : "cursor-default"
+                            isOfficer && (userRole === "PRESIDENT" || issue.area === userArea) ? "cursor-grab active:cursor-grabbing" : "cursor-default opacity-80"
                           )}
                         >
                           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -274,11 +303,11 @@ export function OfficerKanban() {
                              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
                                {issue.category}
                              </span>
-                             {isOfficer ? (
+                             {isOfficer && (userRole === "PRESIDENT" || issue.area === userArea) ? (
                                <GripVertical className="w-4 h-4 text-slate-700 opacity-20 group-hover:opacity-100 transition-opacity" />
                              ) : (
-                               <span className="text-[8px] font-black uppercase tracking-[0.2em] text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-full">
-                                 View Only
+                               <span className="text-[8px] font-black uppercase tracking-[0.2em] text-red-400 bg-red-400/5 border border-red-400/20 px-2.5 py-1 rounded-full uppercase">
+                                 {isOfficer ? "Sector Restricted" : "View Only"}
                                </span>
                              )}
                           </div>

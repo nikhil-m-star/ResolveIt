@@ -105,27 +105,26 @@ export function IssueMap({ issues, userLocation, focusLocation }) {
             position={[issue.latitude, issue.longitude]}
             icon={createCustomMarker(issue.status)}
           >
-            <Popup className="glass-popup custom-leaflet-popup">
-              <div className="p-5 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-[24px] min-w-[200px] shadow-2xl relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                  
+            <Popup className="premium-map-popup" minWidth={240}>
+              <div className="relative overflow-hidden group">
                   <div className="flex items-center gap-2 mb-3">
                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: getStatusDotColor(issue.status) }} />
-                     <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Report Located</span>
+                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Sector Report</span>
                   </div>
-                  <h4 className="font-heading font-black text-md mb-2 text-white uppercase tracking-tight leading-tight">
+                  <h4 className="font-heading font-black text-lg mb-2 text-white uppercase tracking-tighter leading-[1.2]">
                       {issue.title}
                   </h4>
-                  <div className="flex items-center gap-2 mb-5">
-                      <span className={cn("px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border border-white/5 bg-white/5", getCategoryColor(issue.category))}>
+                  <div className="flex items-center gap-2 mb-6">
+                      <span className={cn("px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border border-white/10 bg-white/5", getCategoryColor(issue.category))}>
                           {issue.category}
                       </span>
+                      <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-auto opacity-60">{issue.area || "City Wide"}</span>
                   </div>
                   <Link 
                      to={`/issues/${issue.id}`}
-                     className="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(16,185,129,0.5)]"
+                     className="flex items-center justify-center gap-2 w-full py-4 bg-primary hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95 shadow-[0_15px_30px_-10px_rgba(16,185,129,0.4)]"
                   >
-                      View Report <ChevronRight className="w-3 h-3" />
+                      Open Case <ChevronRight className="w-3 h-3" />
                   </Link>
               </div>
             </Popup>

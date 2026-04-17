@@ -112,19 +112,13 @@ export const createIssue = async (req, res) => {
         console.error("AI Error getting intensity/ETA:", ai_err);
     }
 
-    // Automated Dispatch: Find officer assigned to this area
+    // Automated Dispatch: Find lead officer for this area
     let assignedToId = null;
     if (area) {
-      const matchingOfficer = await prisma.user.findFirst({
-        where: { 
-          role: 'OFFICER',
-          area: { equals: area, mode: 'insensitive' }
-        }
-      });
-      if (matchingOfficer) {
-        assignedToId = matchingOfficer.id;
-        console.log(`Automated Dispatch: Incident in ${area} assigned to Officer ${matchingOfficer.name}`);
-      }
+       const leadOfficer = await prisma.user.findFirst({
+         where: { role: 'OFFICER', area: { equals: area, mode: 'insensitive' } }
+       });
+       if (leadOfficer) assignedToId = leadOfficer.id;
     }
 
     const issueData = {
@@ -140,26 +134,36 @@ export const createIssue = async (req, res) => {
       etaDays,
       isAnonymous: resolvedIsAnonymous,
       createdById: req.user.id,
-      assignedToId // Auto-assigned if match found
+      assignedToId 
     };
 
     const newIssue = await prisma.issue.create({
       data: issueData,
     });
 
-    // Notify officer if automatically assigned
-    if (assignedToId) {
+    // Sector-Wide Notifications: Alert all officers in this area
+    if (area) {
       try {
-        await prisma.notification.create({
-          data: {
-            userId: assignedToId,
-            issueId: newIssue.id,
-            type: 'URGENT',
-            message: `URGENT: New incident dispatched to your sector (${area}): ${title}`
+        const matchingOfficers = await prisma.user.findMany({
+          where: { 
+            role: 'OFFICER',
+            area: { equals: area, mode: 'insensitive' }
           }
         });
+
+        if (matchingOfficers.length > 0) {
+          await prisma.notification.createMany({
+            data: matchingOfficers.map(officer => ({
+              userId: officer.id,
+              issueId: newIssue.id,
+              type: 'URGENT',
+              message: `URGENT: New incident in your sector (${area}): ${title}`
+            }))
+          });
+          console.log(`Automated Dispatch: Notified ${matchingOfficers.length} officers in ${area}`);
+        }
       } catch (notifErr) {
-        console.error("Failed to send auto-dispatch notification:", notifErr);
+        console.error("Failed to process mass officer notifications:", notifErr);
       }
     }
 
@@ -193,7 +197,13 @@ export const getIssues = async (req, res) => {
         { description: { contains: search, mode: "insensitive" } }
       ];
     }
-    if (req.query.assignedToMe === "true" && req.user?.id) filter.assignedToId = req.user.id;
+    
+    // Sector-Based Awareness: For officers to see everything in their zone
+    if (req.query.areaReports === "true" && req.user?.area) {
+      filter.area = req.user.area;
+    } else if (req.query.assignedToMe === "true" && req.user?.id) {
+      filter.assignedToId = req.user.id;
+    }
 
     // 2. Data Retrieval with Dynamic Include
     let issues = await prisma.issue.findMany({
@@ -289,6 +299,17 @@ export const updateStatus = async (req, res) => {
         include: { createdBy: true }
     });
     if (!issue) return res.status(404).json({ error: "Issue not found" });
+
+    // Strict Area-Based Enforcement: Officers can only update issues in their own sector
+    if (req.user.role === "OFFICER") {
+      const isSameArea = String(issue.area || "").trim().toLowerCase() === String(req.user.area || "").trim().toLowerCase();
+      if (!isSameArea) {
+        return res.status(403).json({ 
+          error: "Permission Denied", 
+          message: `This incident is in ${issue.area}, which is outside your assigned sector of ${req.user.area}.` 
+        });
+      }
+    }
 
     // Update Issue & Push Status History in a transaction
     const [updatedIssue, statusEntry, _notification] = await prisma.$transaction([
