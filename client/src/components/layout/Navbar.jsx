@@ -72,7 +72,7 @@ export function Navbar() {
 
   return (
     <>
-      <Motion.div 
+      <motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="fixed top-6 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
@@ -98,7 +98,7 @@ export function Navbar() {
                     )}
                   >
                     {active && (
-                      <Motion.div
+                      <motion.div
                         layoutId="active-pill"
                         className="absolute inset-0 bg-primary/15 rounded-full border border-primary/20 shadow-[inset_0_2px_10px_rgba(16,185,129,0.1)] -z-10"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
@@ -142,21 +142,21 @@ export function Navbar() {
             </div>
           </div>
         </nav>
-      </Motion.div>
+      </motion.div>
 
 
       {/* Mobile More Menu Overlay */}
       <AnimatePresence>
         {isMobileMoreOpen && (
           <>
-            <Motion.div
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMoreOpen(false)}
               className="fixed inset-0 bg-black/80 backdrop-blur-md z-1240 md:hidden"
             />
-            <Motion.div
+            <motion.div
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
@@ -208,13 +208,13 @@ export function Navbar() {
                    </button>
                 </div>
               </div>
-            </Motion.div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>
 
       {/* Mobile floating pill nav */}
-      <Motion.div
+      <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="fixed bottom-8 left-0 right-0 z-1250 flex justify-center px-6 md:hidden"
@@ -234,7 +234,7 @@ export function Navbar() {
                   )}
                 >
                   {active && (
-                    <Motion.div
+                    <motion.div
                       layoutId="mobile-active-pill"
                       className="absolute inset-1 bg-primary/20 rounded-full border border-primary/20 -z-10"
                       transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
@@ -258,7 +258,7 @@ export function Navbar() {
             </button>
           </div>
         </nav>
-      </Motion.div>
+      </motion.div>
     </>
   );
 }

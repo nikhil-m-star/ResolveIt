@@ -20,7 +20,7 @@ export function IssueCard({ issue }) {
   });
 
   return (
-    <Motion.div 
+    <motion.div 
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -114,7 +114,7 @@ export function IssueCard({ issue }) {
            </div>
         </div>
       </div>
-    </Motion.div>
+    </motion.div>
   );
 }
 
