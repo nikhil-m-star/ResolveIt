@@ -2,6 +2,49 @@ import prisma from "../lib/prisma.js";
 import { autoCategorizIssue, checkDuplicate, assessIntensity, predictETA, generateCityReport } from "../services/nvidia.js";
 import { sendEmailNotification } from "../lib/email.js";
 
+const VALID_STATUS = new Set(["REPORTED", "IN_PROGRESS", "RESOLVED", "REJECTED"]);
+const VALID_CATEGORY = new Set([
+  "POTHOLE",
+  "GARBAGE",
+  "STREETLIGHT",
+  "WATER_LEAK",
+  "BRIBERY",
+  "POWER_CUT",
+  "SEWAGE",
+  "TREE_FALLEN",
+  "OTHER"
+]);
+
+const normalizeQueryParam = (value) => {
+  if (value === null || value === undefined) return null;
+  const parsed = String(value).trim();
+  if (!parsed || parsed === "null" || parsed === "undefined") return null;
+  return parsed;
+};
+
+const buildDistanceFromUser = (userLat, userLng, issueLat, issueLng) => {
+  const hasValidUserCoords = Number.isFinite(userLat) && Number.isFinite(userLng);
+  const hasValidIssueCoords = Number.isFinite(issueLat) && Number.isFinite(issueLng);
+  if (!hasValidUserCoords || !hasValidIssueCoords) return Number.POSITIVE_INFINITY;
+  return Math.hypot(issueLat - userLat, issueLng - userLng);
+};
+
+const getUserVoteMapForIssues = async (userId, issueIds = []) => {
+  if (!userId || issueIds.length === 0) return new Map();
+
+  try {
+    const records = await prisma.vote.findMany({
+      where: { userId, issueId: { in: issueIds } },
+      select: { issueId: true, type: true }
+    });
+    return new Map(records.map((record) => [record.issueId, record.type]));
+  } catch (error) {
+    // Production safety: keep issues feed alive even if vote schema/migration is out of sync.
+    console.warn("Vote map fallback: failed to fetch vote type, continuing without userVote.", error.message);
+    return new Map();
+  }
+};
+
 // AI Endpoint: Auto-Categorize Issue
 export const autoCategorize = async (req, res) => {
   const { title, description } = req.body;
@@ -130,17 +173,21 @@ export const createIssue = async (req, res) => {
 // Get all issues with filters - Optimized Clean Version
 export const getIssues = async (req, res) => {
   try {
-    const { city, area, category, status, search, lat, lng } = req.query;
+    const { lat, lng } = req.query;
     
     // 1. Build Atomic Filter
     const filter = {};
-    const isValid = (v) => v && v !== "" && v !== "null" && v !== "undefined";
+    const city = normalizeQueryParam(req.query.city);
+    const area = normalizeQueryParam(req.query.area);
+    const category = normalizeQueryParam(req.query.category);
+    const status = normalizeQueryParam(req.query.status);
+    const search = normalizeQueryParam(req.query.search);
 
-    if (isValid(city)) filter.city = city;
-    if (isValid(area)) filter.area = area;
-    if (isValid(category)) filter.category = category;
-    if (isValid(status)) filter.status = status;
-    if (isValid(search)) {
+    if (city) filter.city = city;
+    if (area) filter.area = area;
+    if (category && VALID_CATEGORY.has(category)) filter.category = category;
+    if (status && VALID_STATUS.has(status)) filter.status = status;
+    if (search) {
       filter.OR = [
         { title: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } }
@@ -149,25 +196,16 @@ export const getIssues = async (req, res) => {
     if (req.query.assignedToMe === "true" && req.user?.id) filter.assignedToId = req.user.id;
 
     // 2. Data Retrieval with Dynamic Include
-    const queryInclude = {
-      createdBy: { select: { id: true, name: true, role: true } }
-    };
-
-    if (req.user?.id) {
-      queryInclude.voteRecords = { 
-        where: { userId: req.user.id }, 
-        select: { type: true } 
-      };
-    }
-
     let issues = await prisma.issue.findMany({
       where: filter,
       orderBy: { createdAt: 'desc' },
-      include: queryInclude
+      include: {
+        createdBy: { select: { id: true, name: true, role: true } }
+      }
     });
 
     // 3. Force Global Fallback if filter too strict
-    if (issues.length === 0 && (isValid(city) || isValid(area))) {
+    if (issues.length === 0 && (city || area)) {
        issues = await prisma.issue.findMany({
          take: 10,
          orderBy: { createdAt: 'desc' },
@@ -176,19 +214,21 @@ export const getIssues = async (req, res) => {
     }
 
     // 4. Transform & Geospatial Precision
-    const uLat = parseFloat(lat);
-    const uLng = parseFloat(lng);
+    const uLat = Number.parseFloat(lat);
+    const uLng = Number.parseFloat(lng);
+    const userVoteMap = await getUserVoteMapForIssues(req.user?.id, issues.map((issue) => issue.id));
 
     const processed = issues.map(i => ({
       ...i,
-      userVote: i.voteRecords?.[0]?.type || null,
+      userVote: userVoteMap.get(i.id) || null,
       createdBy: i.isAnonymous ? null : i.createdBy
     }));
 
-    if (!isNaN(uLat) && !isNaN(uLng)) {
+    if (Number.isFinite(uLat) && Number.isFinite(uLng)) {
       processed.sort((a, b) => {
-        const getDist = (x1, y1, x2, y2) => Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        return getDist(uLat, uLng, a.latitude, a.longitude) - getDist(uLat, uLng, b.latitude, b.longitude);
+        const aDistance = buildDistanceFromUser(uLat, uLng, a.latitude, a.longitude);
+        const bDistance = buildDistanceFromUser(uLat, uLng, b.latitude, b.longitude);
+        return aDistance - bDistance;
       });
     }
 
@@ -214,13 +254,6 @@ export const getIssueById = async (req, res) => {
       }
     };
 
-    if (req.user?.id) {
-      include.voteRecords = {
-        where: { userId: req.user.id },
-        select: { type: true }
-      };
-    }
-
     const issue = await prisma.issue.findUnique({
       where: { id: req.params.id },
       include
@@ -228,9 +261,11 @@ export const getIssueById = async (req, res) => {
 
     if (!issue) return res.status(404).json({ error: "Issue not found" });
 
+    const userVoteMap = await getUserVoteMapForIssues(req.user?.id, [issue.id]);
+
     const formattedIssue = {
       ...issue,
-      userVote: issue.voteRecords[0]?.type || null
+      userVote: userVoteMap.get(issue.id) || null
     };
 
     res.json(formattedIssue);
