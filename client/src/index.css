@@ -471,16 +471,6 @@ body {
 .-translate-x-1\/2 { transform: translateX(-50%); }
 .-translate-y-1\/2 { transform: translateY(-50%); }
 .rotate-45 { transform: rotate(45deg); }
-.grayscale { filter: grayscale(100%); }
-.hover\:grayscale-0:hover { filter: grayscale(0%); }
-.saturate-\[0\.4\] { filter: saturate(0.4); }
-.group:hover .group-hover\:scale-105 { transform: scale(1.05); }
-.group:hover .group-hover\:scale-110 { transform: scale(1.1); }
-.group:hover .group-hover\:text-primary { color: var(--primary); }
-.group:hover .group-hover\:opacity-100 { opacity: 1; }
-.group:hover .group-hover\:opacity-10 { opacity: 0.1; }
-.group:hover .group-hover\:opacity-20 { opacity: 0.2; }
-.group:hover .group-hover\:saturate-100 { filter: saturate(1); }
 .group:hover .group-hover\:opacity-100 { opacity: 1; }
 .group:hover .group-hover\:translate-x-full { transform: translateX(100%); }
 .group:hover .group-hover\:-translate-y-0\.5 { transform: translateY(-0.125rem); }

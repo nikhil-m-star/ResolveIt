@@ -84,11 +84,11 @@ export function Profile() {
           <div className="relative">
             <div className="w-28 h-28 md:w-40 md:h-40 rounded-3xl bg-black border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-2xl relative">
                {/* Removed scan gradient */}
-               {clerkUser?.imageUrl ? (
-                 <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
-               ) : (
-                 <UserIcon className="w-16 h-16 text-primary/30" />
-               )}
+              {clerkUser?.imageUrl ? (
+                <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover transition-all duration-700" />
+              ) : (
+                <UserIcon className="w-16 h-16 text-primary/30" />
+              )}
             </div>
             <div className="absolute -bottom-2 -right-2 px-2.5 py-1 bg-primary text-black text-[8px] font-black uppercase tracking-widest rounded-lg shadow-xl border border-primary/50">
                VERIFIED
