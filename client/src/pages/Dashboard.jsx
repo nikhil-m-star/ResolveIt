@@ -115,9 +115,18 @@ export function Dashboard() {
                     <div className="absolute inset-0 bg-primary/10 blur-xl animate-pulse rounded-full" />
                     <CheckCircle2 className="h-12 w-12 text-primary relative z-10" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <p className="text-2xl font-heading font-black text-white uppercase tracking-tighter">City is Clear</p>
-                    <p className="text-sm text-slate-500">No active reports detected in this area.</p>
+                    <p className="text-sm text-slate-500 max-w-xs mx-auto">No active reports detected in this specific area. This sector is under optimal situational control.</p>
+                    <button 
+                      onClick={() => {
+                        setFilters({ city: "", area: "", status: "", search: "", lat: null, lng: null });
+                        refetch();
+                      }}
+                      className="mt-4 px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black text-primary uppercase tracking-[0.2em] hover:bg-white/10 transition-all"
+                    >
+                      Refresh Feed
+                    </button>
                   </div>
                 </div>
               ) : (

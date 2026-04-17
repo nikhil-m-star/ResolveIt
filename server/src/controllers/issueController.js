@@ -132,10 +132,10 @@ export const getIssues = async (req, res) => {
   try {
     const { city, area, category, status, search, lat, lng } = req.query;
     
-    // Self-Bootstrapping: IF database is empty, auto-populate situational grid
+    // Self-Bootstrapping: IF database is empty or has very few reports, auto-populate situational grid
     const count = await prisma.issue.count();
-    if (count === 0) {
-      console.log("Self-Bootstrapping: No data detected. Initializing metropolitan grid...");
+    if (count < 5) {
+      console.log(`Self-Bootstrapping: Low data density (${count} reports). Initializing metropolitan grid...`);
       
       // 1. Ensure Administrative Personnel exist
       const admin = await prisma.user.upsert({
@@ -164,26 +164,53 @@ export const getIssues = async (req, res) => {
         }
       });
 
-      // 2. Deploy Initial Situational Reports
-      await prisma.issue.createMany({
-        data: [
-          { 
-            title: 'SEED - Major Pothole on 80ft Road', 
-            description: 'Critical road damage impacting metropolitan flow. Dispatch required.',
-            category: 'POTHOLE', status: 'REPORTED', city: 'Bengaluru', area: 'Koramangala',
-            latitude: 12.9352, longitude: 77.6245, intensity: 8, createdById: admin.id,
-            assignedToId: officer.id
-          },
-          { 
-            title: 'SEED - Overflowing Sanitation Point', 
-            description: 'Environmental hazard detected at sector boundary.',
-            category: 'GARBAGE', status: 'RESOLVED', city: 'Bengaluru', area: 'HSR Layout',
-            latitude: 12.9116, longitude: 77.6474, intensity: 5, createdById: admin.id,
-            resolvedById: officer.id
-          }
-        ]
-      });
-      console.log("Metropolitan Grid Initialized.");
+      // 2. Deploy High-Resolution Situational Reports
+      const bootstrapData = [
+        { 
+          title: 'SEED - Major Pothole on 80ft Road', 
+          description: 'Critical road damage impacting metropolitan flow. Dispatch required.',
+          category: 'POTHOLE', status: 'REPORTED', city: 'Bengaluru', area: 'Koramangala',
+          latitude: 12.9352, longitude: 77.6245, intensity: 8, createdById: admin.id,
+          assignedToId: officer.id, imageUrls: ['https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=1200&q=80']
+        },
+        { 
+          title: 'SEED - Streetlight Grid Failure', 
+          description: 'Safety hazard: multiple lights dark at the junction.',
+          category: 'STREETLIGHT', status: 'IN_PROGRESS', city: 'Bengaluru', area: 'Indiranagar',
+          latitude: 12.9784, longitude: 77.6408, intensity: 6, createdById: admin.id,
+          assignedToId: officer.id, imageUrls: ['https://images.unsplash.com/photo-1494522358652-330b6cba186e?auto=format&fit=crop&w=1200&q=80']
+        },
+        { 
+          title: 'SEED - Overflowing Sanitation Point', 
+          description: 'Environmental hazard detected at sector boundary.',
+          category: 'GARBAGE', status: 'RESOLVED', city: 'Bengaluru', area: 'HSR Layout',
+          latitude: 12.9116, longitude: 77.6474, intensity: 5, createdById: admin.id,
+          resolvedById: officer.id, resolvedAt: new Date(), imageUrls: ['https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1200&q=80']
+        },
+        { 
+          title: 'SEED - Urgent Water Pipeline Leak', 
+          description: 'Severe underground leak causing road erosion.',
+          category: 'WATER_LEAK', status: 'REPORTED', city: 'Bengaluru', area: 'BTM Layout',
+          latitude: 12.9166, longitude: 77.6101, intensity: 7, createdById: admin.id,
+          imageUrls: ['https://images.unsplash.com/photo-1504626815340-0255b6fc9df9?auto=format&fit=crop&w=1200&q=80']
+        },
+        { 
+          title: 'SEED - Dangerous Fallen Canopy', 
+          description: 'Large branch blocking emergency access lane.',
+          category: 'TREE_FALLEN', status: 'IN_PROGRESS', city: 'Bengaluru', area: 'Jayanagar',
+          latitude: 12.9293, longitude: 77.5838, intensity: 6, createdById: admin.id,
+          assignedToId: officer.id, imageUrls: ['https://images.unsplash.com/photo-1516024925406-8c8f000b209a?auto=format&fit=crop&w=1200&q=80']
+        }
+      ];
+
+      for(const item of bootstrapData) {
+        await prisma.issue.upsert({
+          where: { title_city_area: { title: item.title, city: item.city, area: item.area } },
+          update: item,
+          create: item
+        }).catch(() => {/* Handle existing uniques */});
+      }
+      console.log("Metropolitan Grid Restored.");
     }
 
     const filter = {};
@@ -211,7 +238,6 @@ export const getIssues = async (req, res) => {
       }
     };
 
-    // Only include user-specific vote context if we have a valid user session
     if (req.user?.id) {
       include.voteRecords = {
         where: { userId: req.user.id },
@@ -237,7 +263,6 @@ export const getIssues = async (req, res) => {
           ...issue,
           userVote: issue.voteRecords?.[0]?.type || null
         };
-        // Mask user details for anonymous issues
         if (processed.isAnonymous) {
           processed.createdBy = null;
         }
@@ -254,6 +279,7 @@ export const getIssues = async (req, res) => {
       
       if (lat && lng && !isNaN(uLat) && !isNaN(uLng)) {
         const getDistance = (lat1, lon1, lat2, lon2) => {
+          if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
           const R = 6371; // km
           const dLat = (lat2 - lat1) * Math.PI / 180;
           const dLon = (lon2 - lon1) * Math.PI / 180;

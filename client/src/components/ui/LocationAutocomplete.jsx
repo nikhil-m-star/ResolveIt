@@ -39,9 +39,12 @@ export function LocationAutocomplete({
 
     setIsLoading(true);
     try {
-      // Using Nominatim OpenStreetMap API with featuretype=settlement to favor areas
+      // Lock search to Bengaluru viewbox: [left, top, right, bottom]
+      const BENGALURU_VIEWBOX = '77.3,13.2,77.8,12.7';
+      const constrainedQuery = `${searchQuery} Bengaluru`;
+      
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&addressdetails=1&limit=8`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(constrainedQuery)}&viewbox=${BENGALURU_VIEWBOX}&bounded=1&addressdetails=1&limit=8`
       );
       const data = await response.json();
       

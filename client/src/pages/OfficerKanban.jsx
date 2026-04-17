@@ -17,31 +17,42 @@ export function OfficerKanban() {
   const queryClient = useQueryClient();
   const [movingId, setMovingId] = useState(null);
   const [draggedOver, setDraggedOver] = useState(null);
+  const userRole = localStorage.getItem("resolveit_user_role") || "CITIZEN";
+  const isOfficer = ["OFFICER", "PRESIDENT"].includes(userRole);
 
   const { data: issues, isLoading, isError } = useQuery({
     queryKey: ["kanbanIssues"],
     queryFn: async () => {
-      const assignedRes = await api.get("/issues?assignedToMe=true");
-      if (assignedRes.data?.length > 0) {
-        return assignedRes.data;
+      // If officer, try fetching assigned. If empty or not officer, fetch all.
+      if (isOfficer) {
+        const assignedRes = await api.get("/issues?assignedToMe=true");
+        if (assignedRes.data?.length > 0) return assignedRes.data;
       }
       return (await api.get("/issues")).data;
     },
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ issueId, newStatus }) => api.patch(`/issues/${issueId}/status`, { newStatus, note: "Updated via Board." }),
+    mutationFn: ({ issueId, newStatus }) => {
+      if (!isOfficer) throw new Error("Unauthorized");
+      return api.patch(`/issues/${issueId}/status`, { newStatus, note: "Updated via Transparency Board." });
+    },
     onMutate: () => setMovingId(true),
     onSuccess: () => {
       queryClient.invalidateQueries(["kanbanIssues"]);
       toast.success("Board synchronized");
     },
-    onError: () => toast.error("Update failed. Clearance required."),
+    onError: () => toast.error("Update failed. Personnel clearance required."),
     onSettled: () => setMovingId(false),
   });
 
   const handleDrop = (e, newStatus) => {
     e.preventDefault();
+    if (!isOfficer) {
+      toast.error("Public view only. Handling restricted to officers.");
+      setDraggedOver(null);
+      return;
+    }
     setDraggedOver(null);
     const issueId = e.dataTransfer.getData("issueId");
     const currentStatus = e.dataTransfer.getData("currentStatus");
@@ -57,7 +68,7 @@ export function OfficerKanban() {
         <div className="flex items-center justify-center h-full pt-48">
           <div className="flex flex-col items-center gap-6">
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 animate-pulse">Syncing cases...</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 animate-pulse">Establishing secure link...</span>
           </div>
         </div>
       </Layout>
@@ -69,12 +80,16 @@ export function OfficerKanban() {
       <Layout>
          <div className="max-w-4xl mx-auto px-4 py-32 text-center">
           <AlertCircle className="w-16 h-16 text-red-500/40 mx-auto mb-6" />
-          <h2 className="text-3xl font-heading font-black text-white mb-4 uppercase tracking-tighter">Board Error</h2>
-          <p className="text-slate-500 text-sm uppercase tracking-widest leading-loose">Unable to retrieve case data. Check connectivity.</p>
+          <h2 className="text-3xl font-heading font-black text-white mb-4 uppercase tracking-tighter">Diagnostic Error</h2>
+          <p className="text-slate-500 text-sm uppercase tracking-widest leading-loose">Unable to establish case board connection.</p>
         </div>
       </Layout>
     );
   }
+
+  const resolvedCount = issues?.filter(i => i.status === "RESOLVED").length || 0;
+  const totalCount = issues?.length || 1;
+  const resolutionRate = Math.round((resolvedCount / totalCount) * 100);
 
   return (
     <Layout>
@@ -83,7 +98,11 @@ export function OfficerKanban() {
         {/* Kanban Header & Metrics HUD */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
           <div className="space-y-3">
-             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase">Board</h1>
+             <div className="flex items-center gap-3 mb-2">
+                <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-[8px] font-black text-primary uppercase tracking-[0.2em]">Live Data</div>
+             </div>
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase leading-tight">Public Case Board</h1>
+             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest max-w-sm">Transparency in administrative handling and metropolitan resolution progress.</p>
           </div>
 
           <motion.div 
@@ -91,32 +110,36 @@ export function OfficerKanban() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col md:flex-row items-center gap-8 bg-black/40 border border-white/10 rounded-[40px] px-10 py-6 backdrop-blur-3xl shadow-2xl w-full md:w-auto relative group overflow-hidden"
           >
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             
             <div className="flex flex-col gap-2 w-full md:w-64">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                City Wide Health <Activity className="w-3 h-3 text-primary" />
+                City Resolution Speed <Activity className="w-3 h-3 text-primary" />
               </span>
               <div className="flex items-center gap-4">
                 <div className="h-2 flex-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
                   <motion.div 
                     initial={{ width: 0 }}
-                    animate={{ width: `${Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%` }}
-                    className="h-full bg-primary shadow-[0_0_10px_#10b981]" 
+                    animate={{ width: `${resolutionRate}%` }}
+                    className="h-full bg-primary shadow-[0_0_15px_#10b981]" 
                   />
                 </div>
                 <span className="text-sm font-black text-white min-w-[3ch]">
-                  {Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%
+                  {resolutionRate}%
                 </span>
               </div>
             </div>
             
             <div className="hidden md:block w-px h-10 bg-white/10" />
             
-            <div className="flex items-center gap-6 w-full md:w-auto">
+            <div className="flex items-center gap-10 w-full md:w-auto">
               <div className="flex flex-col">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Active Cases</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">In Handling</span>
                 <span className="text-2xl font-black text-white tracking-tighter">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Metropolitan SLA</span>
+                <span className="text-2xl font-black text-primary tracking-tighter">Optimal</span>
               </div>
             </div>
           </motion.div>
