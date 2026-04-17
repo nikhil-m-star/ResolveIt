@@ -76,7 +76,7 @@ export function AreaSelector({
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 5, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute z-[100] left-0 right-0 overflow-hidden rounded-3xl border border-white/10 bg-black/80 backdrop-blur-3xl shadow-2xl"
+            className="absolute z-[100] left-0 right-0 overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0a] shadow-2xl pointer-events-auto"
           >
             {/* Search Input Inside Dropdown */}
             <div className="p-4 border-b border-white/5">
@@ -93,7 +93,7 @@ export function AreaSelector({
               </div>
             </div>
 
-            <div className="max-h-64 overflow-y-auto scrollbar-hide py-2">
+            <div className="max-h-64 overflow-y-auto py-2 -webkit-overflow-scrolling-touch">
               {filteredAreas.length > 0 ? (
                 filteredAreas.map((area) => (
                   <button

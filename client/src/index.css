@@ -633,7 +633,7 @@ body {
 }
 
 .leaflet-tile-pane { 
-  filter: contrast(1.1) brightness(0.8) saturate(0.8) invert(1) hue-rotate(180deg);
+  filter: none;
 }
 
 /* ─── Responsive: sm (640px) ─── */
