@@ -76,10 +76,15 @@ export function AreaSelector({
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 5, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute z-[100] left-0 right-0 overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0a] shadow-2xl pointer-events-auto"
+            style={{ 
+              backgroundColor: "#0a0a0a", 
+              opacity: "1 !important",
+              zIndex: 9999 
+            }}
+            className="absolute left-0 right-0 rounded-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,1)] pointer-events-auto"
           >
             {/* Search Input Inside Dropdown */}
-            <div className="p-4 border-b border-white/5">
+            <div className="p-4 border-b border-white/5 bg-[#0a0a0a] rounded-t-3xl">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600" />
                 <input
@@ -88,19 +93,22 @@ export function AreaSelector({
                   placeholder="FILTER AREAS..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 rounded-xl pl-10 pr-4 py-2.5 text-[9px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/20 transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/40 transition-all"
                 />
               </div>
             </div>
 
-            <div className="max-h-64 overflow-y-auto py-2 -webkit-overflow-scrolling-touch">
+            <div 
+              className="max-h-[280px] overflow-y-auto py-2 relative z-20 overscroll-contain"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+            >
               {filteredAreas.length > 0 ? (
                 filteredAreas.map((area) => (
                   <button
                     key={area.name}
                     type="button"
                     onClick={() => handleSelect(area)}
-                    className="w-full text-left px-6 py-4 hover:bg-white/5 transition-all flex items-center justify-between group"
+                    className="w-full text-left px-6 py-4 hover:bg-white/5 transition-all flex items-center justify-between group cursor-pointer active:bg-white/10"
                   >
                     <span className={cn(
                       "text-[10px] font-black uppercase tracking-widest transition-colors",
@@ -114,7 +122,7 @@ export function AreaSelector({
                   </button>
                 ))
               ) : (
-                <div className="px-6 py-8 text-center">
+                <div className="px-6 py-10 text-center">
                   <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">No matching sectors found</p>
                 </div>
               )}
