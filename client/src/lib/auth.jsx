@@ -4,15 +4,16 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat";
 
-const isLocalHost =
-  typeof window !== "undefined" &&
-  ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const DEFAULT_API_URL = isLocalHost
   ? "http://localhost:5000/api"
   : "https://resolveit-cyhu.onrender.com/api";
 
+// Force local API during development to avoid "Ghost Backend" issues
+const finalBaseURL = isLocalHost ? DEFAULT_API_URL : (import.meta.env.VITE_API_URL || DEFAULT_API_URL);
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || DEFAULT_API_URL,
+  baseURL: finalBaseURL,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });

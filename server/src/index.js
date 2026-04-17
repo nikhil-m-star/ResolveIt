@@ -20,10 +20,10 @@ app.use(helmet());
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "http://localhost:5173",
-  "https://resolve--it.vercel.app",
-  "https://resolve--it-git-main-nikhil-m-stars-projects.vercel.app"
+  "http://localhost:3000",
 ].filter(Boolean);
 
+// Dynamic CORS for Preview and Production URLs
 app.use(
   cors({
     credentials: true,
@@ -31,10 +31,15 @@ app.use(
       // Allow requests with no origin (like mobile apps or curl)
       if (!origin) return callback(null, true);
       
-      if (allowedOrigins.includes(origin)) {
+      const isAllowed = allowedOrigins.includes(origin) || 
+        origin.endsWith(".vercel.app") || 
+        origin.endsWith(".onrender.com") ||
+        origin.includes("localhost");
+
+      if (isAllowed) {
         callback(null, true);
       } else {
-        console.warn(`CORS attempt from unauthorized origin: ${origin}`);
+        console.warn(`[CORS SHIELD] Blocked: ${origin}`);
         callback(null, false);
       }
     },
