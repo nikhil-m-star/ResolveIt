@@ -189,13 +189,13 @@ export function ReportIssue() {
         {/* Header Section */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
-             <Bot className="w-3.5 h-3.5" /> Intelligence Assisted
+             <Bot className="w-3.5 h-3.5" /> AI Assisted
           </div>
-          <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">Initiate Official Report</h1>
-          <p className="text-slate-400 font-medium">Your vigilance drives civic progress. AI-powered diagnostics will help optimize your submission.</p>
+          <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">Report an Issue</h1>
+          <p className="text-slate-400 font-medium">Your help makes the city better. Our AI will help you fill in the details.</p>
         </div>
 
-        {/* Tactical Pipeline (Progress) */}
+        {/* Progress Tracker */}
         <div className="max-w-xl mx-auto relative px-8">
            <div className="absolute left-0 top-1/2 w-full h-[2px] bg-white/5 -translate-y-1/2" />
            <div 
@@ -225,7 +225,7 @@ export function ReportIssue() {
                  <AlertCircle className="w-6 h-6 text-primary" />
               </div>
               <div>
-                 <h4 className="font-bold text-white flex items-center gap-2 uppercase tracking-widest text-sm">Conflict Warning <Bot className="w-4 h-4 opacity-50" /></h4>
+                 <h4 className="font-bold text-white flex items-center gap-2 uppercase tracking-widest text-sm">Similar report found <Bot className="w-4 h-4 opacity-50" /></h4>
                  <p className="text-xs mt-1 text-slate-400 leading-relaxed font-medium">{duplicateWarning.reasoning}</p>
               </div>
            </div>
@@ -238,27 +238,27 @@ export function ReportIssue() {
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
               <div className="space-y-2">
                 <h2 className="text-lg font-black text-white uppercase tracking-widest">Step 01</h2>
-                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Diagnostic Narrative</p>
+                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Issue Details</p>
               </div>
               
               <div className="space-y-3">
-                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Case Subject</label>
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Title</label>
                 <input 
                   type="text" 
                   value={formData.title}
                   onChange={(e) => updateForm("title", e.target.value)}
-                  placeholder="Summarize the incident..."
+                  placeholder="Summarize the issue..."
                   className="w-full bg-black border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-inner font-medium"
                 />
               </div>
 
               <div className="space-y-3 relative group">
-                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Operational Description</label>
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Describe the issue</label>
                 <textarea 
                   value={formData.description}
                   onChange={(e) => updateForm("description", e.target.value)}
                   onBlur={handleBlurAIAnalyzers}
-                  placeholder="Detail the circumstances. Systematic AI analysis will initiate upon blur..."
+                  placeholder="Tell us what happened. Our AI will help analyze the details..."
                   rows={6}
                   className="w-full bg-black border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all font-medium resize-none shadow-inner"
                 />
@@ -271,7 +271,7 @@ export function ReportIssue() {
                       className="absolute right-4 bottom-4 flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-xl border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest"
                     >
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      Analyzing Sequence...
+                      Analyzing...
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -284,7 +284,7 @@ export function ReportIssue() {
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
                   <h2 className="text-lg font-black text-white uppercase tracking-widest">Step 02</h2>
-                  <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Asset Categorization</p>
+                  <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Category & Photos</p>
                 </div>
                 {formData.category && (
                   <div className="px-4 py-2 bg-primary/10 border border-primary/20 rounded-2xl text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 shadow-lg">
@@ -294,23 +294,23 @@ export function ReportIssue() {
               </div>
               
               <div className="space-y-3">
-                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Case Category</label>
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Category</label>
                 <div className="relative">
                   <select 
                     value={formData.category}
                     onChange={(e) => updateForm("category", e.target.value)}
                     className="w-full bg-black border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none font-medium shadow-inner"
                   >
-                    <option value="" disabled>Select Sector Classification...</option>
+                    <option value="" disabled>Select category...</option>
                     <option value="POTHOLE">Potholes & Road Damage</option>
                     <option value="GARBAGE">Sanitation & Waste</option>
                     <option value="WATER_LEAK">Water Infrastructure</option>
-                    <option value="POWER_CUT">Grid Stability / Outages</option>
-                    <option value="STREETLIGHT">Public Illumination</option>
+                    <option value="POWER_CUT">Power Outages</option>
+                    <option value="STREETLIGHT">Streetlights</option>
                     <option value="SEWAGE">Drainage & Sewage</option>
-                    <option value="TREE_FALLEN">Navigational Hazards</option>
-                    <option value="BRIBERY">Integrity Violation</option>
-                    <option value="OTHER">Miscellaneous Sector</option>
+                    <option value="TREE_FALLEN">Fallen Trees</option>
+                    <option value="BRIBERY">Bribery</option>
+                    <option value="OTHER">Other</option>
                   </select>
                 </div>
               </div>
@@ -325,7 +325,7 @@ export function ReportIssue() {
                       <ShieldAlert className="w-6 h-6 text-white" />
                    </div>
                    <div className="flex-1">
-                     <p className="text-xs text-white font-black uppercase tracking-widest mb-3">Anonymous Protocol Enabled</p>
+                     <p className="text-xs text-white font-black uppercase tracking-widest mb-3">Anonymous mode enabled</p>
                      <label className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative">
                           <input 
@@ -345,7 +345,7 @@ export function ReportIssue() {
               )}
 
               <div className="space-y-4">
-                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Visual Evidence</label>
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Photos</label>
                 <div 
                    {...getRootProps()} 
                    className={cn(
@@ -354,12 +354,12 @@ export function ReportIssue() {
                      formData.images.length >= 3 && "opacity-30 pointer-events-none"
                    )}
                 >
-                  <input {...getInputProps()} />
-                  <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-xl">
-                    <UploadCloud className="w-8 h-8 text-primary" />
-                  </div>
-                  <p className="text-sm text-white font-bold mb-1">Upload Tactical Assets</p>
-                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Max 3 (JPEG, PNG, WEBP)</p>
+                   <input {...getInputProps()} />
+                   <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-xl">
+                     <UploadCloud className="w-8 h-8 text-primary" />
+                   </div>
+                   <p className="text-sm text-white font-bold mb-1">Upload Photos</p>
+                   <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Max 3 (JPEG, PNG, WEBP)</p>
                 </div>
 
                 <AnimatePresence>
@@ -393,12 +393,12 @@ export function ReportIssue() {
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
               <div className="space-y-2">
                 <h2 className="text-lg font-black text-white uppercase tracking-widest">Step 03</h2>
-                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Geospatial Positioning</p>
+                <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Location</p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <div className="space-y-3">
-                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Assigned City</label>
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">City</label>
                     <input 
                       type="text" 
                       value={formData.city} readOnly disabled
@@ -406,7 +406,7 @@ export function ReportIssue() {
                     />
                  </div>
                  <div className="space-y-3">
-                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Area / Neighbor Sector</label>
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Area / Neighborhood</label>
                     <input 
                       type="text" 
                       value={formData.area} 
@@ -420,7 +420,7 @@ export function ReportIssue() {
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                     <MapPin className="w-3.5 h-3.5 text-primary"/> Triangulate Case via Map
+                     <MapPin className="w-3.5 h-3.5 text-primary"/> Pick location on map
                   </label>
                   <button
                     type="button"
@@ -429,7 +429,7 @@ export function ReportIssue() {
                     className="flex items-center gap-2 px-5 py-2 rounded-xl bg-primary/10 border border-primary/20 text-[10px] font-black uppercase text-primary tracking-widest transition-all hover:bg-primary hover:text-white disabled:opacity-50"
                   >
                     {isLocatingGPS ? <Loader2 className="w-3 h-3 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
-                    Sync GPS
+                    Find my location
                   </button>
                 </div>
                 <div className="w-full h-80 rounded-5xl overflow-hidden border border-white/10 relative z-0 shadow-2xl">
@@ -455,14 +455,14 @@ export function ReportIssue() {
             </div>
           )}
 
-          {/* Tactical Navigation Bar */}
+          {/* Navigation Bar */}
           <div className="flex items-center justify-between mt-12 pt-8 border-t border-white/5">
             <button 
               onClick={() => setStep(s => Math.max(1, s - 1))}
               disabled={step === 1 || isSubmitting}
               className="px-6 py-3 text-slate-500 hover:text-white disabled:opacity-0 transition-all font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
             >
-              <ArrowLeft className="w-4 h-4" /> ABORT STEP
+              <ArrowLeft className="w-4 h-4" /> Back
             </button>
             
             {step < 3 ? (
@@ -474,7 +474,7 @@ export function ReportIssue() {
                 disabled={(step === 1 && (!formData.title || !formData.description))}
                 className="flex items-center gap-2 bg-primary hover:brightness-110 disabled:opacity-50 text-white px-10 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all shadow-xl active:scale-95"
               >
-                Next Sequence <ArrowRight className="w-3.5 h-3.5" />
+                Next <ArrowRight className="w-3.5 h-3.5" />
               </button>
             ) : (
               <button 
@@ -483,9 +483,9 @@ export function ReportIssue() {
                 className="flex items-center gap-3 bg-primary hover:brightness-110 disabled:opacity-50 text-white px-12 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 shadow-xl active:scale-95"
               >
                 {isSubmitting ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Synchronizing...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</>
                 ) : (
-                  <>Submit Mission</>
+                  <>Submit</>
                 )}
               </button>
             )}

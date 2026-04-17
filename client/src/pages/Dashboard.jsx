@@ -58,20 +58,15 @@ export function Dashboard() {
         {/* Dashboard Header - purified */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="flex flex-col md:flex-row items-center gap-8 w-full md:w-auto">
-            <div className="flex flex-col">
-              <h1 className="text-6xl font-heading font-black text-white tracking-tighter uppercase leading-none">Feed</h1>
-              <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mt-2">Live Sector Intelligence</span>
-            </div>
-            
-            <div className="relative w-full md:w-[450px] group/search">
+            <div className="relative w-full md:w-[600px] group/search">
               <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-focus-within/search:opacity-100 transition-opacity" />
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
               <input 
                 type="text"
-                placeholder="SIGNAL SEARCH_PROTOCOLS..."
+                placeholder="Search issues..."
                 value={filters.search || ""}
                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-5 text-sm font-bold text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-xl"
+                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-5 text-base font-medium text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-xl"
               />
             </div>
           </div>
@@ -84,26 +79,8 @@ export function Dashboard() {
             <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-black/10 group-hover:scale-110 transition-transform">
                <PlusCircle className="h-6 w-6" />
             </div>
-            Report Signal
+            Report
           </Link>
-        </div>
-
-        {/* Status Filter Pills - refined spacing */}
-        <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide">
-           {['ALL', 'REPORTED', 'IN_PROGRESS', 'RESOLVED'].map((status) => (
-             <button
-               key={status}
-               onClick={() => setFilters(prev => ({ ...prev, status: status === 'ALL' ? '' : status }))}
-               className={cn(
-                 "px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all border shrink-0",
-                 (filters.status === status || (status === 'ALL' && !filters.status))
-                   ? "bg-primary border-primary text-black shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                   : "bg-black/40 border-white/5 text-slate-500 hover:text-white hover:border-white/20"
-               )}
-             >
-               {status.replace('_', ' ')}
-             </button>
-           ))}
         </div>
 
 

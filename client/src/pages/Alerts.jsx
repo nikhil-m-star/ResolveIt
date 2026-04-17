@@ -65,7 +65,7 @@ export function Alerts() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
-               <Activity className="w-3.5 h-3.5" /> Intelligence Network
+               <Activity className="w-3.5 h-3.5" /> Notifications
             </div>
             <h1 className="text-5xl font-heading font-black text-white tracking-tight uppercase">Alerts</h1>
           </div>
@@ -78,7 +78,7 @@ export function Alerts() {
                    className="flex items-center gap-2 px-6 py-3 bg-primary/10 hover:bg-primary text-primary hover:text-black border border-primary/20 rounded-2xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-lg"
                 >
                    {markReadMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin"/> : <Check className="w-4 h-4" />}
-                   Synchronize All
+                   Mark all as read
                 </button>
              )}
           </div>
@@ -104,9 +104,9 @@ export function Alerts() {
         <div className="glass-card overflow-hidden border-white/5 bg-black min-h-500 flex flex-col">
            <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                 <History className="w-3.5 h-3.5" /> Recent Incident Telemetry
+                 <History className="w-3.5 h-3.5" /> Recent Activity
               </span>
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{unreadCount} Pending Clearance</span>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{unreadCount} Unread</span>
            </div>
 
             <div className="flex-1 divide-y divide-white/5 bg-black/20">
@@ -118,8 +118,8 @@ export function Alerts() {
                        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin relative z-10" />
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                       <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] animate-pulse">Syncing Intelligence Grid</span>
-                       <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">Accessing Secure Telemetry Node...</span>
+                       <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] animate-pulse">Loading Notifications</span>
+                       <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">Checking for updates...</span>
                     </div>
                  </div>
                ) : filteredNotifications?.length === 0 ? (
@@ -129,8 +129,8 @@ export function Alerts() {
                         <ShieldAlert className="w-10 h-10 text-slate-700 relative z-10" />
                      </div>
                      <div className="space-y-3">
-                        <h3 className="text-2xl font-black text-white uppercase tracking-tight">Sector Nominal</h3>
-                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest max-w-xs mx-auto">No prioritized alerts detected in current telemetry window.</p>
+                        <h3 className="text-2xl font-black text-white uppercase tracking-tight">All clear</h3>
+                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest max-w-xs mx-auto">You have no new notifications at this time.</p>
                      </div>
                   </div>
                ) : (
@@ -165,7 +165,7 @@ export function Alerts() {
                              <div className="flex items-start justify-between gap-6">
                                 <div className="space-y-1">
                                    <div className="flex items-center gap-3">
-                                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Event_Type: {notif.type}</span>
+                                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Type: {notif.type}</span>
                                       <div className="h-px w-8 bg-white/10" />
                                    </div>
                                    <p className={cn(
@@ -186,7 +186,7 @@ export function Alerts() {
                                <div className="flex items-center gap-2">
                                   <Clock className="w-3.5 h-3.5 text-slate-600" />
                                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                                    {formatDistanceToNow(new Date(notif.createdAt))} AG0
+                                    {formatDistanceToNow(new Date(notif.createdAt))} ago
                                   </span>
                                </div>
 
@@ -195,7 +195,7 @@ export function Alerts() {
                                    to={`/issues/${notif.issueId}`}
                                    className="text-[10px] font-black text-primary hover:text-emerald-400 uppercase tracking-widest transition-all flex items-center gap-2 group/link border-b border-primary/0 hover:border-primary/40 pb-0.5"
                                  >
-                                    Initialize Detail_Protocol <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                                    View Details <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                                  </Link>
                                )}
 
@@ -215,15 +215,14 @@ export function Alerts() {
             </div>
 
            <div className="p-6 bg-white/5 border-t border-white/5 flex items-center justify-between">
-              <span className="text-[10px] font-black text-slate-600 uppercase tracking-mega-wide">ResolveIt Unified Intelligence Node</span>
+              <span className="text-[10px] font-black text-slate-600 uppercase tracking-mega-wide">ResolveIt Notification Center</span>
               <div className="flex items-center gap-2">
                  <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                 <span className="text-[9px] font-black text-slate-500 uppercase">System Operational</span>
+                 <span className="text-[9px] font-black text-slate-500 uppercase">System Ready</span>
               </div>
            </div>
         </div>
       </div>
     </Layout>
-
   );
 }

@@ -93,7 +93,7 @@ export function IssueDetail() {
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         
-        {/* Tactical Management Strip (Officials Only) */}
+        {/* Status Update (Officials Only) */}
         {isOfficial && (
           <div className="glass-card bg-black/60 border-l-[6px] border-primary p-6 animate-in slide-in-from-top-6 duration-700 shadow-[0_0_50px_-12px_rgba(16,185,129,0.15)] relative overflow-hidden group">
              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
@@ -106,10 +106,10 @@ export function IssueDetail() {
                       <Shield className="w-7 h-7 text-black" />
                    </div>
                    <div>
-                      <h3 className="text-white font-black text-lg tracking-tight uppercase">Protocol Override</h3>
+                      <h3 className="text-white font-black text-lg tracking-tight uppercase">Update Status</h3>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Secure Session: {userRole}</p>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Authorized: {userRole}</p>
                       </div>
                    </div>
                 </div>
@@ -121,10 +121,10 @@ export function IssueDetail() {
                         onChange={(e) => setSelectedStatus(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/50"
                       >
-                         <option value="REPORTED">01_REPORTED</option>
-                         <option value="IN_PROGRESS">02_PROCESSING</option>
-                         <option value="RESOLVED">03_RESOLVED</option>
-                         <option value="REJECTED">04_TERMINATED</option>
+                         <option value="REPORTED">Reported</option>
+                         <option value="IN_PROGRESS">Processing</option>
+                         <option value="RESOLVED">Resolved</option>
+                         <option value="REJECTED">Cancelled</option>
                       </select>
                    </div>
                    <div className="md:col-span-6 relative group/input">
@@ -133,7 +133,7 @@ export function IssueDetail() {
                         type="text"
                         value={statusNote}
                         onChange={(e) => setStatusNote(e.target.value)}
-                        placeholder="AUTHENTICATE WITH AUDIT NOTE..."
+                        placeholder="ADD A NOTE..."
                         className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-xs font-black uppercase tracking-widest text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50"
                       />
                    </div>
@@ -143,7 +143,7 @@ export function IssueDetail() {
                         disabled={statusMutation.isPending || selectedStatus === issue.status}
                         className="w-full py-3 bg-primary hover:bg-emerald-400 text-black text-[11px] font-black uppercase tracking-[0.2em] rounded-xl shadow-xl transition-all disabled:opacity-50 active:scale-95"
                       >
-                         {statusMutation.isPending ? "Syncing..." : "Execute Status Shift"}
+                         {statusMutation.isPending ? "Saving..." : "Save Changes"}
                       </button>
                    </div>
                 </div>
@@ -182,7 +182,7 @@ export function IssueDetail() {
             <div className="space-y-4">
                <div className="flex items-center gap-3 text-slate-500 group-hover:text-primary transition-colors">
                   <Activity className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em]">Case File: #{issue.id.slice(-8).toUpperCase()}</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em]">Reference: #{issue.id.slice(-8).toUpperCase()}</span>
                </div>
                <h1 className="text-5xl font-heading font-black text-white tracking-tighter uppercase leading-[0.9]">
                  {issue.title}
@@ -193,7 +193,7 @@ export function IssueDetail() {
                {[
                  { icon: MapPin, label: issue.area || issue.city, color: "text-primary" },
                  { icon: Clock, label: formatDistanceToNow(new Date(issue.createdAt), { addSuffix: true }), color: "text-blue-400" },
-                 { icon: Database, label: `INTEL_SRC: ${issue.isAnonymous ? "ANON" : "VERIFIED"}`, color: "text-emerald-400" }
+                 { icon: Database, label: `${issue.isAnonymous ? "Reported Anonymously" : "Verified User"}`, color: "text-emerald-400" }
                ].map((meta, i) => (
                  <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/5">
                     <meta.icon className={cn("w-3.5 h-3.5", meta.color)} />
@@ -205,7 +205,7 @@ export function IssueDetail() {
             <div className="max-w-2xl">
                <div className="flex items-center gap-2 mb-4 text-slate-600">
                   <div className="h-px flex-1 bg-white/10" />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Incident Logistics</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest">Description</span>
                   <div className="h-px flex-1 bg-white/10" />
                </div>
                <p className="text-slate-400 leading-relaxed text-lg font-medium italic border-l-2 border-white/10 pl-6">
@@ -319,7 +319,7 @@ export function IssueDetail() {
            <div className="lg:col-span-1 glass-card bg-black/40 border border-white/5 p-8 flex flex-col gap-8">
              <div className="flex items-center justify-between">
                 <h3 className="text-[11px] font-black text-white uppercase tracking-[0.3em] flex items-center gap-3">
-                   <Activity className="w-4 h-4 text-primary" /> Sector Ledger
+                   <Activity className="w-4 h-4 text-primary" /> History
                 </h3>
              </div>
              
@@ -335,7 +335,7 @@ export function IssueDetail() {
                      <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black text-white uppercase tracking-widest">Incident Root_Initialization</p>
+                    <p className="text-[10px] font-black text-white uppercase tracking-widest">Problem Reported</p>
                     <p className="text-[10px] text-slate-500 uppercase font-bold">{formatDistanceToNow(new Date(issue.createdAt))} ago</p>
                   </div>
                </div>
@@ -352,10 +352,10 @@ export function IssueDetail() {
                     </div>
                     <div className="space-y-2">
                        <div className="flex items-center justify-between gap-4">
-                          <p className="text-[10px] font-black text-white uppercase tracking-widest">Status Update_0{idx + 1}</p>
+                          <p className="text-[10px] font-black text-white uppercase tracking-widest">Update 0{idx + 1}</p>
                           <span className={cn("px-2 py-0.5 text-[8px] font-black uppercase rounded border", getStatusColor(history.newStatus))}>{history.newStatus}</span>
                        </div>
-                       <p className="text-[9px] font-bold text-slate-500 uppercase">CMD: {history.user?.name} • {formatDistanceToNow(new Date(history.createdAt))} ago</p>
+                       <p className="text-[9px] font-bold text-slate-500 uppercase">By {history.user?.name} • {formatDistanceToNow(new Date(history.createdAt))} ago</p>
                        {history.note && (
                          <div className="p-4 bg-white/5 border border-white/5 rounded-xl text-xs text-slate-400 italic font-medium leading-relaxed">
                            "{history.note}"
