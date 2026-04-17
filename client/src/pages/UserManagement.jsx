@@ -390,8 +390,6 @@ export function UserManagement() {
             </AnimatePresence>
           </div>
         </div>
-        </div>
-
       </div>
     </Layout>
   );
