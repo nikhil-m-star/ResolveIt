@@ -78,7 +78,7 @@ export function OfficerKanban() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-6 py-16 h-map-mobile md:h-map-desktop flex flex-col space-y-12 animate-in fade-in duration-1000">
+      <div className="max-w-7xl mx-auto px-6 py-16 min-h-screen flex flex-col space-y-12 animate-in fade-in duration-1000">
         
         {/* Kanban Header & Metrics HUD */}
         <div className="flex flex-col md:flex-row justify-between items-end gap-10">
