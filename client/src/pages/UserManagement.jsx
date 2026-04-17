@@ -165,7 +165,7 @@ export function UserManagement() {
              >
                 <Users className="h-3 w-3" /> Access Management
              </motion.div>
-             <h1 className="text-6xl font-heading font-black text-white tracking-tighter uppercase italic">
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase italic">
                Database
              </h1>
           </div>
@@ -176,7 +176,7 @@ export function UserManagement() {
                 <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Users</span>
                 <span className="block text-3xl font-heading font-black text-white tracking-tighter leading-none">{users?.length || 0}</span>
              </div>
-             <div className="bg-black/40 border border-primary/20 rounded-[32px] px-8 py-5 backdrop-blur-3xl shadow-2xl relative group overflow-hidden">
+             <div className="hidden sm:block bg-black/40 border border-primary/20 rounded-[32px] px-8 py-5 backdrop-blur-3xl shadow-2xl relative group overflow-hidden">
                 <div className="absolute inset-0 bg-primary/5 opacity-100 transition-opacity" />
                 <span className="block text-[10px] font-black text-primary uppercase tracking-widest mb-1">Officers</span>
                 <span className="block text-3xl font-heading font-black text-primary tracking-tighter leading-none">{users?.filter(u => u.role !== 'CITIZEN').length || 0}</span>
@@ -196,7 +196,7 @@ export function UserManagement() {
               className="w-full bg-transparent border-none rounded-2xl pl-14 pr-6 py-4.5 text-xs text-white placeholder:text-slate-600 focus:outline-none transition-all"
             />
           </div>
-          <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-[24px]">
+          <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-[24px] overflow-x-auto scrollbar-hide">
              {["ALL", "USER", "OFFICER", "ADMIN"].map((label) => {
                const role = label === "USER" ? "CITIZEN" : label === "ADMIN" ? "PRESIDENT" : label;
                return (
@@ -204,7 +204,7 @@ export function UserManagement() {
                   key={label}
                   onClick={() => setRoleFilter(role)}
                   className={cn(
-                    "px-6 py-3 rounded-[18px] text-[10px] font-black uppercase tracking-widest transition-all relative overflow-hidden",
+                    "px-6 py-3 rounded-[18px] text-[10px] font-black uppercase tracking-widest transition-all relative overflow-hidden whitespace-nowrap",
                     roleFilter === role ? "text-black" : "text-slate-500 hover:text-white"
                   )}
                 >
@@ -221,9 +221,10 @@ export function UserManagement() {
           </div>
         </div>
 
-        {/* Physical Database Database Table */}
+        {/* Physical Database Database Table / Mobile Grid */}
         <div className="glass-card bg-black/40 border border-white/10 rounded-[48px] shadow-[0_40px_100px_rgba(0,0,0,0.6)] backdrop-blur-3xl overflow-hidden">
-          <div className="overflow-x-auto overflow-y-hidden">
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-white/5 bg-white/5 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
@@ -318,6 +319,77 @@ export function UserManagement() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Grid View */}
+          <div className="lg:hidden p-8 space-y-6">
+            <AnimatePresence mode="popLayout">
+              {filteredUsers?.map((u) => (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  key={u.id}
+                  className="p-8 bg-white/5 border border-white/10 rounded-[32px] space-y-8"
+                >
+                  <div className="flex items-center gap-6">
+                    <div className={cn(
+                      "w-16 h-16 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center font-black text-xl shadow-2xl",
+                      u.role === 'PRESIDENT' ? "text-yellow-500" : u.role === 'OFFICER' ? "text-primary" : "text-white"
+                    )}>
+                      {u.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex flex-col gap-1.5 overflow-hidden">
+                      <h3 className="font-heading font-black text-white text-xl tracking-tight leading-none uppercase italic truncate">{u.name}</h3>
+                      <div className={cn("w-fit items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[8px] font-black uppercase tracking-[0.15em]", 
+                        u.role === 'PRESIDENT' ? "text-yellow-500 bg-yellow-500/10 border-yellow-500/20" :
+                        u.role === 'OFFICER' ? "text-primary bg-primary/10 border-primary/20" :
+                        "text-slate-500 bg-white/5 border-white/5"
+                      )}>
+                        {u.role === 'PRESIDENT' ? "Super Admin" : u.role === 'OFFICER' ? "City Officer" : "Active User"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                     <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex flex-col items-center gap-1">
+                        <span className="text-white font-black text-xl tracking-tighter">{u._count?.issues || 0}</span>
+                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Reports</span>
+                     </div>
+                     <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex flex-col items-center gap-1">
+                        <span className="text-emerald-400 font-black text-xl tracking-tighter">{u.resolvedCount || 0}</span>
+                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Clearance</span>
+                     </div>
+                  </div>
+
+                  <div className="pt-2">
+                    {u.role === 'CITIZEN' ? (
+                      <button 
+                        onClick={() => setPromotingUserId(u.id)}
+                        disabled={roleMutation.isPending}
+                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary text-black rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
+                      >
+                        <ArrowUpCircle className="w-5 h-5" /> Make Officer
+                      </button>
+                    ) : u.role === 'OFFICER' ? (
+                      <button 
+                        onClick={() => roleMutation.mutate({ userId: u.id, role: 'CITIZEN' })}
+                        disabled={roleMutation.isPending}
+                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white/5 text-slate-400 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
+                      >
+                        <ArrowDownCircle className="w-5 h-5" /> Remove Officer
+                      </button>
+                    ) : (
+                      <div className="w-full py-4 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center italic">
+                        System Root Restricted
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
         </div>
 
       </div>

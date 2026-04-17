@@ -19,18 +19,18 @@ export function Layout({ children }) {
 
       <Navbar />
       <AnimatePresence mode="wait">
-        <Motion.main 
+        <motion.main 
           key={location.pathname}
           initial={{ opacity: 0, scale: 0.99, y: 15, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 1.01, y: -15, filter: "blur(10px)" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="pt-48 min-h-screen relative z-10 pb-24 px-4 sm:px-6"
+          className="pt-32 md:pt-48 min-h-screen relative z-10 pb-24 px-4 sm:px-6"
         >
           <div className="mx-auto max-w-7xl">
             {children}
           </div>
-        </Motion.main>
+        </motion.main>
       </AnimatePresence>
     </div>
   );

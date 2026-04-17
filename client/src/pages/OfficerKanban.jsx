@@ -90,7 +90,7 @@ export function OfficerKanban() {
              >
                 <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#10b981] animate-pulse" /> Monitoring activity
              </motion.div>
-             <h1 className="text-6xl font-heading font-black text-white tracking-tighter uppercase italic">Board</h1>
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase italic">Board</h1>
           </div>
 
           <motion.div 
@@ -129,9 +129,9 @@ export function OfficerKanban() {
           </motion.div>
         </div>
 
-        {/* Board Environment */}
-        <div className="flex-1 overflow-x-auto pb-10 -mx-6 px-6 scrollbar-hide">
-          <div className="flex flex-col md:flex-row gap-10 h-full min-h-[600px]">
+        {/* Board Environment - Snap X implementation */}
+        <div className="flex-1 overflow-x-auto pb-10 -mx-6 px-6 scrollbar-hide snap-x snap-mandatory">
+          <div className="flex flex-row gap-8 h-full min-h-[600px] w-fit">
             {COLUMNS.map((column) => {
               const columnIssues = issues?.filter((issue) => issue.status === column.id) || [];
               const Icon = column.icon;
@@ -147,7 +147,7 @@ export function OfficerKanban() {
                   onDragLeave={() => setDraggedOver(null)}
                   onDrop={(e) => handleDrop(e, column.id)}
                   className={cn(
-                    "relative flex flex-col rounded-[48px] bg-black/40 border transition-all duration-500 w-full md:w-[380px] shrink-0 h-fit min-h-[300px]",
+                    "relative flex flex-col rounded-[48px] bg-black/40 border transition-all duration-500 w-[85vw] md:w-[380px] shrink-0 h-fit min-h-[300px] snap-center",
                     isOver ? "border-primary bg-primary/5 scale-[1.02] shadow-[0_0_40px_rgba(16,185,129,0.1)]" : "border-white/5 shadow-2xl"
                   )}
                 >

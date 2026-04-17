@@ -85,7 +85,7 @@ export function AIInsights() {
                >
                  <Sparkles className="h-3 w-3" /> System Diagnostics
                </motion.div>
-               <h1 className="text-6xl md:text-7xl font-heading font-black text-white uppercase tracking-tighter italic">
+               <h1 className="text-hero-xl font-heading font-black text-white uppercase tracking-tighter italic">
                  AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-200">Insights</span>
                </h1>
             </div>

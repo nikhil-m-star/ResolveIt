@@ -116,7 +116,7 @@ export function Alerts() {
              >
                 <Activity className="h-3 w-3" /> Updates
              </motion.div>
-             <h1 className="text-6xl font-heading font-black text-white tracking-tighter uppercase italic">
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase italic">
                Alerts
              </h1>
           </div>

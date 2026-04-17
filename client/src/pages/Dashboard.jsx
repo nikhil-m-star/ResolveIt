@@ -58,24 +58,24 @@ export function Dashboard() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
         
         {/* Dashboard Header - purified & perfected */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
-            <div className="relative w-full md:w-[550px] group/search">
-              <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-focus-within/search:opacity-100 transition-all duration-500" />
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
-              <input 
-                type="text"
-                placeholder="Search for issues..."
-                value={filters.search || ""}
-                onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-13 pr-6 py-4 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all shadow-2xl backdrop-blur-2xl"
-              />
+        <div className="flex flex-col md:flex-row items-center justify-between gap-10 mb-12 relative z-10 w-full">
+          <div className="flex flex-col md:flex-row items-center gap-6 w-full max-w-2xl">
+            <div className="relative w-full group/search">
+               <div className="absolute inset-0 bg-primary/5 rounded-[24px] blur-xl opacity-0 group-focus-within/search:opacity-100 transition-all duration-500" />
+               <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
+               <input 
+                 type="text"
+                 placeholder="Search for issues..."
+                 value={filters.search}
+                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
+                 className="relative z-10 w-full bg-white/5 border border-white/10 rounded-[24px] pl-14 pr-6 py-5 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all shadow-2xl backdrop-blur-2xl"
+               />
             </div>
           </div>
 
           <Link
             to="/report"
-            className="group relative flex items-center gap-4 bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_10px_40px_-10px_rgba(16,185,129,0.4)] overflow-hidden shrink-0"
+            className="group relative flex items-center justify-center gap-4 bg-primary text-black px-10 py-5 rounded-[24px] font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_10px_40px_-10px_rgba(16,185,129,0.4)] overflow-hidden shrink-0 w-full md:w-auto"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <PlusCircle className="h-5 w-5" />

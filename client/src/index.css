@@ -215,6 +215,16 @@ body {
 .text-\[8px\] { font-size: 8px; }
 .text-\[7px\] { font-size: 7px; }
 
+/* Fluid Fluid Typography Utilities */
+.text-hero-xl { font-size: clamp(2.5rem, 8vw, 6rem); }
+.text-hero-lg { font-size: clamp(2rem, 6vw, 4.5rem); }
+.text-hero-md { font-size: clamp(1.5rem, 4vw, 3rem); }
+
+/* Mobile Utilities for Cards/Pins */
+.snap-x { scroll-snap-type: x mandatory; }
+.snap-center { scroll-snap-align: center; }
+.snap-start { scroll-snap-align: start; }
+
 .font-normal { font-weight: 400; }
 .font-medium { font-weight: 500; }
 .font-semibold { font-weight: 600; }
@@ -380,6 +390,7 @@ body {
   .md\:rounded-none { border-radius: 0; }
   .md\:border-l { border-left-width: 1px; }
   .md\:p-8 { padding: 2rem; }
+  .md\:pt-48 { padding-top: 12rem; }
 }
 
 @media (min-width: 1024px) {
