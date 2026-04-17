@@ -288,3 +288,5 @@ export function Alerts() {
         </div>
       </div>
     </Layout>
+  );
+}
