@@ -869,6 +869,9 @@ table {
 .w-4\.5 { width: 1.125rem; }
 .h-\[2px\] { height: 2px; }
 
+/* Custom Map Heights */
+.h-map-mobile { min-height: 400px; height: 50vh; }
+
 /* Misc positioning */
 .top-\[-20\%\] { top: -20%; }
 .left-\[-10\%\] { left: -10%; }
@@ -907,6 +910,7 @@ table {
   .md\:pl-0 { padding-left: 0; }
   .md\:flex-1 { flex: 1 1 0%; }
   .md\:col-span-6 { grid-column: span 6 / span 6; }
+  .md\:h-map-desktop { min-height: 600px; height: 75vh; }
 }
 
 /* ─── Hex bracket background ─── */
