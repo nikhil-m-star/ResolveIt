@@ -165,27 +165,29 @@ export function Navbar() {
             >
               <div className="glass-panel rounded-[40px] p-8 shadow-[0_32px_100px_rgba(0,0,0,0.8)] border border-white/15 bg-black/60 flex flex-col gap-8">
                 {user ? (
-                   <div className="grid grid-cols-2 gap-4">
+                   <div className="flex flex-col gap-4">
                       <Link 
                         to="/profile" 
                         onClick={() => setIsMobileMoreOpen(false)}
-                        className="flex flex-col items-center justify-center gap-4 aspect-square rounded-[32px] bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/30 transition-all group"
+                        className="flex items-center gap-5 rounded-3xl p-4 bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/30 transition-all group"
                       >
-                        <div className="p-4 rounded-2xl bg-black/40 group-hover:scale-110 transition-transform">
-                          <User className="h-8 w-8 text-primary" />
+                        <div className="p-3.5 rounded-2xl bg-black/40 group-hover:scale-110 transition-transform shadow-inner">
+                          <User className="h-6 w-6 text-primary" />
                         </div>
-                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">Profile</span>
+                        <span className="text-[13px] font-black uppercase tracking-[0.2em] text-slate-300 group-hover:text-white transition-colors flex-1">Profile View</span>
                       </Link>
                       <Link 
                         to="/alerts" 
                         onClick={() => setIsMobileMoreOpen(false)}
-                        className="flex flex-col items-center justify-center gap-4 aspect-square rounded-[32px] bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/30 transition-all group relative"
+                        className="flex items-center gap-5 rounded-3xl p-4 bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/30 transition-all group relative"
                       >
-                        <div className="p-4 rounded-2xl bg-black/40 group-hover:scale-110 transition-transform">
-                          <Bell className="h-8 w-8 text-primary" />
+                        <div className="p-3.5 rounded-2xl bg-black/40 group-hover:scale-110 transition-transform shadow-inner">
+                          <Bell className="h-6 w-6 text-primary" />
                         </div>
-                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">Alerts</span>
-                        <AlertBadge mobile />
+                        <span className="text-[13px] font-black uppercase tracking-[0.2em] text-slate-300 group-hover:text-white transition-colors flex-1">City Alerts</span>
+                        <div className="relative z-10 flex items-center pr-2">
+                           <AlertBadge mobile />
+                        </div>
                       </Link>
                    </div>
                 ) : (

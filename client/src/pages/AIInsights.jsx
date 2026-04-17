@@ -186,13 +186,13 @@ export function AIInsights() {
                         
                         <ReactMarkdown 
                             components={{
-                                h1: ({node, ...props}) => <h1 className="text-5xl font-heading font-black text-white mt-16 mb-10 uppercase tracking-tighter border-l-4 border-primary pl-6" {...props} />,
-                                h2: ({node, ...props}) => <h2 className="text-2xl font-heading font-black text-white mt-14 mb-8 flex items-center gap-4 uppercase tracking-tight" {...props} >
+                                h1: ({node, ...props}) => <h1 className="text-5xl font-heading font-black text-white mt-24 mb-14 uppercase tracking-tighter border-l-4 border-primary pl-6" {...props} />,
+                                h2: ({node, ...props}) => <h2 className="text-2xl font-heading font-black text-white mt-20 mb-10 flex items-center gap-4 uppercase tracking-tight" {...props} >
                                     <div className="w-2 h-2 bg-primary rounded-full shadow-[0_0_10px_#10b981]" /> {props.children}
                                 </h2>,
-                                h3: ({node, ...props}) => <h3 className="text-[12px] font-black text-primary mt-12 mb-6 uppercase tracking-[0.3em] bg-primary/10 w-fit px-4 py-1.5 rounded border border-primary/20" {...props} />,
-                                p: ({node, ...props}) => <p className="text-slate-300 leading-[2.2] mb-10 font-medium text-[16px]" {...props} />,
-                                ul: ({node, ...props}) => <ul className="space-y-6 mb-12 text-slate-300" {...props} />,
+                                h3: ({node, ...props}) => <h3 className="text-[12px] font-black text-primary mt-16 mb-8 uppercase tracking-[0.3em] bg-primary/10 w-fit px-4 py-1.5 rounded border border-primary/20" {...props} />,
+                                p: ({node, ...props}) => <p className="text-slate-300 leading-[2.2] mb-14 font-medium text-[16px]" {...props} />,
+                                ul: ({node, ...props}) => <ul className="space-y-8 mb-16 text-slate-300" {...props} />,
                                 li: ({node, ...props}) => (
                                     <li className="flex items-start gap-4">
                                       <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_#10b981] shrink-0" />
@@ -202,7 +202,7 @@ export function AIInsights() {
                                 strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-[11px] tracking-widest bg-white/10 px-2.5 py-1 rounded inline-flex items-center" {...props} />,
                                 a: ({node, ...props}) => <Link to={props.href} className="text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary/30 hover:border-primary transition-all pb-0.5" {...props} />,
                                 blockquote: ({node, ...props}) => (
-                                    <blockquote className="border-l-4 border-primary/40 bg-primary/5 p-10 rounded-tr-[32px] rounded-br-[32px] my-14 text-slate-200 text-lg md:text-xl font-medium" {...props} />
+                                    <blockquote className="border-l-4 border-primary/40 bg-primary/5 p-12 rounded-tr-[40px] rounded-br-[40px] my-20 text-slate-200 text-lg md:text-xl font-medium" {...props} />
                                 ),
                             }}
                         >
