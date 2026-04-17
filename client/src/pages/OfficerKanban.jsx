@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
-import { Loader2, KanbanSquare, Target, Activity, CheckCircle2, GripVertical, MapPin, AlertTriangle, AlertCircle } from "lucide-react";
+import { Loader2, KanbanSquare, Target, Activity, CheckCircle2, GripVertical, MapPin, AlertTriangle, AlertCircle, Clock3, ShieldCheck, Flame, Users } from "lucide-react";
 import { cn } from "../utils/helpers";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -88,8 +88,21 @@ export function OfficerKanban() {
   }
 
   const resolvedCount = issues?.filter(i => i.status === "RESOLVED").length || 0;
+  const reportedCount = issues?.filter(i => i.status === "REPORTED").length || 0;
+  const inProgressCount = issues?.filter(i => i.status === "IN_PROGRESS").length || 0;
+  const slaBreachedCount = issues?.filter(i => i.slaBreached).length || 0;
+  const unresolvedCount = reportedCount + inProgressCount;
+  const totalVotes = issues?.reduce((sum, issue) => sum + (issue.votes || 0), 0) || 0;
   const totalCount = issues?.length || 1;
   const resolutionRate = Math.round((resolvedCount / totalCount) * 100);
+  const avgVotes = Math.round(totalVotes / totalCount);
+  const topArea = Object.entries(
+    (issues || []).reduce((acc, issue) => {
+      const key = issue.area || issue.city || "City Wide";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {})
+  ).sort((a, b) => b[1] - a[1])[0]?.[0] || "City Wide";
 
   return (
     <Layout>
@@ -100,9 +113,16 @@ export function OfficerKanban() {
           <div className="space-y-3">
              <div className="flex items-center gap-3 mb-2">
                 <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-[8px] font-black text-primary uppercase tracking-[0.2em]">Live Data</div>
+                {!isOfficer && (
+                  <div className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-[8px] font-black text-cyan-300 uppercase tracking-[0.2em]">Citizen View</div>
+                )}
              </div>
              <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase leading-tight">Public Case Board</h1>
-             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest max-w-sm">Transparency in administrative handling and metropolitan resolution progress.</p>
+             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest max-w-sm">
+               {isOfficer
+                 ? "Transparency in administrative handling and metropolitan resolution progress."
+                 : "Live visibility into city handling status, case flow, and response performance."}
+             </p>
           </div>
 
           <motion.div 
@@ -145,6 +165,48 @@ export function OfficerKanban() {
           </motion.div>
         </div>
 
+        {!isOfficer && (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <Users className="w-3.5 h-3.5 text-cyan-300" /> Total Cases
+              </div>
+              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-white">{issues?.length || 0}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <Clock3 className="w-3.5 h-3.5 text-amber-400" /> Open Cases
+              </div>
+              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-white">{unresolvedCount}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Resolved
+              </div>
+              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-primary">{resolvedCount}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <Activity className="w-3.5 h-3.5 text-primary" /> Resolution Rate
+              </div>
+              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-white">{resolutionRate}%</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <Flame className="w-3.5 h-3.5 text-red-400" /> SLA Breaches
+              </div>
+              <div className="mt-2 text-[1.75rem] md:text-2xl font-black tracking-tighter text-red-400">{slaBreachedCount}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 md:p-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <MapPin className="w-3.5 h-3.5 text-cyan-300" /> Hotspot
+              </div>
+              <div className="mt-2 text-sm font-black tracking-tight text-white truncate" title={topArea}>{topArea}</div>
+              <div className="mt-1 text-[9px] font-black uppercase tracking-widest text-slate-500">{avgVotes} avg votes/case</div>
+            </div>
+          </div>
+        )}
+
         {/* Board Environment - Snap X implementation */}
         <div className="flex-1 overflow-x-auto pb-10 -mx-6 px-6 scrollbar-hide snap-x snap-mandatory">
           <div className="flex flex-row gap-8 h-full min-h-[600px] w-fit">
@@ -163,7 +225,7 @@ export function OfficerKanban() {
                   onDragLeave={() => setDraggedOver(null)}
                   onDrop={(e) => handleDrop(e, column.id)}
                   className={cn(
-                    "relative flex flex-col rounded-[48px] bg-black/40 border transition-all duration-500 w-[85vw] md:w-[380px] shrink-0 h-fit min-h-[300px] snap-center",
+                    "relative flex flex-col rounded-[48px] bg-black/40 border transition-all duration-500 w-[92vw] md:w-[380px] shrink-0 h-fit min-h-[340px] md:min-h-[300px] snap-center",
                     isOver ? "border-primary bg-primary/5 scale-[1.02] shadow-[0_0_40px_rgba(16,185,129,0.1)]" : "border-white/5 shadow-2xl"
                   )}
                 >
@@ -174,7 +236,7 @@ export function OfficerKanban() {
                     column.id === "IN_PROGRESS" ? "bg-amber-500" : "bg-emerald-500"
                   )} />
 
-                  <div className="p-8 border-b border-white/5 bg-white/5 backdrop-blur-xl flex justify-between items-center relative z-10 rounded-t-[48px]">
+                  <div className="p-9 md:p-8 border-b border-white/5 bg-white/5 backdrop-blur-xl flex justify-between items-center relative z-10 rounded-t-[48px]">
                     <h3 className="text-[11px] font-black text-white flex items-center gap-4 uppercase tracking-[0.2em]">
                        <div className={cn("p-2.5 rounded-2xl bg-black/60 border border-white/10 shadow-2xl", column.color)}>
                           <Icon className="w-4 h-4" />
@@ -186,18 +248,22 @@ export function OfficerKanban() {
                     </span>
                   </div>
 
-                  <div className="p-8 flex flex-col gap-6 relative z-10">
+                  <div className="p-9 md:p-8 flex flex-col gap-6 relative z-10">
                      {columnIssues.map((issue) => (
                        <motion.div 
                           key={issue.id}
                           layoutId={issue.id}
-                          draggable
+                          draggable={isOfficer}
                           onDragStart={(e) => {
+                            if (!isOfficer) return;
                             e.dataTransfer.setData("issueId", issue.id);
                             e.dataTransfer.setData("currentStatus", issue.status);
                           }}
-                          className="p-7 bg-black/60 border border-white/5 hover:border-primary/40 transition-all cursor-grab active:cursor-grabbing rounded-[32px] relative group shadow-2xl hover:shadow-primary/10 overflow-hidden"
-                       >
+                          className={cn(
+                            "p-8 md:p-7 bg-black/60 border border-white/5 hover:border-primary/40 transition-all rounded-[32px] relative group shadow-2xl hover:shadow-primary/10 overflow-hidden",
+                            isOfficer ? "cursor-grab active:cursor-grabbing" : "cursor-default"
+                          )}
+                        >
                           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                           
                           {movingId && <div className="absolute inset-0 bg-black/80 z-10 rounded-[32px] flex items-center justify-center backdrop-blur-sm">
@@ -208,7 +274,13 @@ export function OfficerKanban() {
                              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
                                {issue.category}
                              </span>
-                             <GripVertical className="w-4 h-4 text-slate-700 opacity-20 group-hover:opacity-100 transition-opacity" />
+                             {isOfficer ? (
+                               <GripVertical className="w-4 h-4 text-slate-700 opacity-20 group-hover:opacity-100 transition-opacity" />
+                             ) : (
+                               <span className="text-[8px] font-black uppercase tracking-[0.2em] text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-full">
+                                 View Only
+                               </span>
+                             )}
                           </div>
                           
                           <h4 className="text-lg font-heading font-black text-white mb-4 leading-[1.3] group-hover:text-primary/90 transition-colors">

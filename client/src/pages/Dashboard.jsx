@@ -36,38 +36,38 @@ export function Dashboard() {
 
   return (
     <Layout>
-      <div className="px-4 py-8 max-w-6xl mx-auto space-y-10 animate-in fade-in duration-700 relative">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 w-full">
+      <div className="px-4 py-8 max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 relative">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 relative z-10 w-full">
           <div className="relative w-full md:w-auto flex-1 max-w-xl group/search">
-             <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 transition-colors" />
+             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 transition-colors" />
              <input 
                type="text"
                placeholder="Search incidents..."
                value={filters.search}
                onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-sm text-white focus:outline-none focus:border-primary/40 transition-all"
+               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-primary/40 transition-all"
              />
           </div>
-          <Link to="/report" className="bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+          <Link to="/report" className="w-full md:w-auto justify-center bg-primary text-black px-6 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
              <PlusCircle className="h-4 w-4" /> Report
           </Link>
         </div>
 
         <section className="min-h-[70vh] rounded-3xl glass-card overflow-hidden">
-          <div className="p-10">
+          <div className="p-4 md:p-8">
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-32 space-y-6">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              <div className="flex flex-col items-center justify-center py-16 space-y-5">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Syncing Cases...</p>
               </div>
             ) : isError ? (
-              <div className="p-8 text-center bg-red-500/5 rounded-2xl border border-red-500/20">
+              <div className="p-6 text-center bg-red-500/5 rounded-2xl border border-red-500/20">
                 <p className="text-red-400 font-black uppercase text-[10px]">Sync Failure</p>
                 <button onClick={handleRefresh} className="mt-4 text-white hover:underline text-xs">Retry Connection</button>
               </div>
             ) : issues?.length === 0 ? (
-              <div className="flex flex-col items-center gap-6 py-32 text-center">
-                <CheckCircle2 className="h-16 w-16 text-primary opacity-20" />
+              <div className="flex flex-col items-center gap-5 py-16 text-center">
+                <CheckCircle2 className="h-12 w-12 text-primary opacity-20" />
                 <div className="space-y-4">
                   <h3 className="text-2xl font-heading font-black text-white uppercase tracking-tighter">Sector Clear</h3>
                   <p className="text-sm text-slate-500 max-w-xs mx-auto">No reports detected in this vicinity. Situation is optimal.</p>
@@ -77,7 +77,7 @@ export function Dashboard() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {issues.map(issue => <IssueCard key={issue.id} issue={issue} />)}
               </div>
             )}

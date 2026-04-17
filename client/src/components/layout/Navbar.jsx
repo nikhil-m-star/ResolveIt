@@ -253,16 +253,18 @@ export function Navbar() {
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "relative flex flex-col items-center justify-center rounded-full flex-1 h-full transition-all duration-300 z-10",
+                    "relative flex items-center justify-center flex-1 h-full transition-all duration-300 z-10",
                     active ? "text-black" : "text-slate-300"
                   )}
                 >
                   {active && (
-                    <motion.div
-                      layoutId="mobile-active-pill"
-                      className="absolute inset-1 bg-primary rounded-full shadow-[0_8px_20px_rgba(16,185,129,0.35)] -z-10"
-                      transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
-                    />
+                    <div className="absolute inset-0 flex items-center justify-center -z-10">
+                      <motion.div
+                        layoutId="mobile-active-pill"
+                        className="w-11 h-11 bg-primary rounded-full shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
+                        transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
+                      />
+                    </div>
                   )}
                   <Icon className={cn("h-6 w-6 transition-all", active ? "scale-110" : "scale-90 opacity-80")} />
                 </Link>
@@ -271,12 +273,14 @@ export function Navbar() {
             <button
               onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
               className={cn(
-                "relative flex flex-col items-center justify-center rounded-full flex-1 h-full transition-all duration-300 z-10",
+                "relative flex items-center justify-center flex-1 h-full transition-all duration-300 z-10",
                 isMobileMoreOpen ? "text-black shadow-[inset_0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-300"
               )}
             >
               {isMobileMoreOpen && (
-                <div className="absolute inset-1 bg-primary rounded-full shadow-[0_8px_20px_rgba(16,185,129,0.35)] -z-10" />
+                <div className="absolute inset-0 flex items-center justify-center -z-10">
+                  <div className="w-11 h-11 bg-primary rounded-full shadow-[0_8px_20px_rgba(16,185,129,0.35)]" />
+                </div>
               )}
               <MoreHorizontal className={cn("h-6 w-6 transition-all", isMobileMoreOpen ? "scale-110" : "scale-90 opacity-80")} />
             </button>
