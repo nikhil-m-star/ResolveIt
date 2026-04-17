@@ -53,46 +53,40 @@ export function Dashboard() {
 
   return (
     <Layout>
-      <div className="px-4 py-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700 relative">
-        {/* Background Glow Effect - Perfect for depth */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="px-4 py-8 max-w-6xl mx-auto space-y-10 animate-in fade-in duration-700 relative">
         
-        {/* Dashboard Header - purified & perfected */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-10 mb-12 relative z-10 w-full">
-          <div className="flex flex-col md:flex-row items-center gap-6 w-full max-w-2xl">
-            <div className="relative w-full group/search">
-               <div className="absolute inset-0 bg-primary/5 rounded-[24px] blur-xl opacity-0 group-focus-within/search:opacity-100 transition-all duration-500" />
-               <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
-               <input 
-                 type="text"
-                 placeholder="Search for issues..."
-                 value={filters.search}
-                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                 className="relative z-10 w-full bg-white/5 border border-white/10 rounded-[24px] pl-14 pr-6 py-5 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all shadow-2xl backdrop-blur-2xl"
-               />
-            </div>
+        {/* Dashboard Header */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 w-full">
+          <div className="relative w-full md:w-auto flex-1 max-w-xl group/search">
+             <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 z-10 transition-colors" />
+             <input 
+               type="text"
+               placeholder="Search issues by title, area..."
+               value={filters.search}
+               onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
+               className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all duration-300"
+             />
           </div>
 
           <Link
             to="/report"
-            className="group relative flex items-center justify-center gap-4 bg-primary text-black px-10 py-5 rounded-[24px] font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_10px_40px_-10px_rgba(16,185,129,0.4)] overflow-hidden shrink-0 w-full md:w-auto"
+            className="group relative flex items-center justify-center gap-3 bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 overflow-hidden shrink-0 w-full md:w-auto"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-            <PlusCircle className="h-5 w-5" />
-            Report Issue
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <PlusCircle className="h-4 w-4" />
+            Report
           </Link>
         </div>
 
-
         <div className="mx-auto max-w-5xl w-full relative z-10">
-          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-[40px] bg-black/40 border border-white/5 shadow-2xl backdrop-blur-3xl">
-            {/* Minimal Sub-header */}
-            <div className="px-8 py-4 border-b border-white/5 bg-white/5 flex items-center justify-between min-h-[56px]">
-              <div className="flex items-center gap-4">
+          <section className="flex min-h-[70vh] w-full flex-col overflow-hidden rounded-3xl glass-card">
+            {/* Sub-header */}
+            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
                 {isLocating && (
                   <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase animate-pulse">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    Searching location...
+                    Locating...
                   </div>
                 )}
               </div>

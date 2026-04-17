@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
-import { Loader2, User as UserIcon, Medal, Star, CheckCircle2, ShieldAlert, Shield, MapPin, Edit3, Settings, Trophy, AlertTriangle, Target } from "lucide-react";
+import { Loader2, User as UserIcon, Medal, Star, CheckCircle2, ShieldAlert, Shield, MapPin, Edit3, Settings, Trophy, AlertTriangle, Target, Fingerprint, Terminal, Activity, ChevronRight } from "lucide-react";
 import { useUserCompat, UserButtonCompat } from "../lib/clerkCompat";
 import { useState } from "react";
 import { cn } from "../utils/helpers";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function Profile() {
@@ -99,7 +100,7 @@ export function Profile() {
                 <Terminal className="w-3.5 h-3.5" />
                 <span className="text-[9px] font-black uppercase tracking-[0.4em]">User Details</span>
               </div>
-              <h1 className="text-5xl font-heading font-black text-white tracking-tighter uppercase leading-none">{profile.name}</h1>
+              <h1 className="text-hero-md font-heading font-black text-white tracking-tighter uppercase leading-none">{profile.name}</h1>
             </div>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">

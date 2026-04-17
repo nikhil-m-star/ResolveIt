@@ -181,7 +181,7 @@ export function IssueDetail() {
                   <Activity className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-[0.4em]">Reference: #{issue.id.slice(-8).toUpperCase()}</span>
                </div>
-               <h1 className="text-5xl font-heading font-black text-white tracking-tighter uppercase leading-[0.9]">
+               <h1 className="text-hero-lg font-heading font-black text-white tracking-tighter uppercase leading-none">
                  {issue.title}
                </h1>
             </div>

@@ -7,6 +7,7 @@ import { api } from "../lib/auth";
 import toast from "react-hot-toast";
 import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
 import { cn } from "../utils/helpers";
+import { motion, AnimatePresence } from "framer-motion";
 
 function LocationPicker({ position, setPosition }) {
   useMapEvents({
@@ -191,7 +192,7 @@ export function ReportIssue() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
              <Bot className="w-3.5 h-3.5" /> AI Assisted
           </div>
-          <h1 className="text-4xl font-heading font-extrabold text-white tracking-tight">Report an Issue</h1>
+          <h1 className="text-hero-md font-heading font-black text-white tracking-tighter uppercase">Report an Issue</h1>
           <p className="text-slate-400 font-medium">Your help makes the city better. Our AI will help you fill in the details.</p>
         </div>
 
