@@ -85,8 +85,13 @@ export function Navbar() {
   return (
     <>
       <motion.div 
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        variants={{
+          visible: { y: 0, opacity: 1 },
+          hidden: { y: -100, opacity: 0 }
+        }}
+        initial="visible"
+        animate={isHidden ? "hidden" : "visible"}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-6 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
       >
         <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-t border-t-white/30 border-x border-x-white/10 border-b border-b-black/50 bg-white/10 backdrop-blur-2xl">
