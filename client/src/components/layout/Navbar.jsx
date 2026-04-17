@@ -4,7 +4,7 @@ import { api } from "../../lib/auth";
 import { UserButtonCompat, useUserCompat } from "../../lib/clerkCompat";
 import { Link, useLocation } from "react-router-dom";
 import { PlusCircle, Compass, Shield, ShieldAlert, KanbanSquare, UserCircle2, Map, Sparkles, Users, MoreHorizontal, User, Bell, Activity } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "../../utils/helpers";
 
 const decodeJwtPayload = (token) => {
@@ -42,6 +42,18 @@ export function Navbar() {
   const { user } = useUserCompat();
   const location = useLocation();
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (latest > previous && latest > 150) {
+      setIsHidden(true);
+      setIsMobileMoreOpen(false);
+    } else {
+      setIsHidden(false);
+    }
+  });
   
   let role = "CITIZEN";
   try {
@@ -77,7 +89,7 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed top-6 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
       >
-        <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 bg-white/[0.02] backdrop-blur-3xl">
+        <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.6)] border border-white/20 bg-white/10 backdrop-blur-3xl">
           <div className="flex items-center gap-6">
             <Link to="/" className="flex shrink-0 items-center gap-3 pl-4 pr-6 border-r border-white/10 hover:opacity-80 transition-opacity">
               <Shield className="h-6 w-6 text-primary shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
@@ -217,11 +229,16 @@ export function Navbar() {
 
       {/* Mobile floating pill nav */}
       <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="fixed bottom-8 left-0 right-0 z-1250 flex justify-center px-6 md:hidden"
+        variants={{
+          visible: { y: 0, opacity: 1 },
+          hidden: { y: 150, opacity: 0 }
+        }}
+        initial="visible"
+        animate={isHidden ? "hidden" : "visible"}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed bottom-8 left-0 right-0 z-1250 flex justify-center px-6 md:hidden pointer-events-none"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-full px-2 py-2 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 bg-white/[0.02] backdrop-blur-3xl">
+        <nav className="glass-pill w-full max-w-sm rounded-full px-2 py-2 shadow-[0_15px_40px_rgba(0,0,0,0.6)] border border-white/20 bg-white/10 backdrop-blur-3xl pointer-events-auto">
           <div className="flex justify-between items-center relative h-14">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
