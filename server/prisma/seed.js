@@ -7,23 +7,15 @@ async function main() {
 
   const CITY = 'Bengaluru';
 
-  // Reset prior seed issues/comments/relations for idempotent runs.
-  const oldSeedIssues = await prisma.issue.findMany({
-    where: { title: { startsWith: 'SEED - ' } },
-    select: { id: true },
-  });
-  const oldIssueIds = oldSeedIssues.map((i) => i.id);
-
-  if (oldIssueIds.length > 0) {
-    await prisma.$transaction([
-      prisma.vote.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
-      prisma.comment.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
-      prisma.statusHistory.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
-      prisma.notification.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
-      prisma.rating.deleteMany({ where: { issueId: { in: oldIssueIds } } }),
-      prisma.issue.deleteMany({ where: { id: { in: oldIssueIds } } }),
-    ]);
-  }
+  // Reset database for a clean, idempotent run.
+  await prisma.$transaction([
+    prisma.vote.deleteMany({}),
+    prisma.comment.deleteMany({}),
+    prisma.statusHistory.deleteMany({}),
+    prisma.notification.deleteMany({}),
+    prisma.rating.deleteMany({}),
+    prisma.issue.deleteMany({}),
+  ]);
 
   // Clear notification/vote residue from seeded users if they exist.
   const seededUsers = await prisma.user.findMany({
