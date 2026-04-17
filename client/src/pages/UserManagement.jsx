@@ -114,6 +114,8 @@ export function UserManagement() {
                         <LocationAutocomplete 
                           value={promoArea}
                           onChange={(val) => setPromoArea(val)}
+                          onSelect={(selection) => setPromoArea(selection?.area || selection?.name || "")}
+                          cityHint="Bengaluru"
                           placeholder="Search operational area..."
                         />
 

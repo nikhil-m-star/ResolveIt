@@ -430,6 +430,7 @@ export function ReportIssue() {
                           updateForm("longitude", selection.lng);
                         }
                       }}
+                      cityHint={formData.city || "Bengaluru"}
                       placeholder="e.g. Koramangala"
                     />
                  </div>

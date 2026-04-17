@@ -164,6 +164,12 @@ export function Profile() {
                 <LocationAutocomplete 
                   value={formData.area}
                   onChange={(val) => setFormData({...formData, area: val})}
+                  onSelect={(selection) => setFormData((prev) => ({
+                    ...prev,
+                    area: selection?.area || selection?.name || prev.area,
+                    city: selection?.city || prev.city,
+                  }))}
+                  cityHint={formData.city || "Bengaluru"}
                   placeholder="e.g., Downtown"
                   className="!rounded-xl"
                 />

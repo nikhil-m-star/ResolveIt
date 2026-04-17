@@ -9,6 +9,7 @@ import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
 export function MapExplorer() {
   const [filters, setFilters] = useState({
     city: "",
+    area: "",
     category: "",
     status: "",
     search: ""
@@ -62,13 +63,19 @@ export function MapExplorer() {
           >
             <LocationAutocomplete 
               value={filters.search}
-              onChange={(val) => setFilters({...filters, search: val})}
+              onChange={(val) => setFilters({...filters, search: val, area: ""})}
               onSelect={(selection) => {
                 if (Number.isFinite(selection?.lat) && Number.isFinite(selection?.lng)) {
                   setFocusLocation([selection.lat, selection.lng]);
                 }
-                setFilters((prev) => ({ ...prev, search: selection?.name || prev.search }));
+                setFilters((prev) => ({
+                  ...prev,
+                  search: selection?.name || prev.search,
+                  area: selection?.area || prev.area,
+                  city: selection?.city || prev.city,
+                }));
               }}
+              cityHint={filters.city || "Bengaluru"}
               placeholder="Search by area..."
               icon={Search}
             />

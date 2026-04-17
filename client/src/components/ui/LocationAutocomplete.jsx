@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MapPin, Loader2, Search } from "lucide-react";
+import { MapPin, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../utils/helpers";
 
@@ -9,7 +9,11 @@ export function LocationAutocomplete({
   onSelect,
   placeholder = "Search area...", 
   className,
-  icon: Icon = MapPin 
+  icon: Icon = MapPin,
+  cityHint = "",
+  countryHint = "India",
+  minChars = 2,
+  limit = 8
 }) {
   const [query, setQuery] = useState(value || "");
   const [suggestions, setSuggestions] = useState([]);
@@ -17,6 +21,7 @@ export function LocationAutocomplete({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const timeoutRef = useRef(null);
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
     setQuery(value || "");
@@ -32,50 +37,103 @@ export function LocationAutocomplete({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const normalizeLocationResult = (item) => ({
+    id: item.place_id,
+    display: item.display_name,
+    name:
+      item.address?.suburb ||
+      item.address?.city_district ||
+      item.address?.neighbourhood ||
+      item.address?.town ||
+      item.address?.city ||
+      item.display_name?.split(",")?.[0] ||
+      "Unknown Area",
+    full: item.display_name,
+    lat: Number(item.lat),
+    lng: Number(item.lon),
+    city: item.address?.city || item.address?.town || item.address?.village || cityHint || "Bengaluru",
+    area:
+      item.address?.suburb ||
+      item.address?.city_district ||
+      item.address?.neighbourhood ||
+      item.address?.quarter ||
+      item.display_name?.split(",")?.[0] ||
+      "",
+    type: item.addresstype || item.type || "",
+  });
+
+  const dedupeAndRankSuggestions = (items = []) => {
+    const preferredTypes = [
+      "suburb",
+      "neighbourhood",
+      "city_district",
+      "quarter",
+      "residential",
+      "town",
+      "city"
+    ];
+
+    const seen = new Set();
+    const unique = [];
+    for (const item of items) {
+      const key = `${(item.name || "").toLowerCase()}|${(item.city || "").toLowerCase()}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(item);
+    }
+
+    unique.sort((a, b) => {
+      const aIdx = preferredTypes.indexOf(a.type);
+      const bIdx = preferredTypes.indexOf(b.type);
+      const aScore = aIdx === -1 ? 99 : aIdx;
+      const bScore = bIdx === -1 ? 99 : bIdx;
+      return aScore - bScore;
+    });
+
+    return unique;
+  };
+
   const fetchSuggestions = async (searchQuery) => {
-    if (searchQuery.length < 3) {
+    if (searchQuery.trim().length < minChars) {
       setSuggestions([]);
       return;
     }
 
+    const requestId = ++requestIdRef.current;
     setIsLoading(true);
     try {
-      // Lock search to Bengaluru viewbox: [left, top, right, bottom]
-      const BENGALURU_VIEWBOX = '77.3,13.2,77.8,12.7';
-      const constrainedQuery = `${searchQuery} Bengaluru`;
-      
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(constrainedQuery)}&viewbox=${BENGALURU_VIEWBOX}&bounded=1&addressdetails=1&limit=8`
-      );
-      const data = await response.json();
-      
-      // Filter out specific roads, house numbers, or points of interest to keep "Main Areas"
-      const formatted = data
-        .filter(item => {
-          const type = item.addresstype || item.type;
-          const excludedTypes = ['highway', 'road', 'building', 'house', 'commercial', 'industrial', 'retail'];
-          return !excludedTypes.includes(type);
-        })
-        .map(item => ({
-          id: item.place_id,
-          display: item.display_name,
-          name: item.address?.suburb || item.address?.city_district || item.address?.town || item.address?.city || item.display_name.split(',')[0],
-          full: item.display_name,
-          lat: Number(item.lat),
-          lng: Number(item.lon),
-          city: item.address?.city || item.address?.town || item.address?.village || "Bengaluru",
-          area: item.address?.suburb || item.address?.city_district || item.address?.neighbourhood || item.display_name.split(',')[0]
-        }));
-      
-      // Remove duplicates by name
-      const uniqueResults = formatted.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
-      
-      setSuggestions(uniqueResults);
-      setIsOpen(uniqueResults.length > 0);
+      const locationBias = [cityHint, countryHint].filter(Boolean).join(", ");
+      const primaryQuery = locationBias ? `${searchQuery}, ${locationBias}` : searchQuery;
+      const fallbackQuery = countryHint ? `${searchQuery}, ${countryHint}` : searchQuery;
+
+      const makeUrl = (q) =>
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=${limit}&q=${encodeURIComponent(q)}`;
+
+      const primaryResponse = await fetch(makeUrl(primaryQuery));
+      const primaryData = await primaryResponse.json();
+      let fallbackData = [];
+      if (primaryQuery !== fallbackQuery) {
+        const fallbackResponse = await fetch(makeUrl(fallbackQuery));
+        fallbackData = await fallbackResponse.json();
+      }
+
+      const merged = [...(primaryData || []), ...(fallbackData || [])]
+        .map(normalizeLocationResult)
+        .filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng));
+
+      const results = dedupeAndRankSuggestions(merged).slice(0, limit);
+      if (requestId !== requestIdRef.current) return;
+      setSuggestions(results);
+      setIsOpen(results.length > 0);
     } catch (error) {
       console.error("Location search failed:", error);
+      if (requestId === requestIdRef.current) {
+        setSuggestions([]);
+      }
     } finally {
-      setIsLoading(false);
+      if (requestId === requestIdRef.current) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -88,7 +146,7 @@ export function LocationAutocomplete({
     
     timeoutRef.current = setTimeout(() => {
       fetchSuggestions(val);
-    }, 500); // 500ms debounce
+    }, 350);
   };
 
   const handleSelect = (suggestion) => {
@@ -106,7 +164,7 @@ export function LocationAutocomplete({
           type="text"
           value={query}
           onChange={handleInputChange}
-          onFocus={() => query.length >= 3 && suggestions.length > 0 && setIsOpen(true)}
+          onFocus={() => query.length >= minChars && suggestions.length > 0 && setIsOpen(true)}
           placeholder={placeholder}
           className="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-12 py-4.5 text-white text-sm placeholder:text-slate-700 focus:outline-none focus:border-primary/40 focus:bg-black/60 transition-all font-black uppercase tracking-widest"
         />
