@@ -39,21 +39,31 @@ export function LocationAutocomplete({
 
     setIsLoading(true);
     try {
-      // Using Nominatim OpenStreetMap API
+      // Using Nominatim OpenStreetMap API with featuretype=settlement to favor areas
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&addressdetails=1&limit=5`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&addressdetails=1&limit=8`
       );
       const data = await response.json();
       
-      const formatted = data.map(item => ({
-        id: item.place_id,
-        display: item.display_name,
-        name: item.address?.suburb || item.address?.neighbourhood || item.address?.road || item.display_name.split(',')[0],
-        full: item.display_name
-      }));
+      // Filter out specific roads, house numbers, or points of interest to keep "Main Areas"
+      const formatted = data
+        .filter(item => {
+          const type = item.addresstype || item.type;
+          const excludedTypes = ['highway', 'road', 'building', 'house', 'commercial', 'industrial', 'retail'];
+          return !excludedTypes.includes(type);
+        })
+        .map(item => ({
+          id: item.place_id,
+          display: item.display_name,
+          name: item.address?.suburb || item.address?.city_district || item.address?.town || item.address?.city || item.display_name.split(',')[0],
+          full: item.display_name
+        }));
       
-      setSuggestions(formatted);
-      setIsOpen(formatted.length > 0);
+      // Remove duplicates by name
+      const uniqueResults = formatted.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+      
+      setSuggestions(uniqueResults);
+      setIsOpen(uniqueResults.length > 0);
     } catch (error) {
       console.error("Location search failed:", error);
     } finally {
