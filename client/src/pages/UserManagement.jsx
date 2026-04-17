@@ -322,16 +322,22 @@ export function UserManagement() {
                   key={u.id}
                   className="p-8 bg-white/5 border border-white/10 rounded-[32px] space-y-8"
                 >
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-start gap-4">
                     <div className={cn(
-                      "w-16 h-16 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center font-black text-xl shadow-2xl",
+                      "w-14 h-14 shrink-0 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center font-black text-xl shadow-2xl",
                       u.role === 'PRESIDENT' ? "text-yellow-500" : u.role === 'OFFICER' ? "text-primary" : "text-white"
                     )}>
                       {u.name.charAt(0).toUpperCase()}
                     </div>
-                    <div className="flex flex-col gap-1.5 overflow-hidden">
-                      <h3 className="font-heading font-black text-white text-xl tracking-tight leading-none uppercase truncate">{u.name}</h3>
-                      <div className={cn("w-fit items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[8px] font-black uppercase tracking-[0.15em]", 
+                    <div className="flex flex-col gap-2 flex-1" style={{ minWidth: 0 }}>
+                      <h3
+                        className="font-heading font-black text-white text-lg tracking-tight leading-tight uppercase line-clamp-2"
+                        style={{ overflowWrap: "anywhere" }}
+                        title={u.name}
+                      >
+                        {u.name}
+                      </h3>
+                      <div className={cn("inline-flex w-fit items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[8px] font-black uppercase tracking-[0.15em]", 
                         u.role === 'PRESIDENT' ? "text-yellow-500 bg-yellow-500/10 border-yellow-500/20" :
                         u.role === 'OFFICER' ? "text-primary bg-primary/10 border-primary/20" :
                         "text-slate-500 bg-white/5 border-white/5"

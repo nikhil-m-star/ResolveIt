@@ -94,8 +94,8 @@ export function Navbar() {
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-6 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
       >
-        <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-t border-t-white/30 border-x border-x-white/10 border-b border-b-black/50 bg-white/10 backdrop-blur-2xl">
-          <div className="flex items-center gap-6">
+        <nav className="glass-pill glass-nav rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+          <div className="relative z-10 flex items-center gap-6">
             <Link to="/" className="flex shrink-0 items-center gap-3 pl-4 pr-6 border-r border-white/10 hover:opacity-80 transition-opacity">
               <Shield className="h-6 w-6 text-primary shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
               <span className="text-white font-heading text-lg font-black tracking-tighter uppercase">ResolveIt</span>
@@ -111,17 +111,17 @@ export function Navbar() {
                     to={item.to}
                     className={cn(
                       "relative flex items-center gap-2.5 rounded-full px-5 py-2 text-[11px] font-black uppercase tracking-widest transition-all duration-300 group z-10",
-                      active ? "text-primary" : "text-slate-500 hover:text-white"
+                      active ? "text-black" : "text-slate-300 hover:text-white"
                     )}
                   >
                     {active && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 bg-primary/15 rounded-full border border-primary/20 shadow-[inset_0_2px_10px_rgba(16,185,129,0.1)] -z-10"
+                        className="absolute inset-0 bg-primary rounded-full shadow-[0_10px_25px_rgba(16,185,129,0.35)] -z-10"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
-                    <Icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 group-active:scale-95", active && "text-primary")} />
+                    <Icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 group-active:scale-95", active && "text-black")} />
                     {item.label}
                   </Link>
                 );
@@ -243,8 +243,8 @@ export function Navbar() {
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="fixed bottom-8 left-0 right-0 z-1250 flex justify-center px-6 md:hidden pointer-events-none"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-full px-2 py-2 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-t border-t-white/30 border-x border-x-white/10 border-b border-b-black/50 bg-white/10 backdrop-blur-2xl pointer-events-auto">
-          <div className="flex justify-between items-center relative h-14">
+        <nav className="glass-pill glass-nav w-full max-w-sm rounded-full px-2 py-2 shadow-[0_20px_50px_rgba(0,0,0,0.8)] pointer-events-auto">
+          <div className="relative z-10 flex justify-between items-center h-14">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
               const Icon = item.icon;
@@ -254,17 +254,17 @@ export function Navbar() {
                   to={item.to}
                   className={cn(
                     "relative flex flex-col items-center justify-center rounded-full flex-1 h-full transition-all duration-300 z-10",
-                    active ? "text-primary" : "text-slate-500"
+                    active ? "text-black" : "text-slate-300"
                   )}
                 >
                   {active && (
                     <motion.div
                       layoutId="mobile-active-pill"
-                      className="absolute inset-1 bg-primary/20 rounded-full border border-primary/20 -z-10"
+                      className="absolute inset-1 bg-primary rounded-full shadow-[0_8px_20px_rgba(16,185,129,0.35)] -z-10"
                       transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
                     />
                   )}
-                  <Icon className={cn("h-6 w-6 transition-all", active ? "scale-110" : "scale-90 opacity-60")} />
+                  <Icon className={cn("h-6 w-6 transition-all", active ? "scale-110" : "scale-90 opacity-80")} />
                 </Link>
               );
             })}
@@ -272,13 +272,13 @@ export function Navbar() {
               onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
               className={cn(
                 "relative flex flex-col items-center justify-center rounded-full flex-1 h-full transition-all duration-300 z-10",
-                isMobileMoreOpen ? "text-primary shadow-[inset_0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-500"
+                isMobileMoreOpen ? "text-black shadow-[inset_0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-300"
               )}
             >
               {isMobileMoreOpen && (
-                <div className="absolute inset-1 bg-primary/20 rounded-full border border-primary/20 -z-10" />
+                <div className="absolute inset-1 bg-primary rounded-full shadow-[0_8px_20px_rgba(16,185,129,0.35)] -z-10" />
               )}
-              <MoreHorizontal className={cn("h-6 w-6 transition-all", isMobileMoreOpen ? "scale-110" : "scale-90 opacity-60")} />
+              <MoreHorizontal className={cn("h-6 w-6 transition-all", isMobileMoreOpen ? "scale-110" : "scale-90 opacity-80")} />
             </button>
           </div>
         </nav>
