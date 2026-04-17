@@ -3,6 +3,8 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { ChevronRight } from "lucide-react";
+import { cn, getStatusColor, getCategoryColor } from "../../utils/helpers";
 
 // Fix Leaflet's default icon path issues
 delete L.Icon.Default.prototype._getIconUrl;
@@ -52,7 +54,7 @@ export function IssueMap({ issues, userLocation }) {
   const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
 
   return (
-    <div className="w-full h-full min-h-400 sm:min-h-500 md:h-screen rounded-2xl md:rounded-none overflow-hidden border border-white/10 md:border-l relative z-0">
+    <div className="w-full h-full relative z-0">
       <MapContainer
         center={defaultCenter}
         zoom={12}

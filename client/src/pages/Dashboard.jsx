@@ -56,30 +56,28 @@ export function Dashboard() {
       <div className="px-4 py-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700">
         
         {/* Dashboard Header - purified */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-          <div className="flex flex-col md:flex-row items-center gap-8 w-full md:w-auto">
-            <div className="relative w-full md:w-[600px] group/search">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+          <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+            <div className="relative w-full md:w-[500px] group/search">
               <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-focus-within/search:opacity-100 transition-opacity" />
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within/search:text-primary transition-colors z-10" />
               <input 
                 type="text"
                 placeholder="Search issues..."
                 value={filters.search || ""}
                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-5 text-base font-medium text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all shadow-xl"
+                className="relative z-10 w-full bg-white/5 border border-white/10 rounded-2xl pl-13 pr-6 py-4 text-sm font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/40 transition-all shadow-2xl backdrop-blur-xl"
               />
             </div>
           </div>
 
           <Link
             to="/report"
-            className="group relative flex items-center gap-5 bg-primary text-black pl-10 pr-12 py-6 rounded-3xl font-black uppercase text-xs tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(16,185,129,0.2)] overflow-hidden"
+            className="group relative flex items-center gap-4 bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(16,185,129,0.2)] overflow-hidden shrink-0"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-black/10 group-hover:scale-110 transition-transform">
-               <PlusCircle className="h-6 w-6" />
-            </div>
-            Report
+            <PlusCircle className="h-5 w-5" />
+            Report Issue
           </Link>
         </div>
 

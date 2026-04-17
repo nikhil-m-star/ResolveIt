@@ -190,20 +190,20 @@ export function Profile() {
                    </h3>
                 </div>
                 
-                <div className="space-y-6">
+                <div className="space-y-4">
                    {[
                      { label: "ISSUES_REPORTED", value: profile._count?.issues || 0, icon: AlertTriangle, color: "text-primary", bg: "bg-primary/5", border: "border-primary/20" },
                      { label: "ISSUES_RESOLVED", value: profile._count?.resolvedIssues || 0, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/5", border: "border-emerald-500/20" },
                      { label: "VOTES_GIVEN", value: profile._count?.votes || 0, icon: Medal, color: "text-blue-400", bg: "bg-blue-500/5", border: "border-blue-500/20" }
                    ].map((stat, i) => (
-                     <div key={i} className={cn("p-5 border rounded-2xl flex items-center justify-between group/stat transition-all hover:bg-white/5", stat.bg, stat.border)}>
+                     <div key={i} className={cn("p-4 border rounded-2xl flex items-center justify-between group/stat transition-all hover:bg-white/5", stat.bg, stat.border)}>
                         <div className="flex items-center gap-4">
-                           <div className={cn("p-2.5 rounded-xl transition-transform group-hover/stat:scale-110", stat.bg, stat.color)}>
+                           <div className={cn("p-2 rounded-xl transition-transform group-hover/stat:scale-110", stat.bg, stat.color)}>
                               <stat.icon className="w-5 h-5" />
                            </div>
                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{stat.label}</span>
                         </div>
-                        <span className="text-3xl font-heading font-black text-white">{stat.value}</span>
+                        <span className="text-2xl font-heading font-black text-white">{stat.value}</span>
                      </div>
                    ))}
                 </div>

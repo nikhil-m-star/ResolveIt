@@ -95,22 +95,19 @@ export function IssueDetail() {
         
         {/* Status Update (Officials Only) */}
         {isOfficial && (
-          <div className="glass-card bg-black/60 border-l-[6px] border-primary p-6 animate-in slide-in-from-top-6 duration-700 shadow-[0_0_50px_-12px_rgba(16,185,129,0.15)] relative overflow-hidden group">
+          <div className="glass-card bg-black/60 border-l-[6px] border-primary p-6 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden group">
              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
                 <Terminal className="w-32 h-32 text-primary" />
              </div>
              
              <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
                 <div className="flex items-center gap-4 shrink-0">
-                   <div className="w-14 h-14 bg-primary flex items-center justify-center rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                      <Shield className="w-7 h-7 text-black" />
+                   <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-xl shadow-lg">
+                      <Shield className="w-6 h-6 text-black" />
                    </div>
                    <div>
-                      <h3 className="text-white font-black text-lg tracking-tight uppercase">Update Status</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Authorized: {userRole}</p>
-                      </div>
+                      <h3 className="text-sm font-black text-white uppercase tracking-widest">Update Status</h3>
+                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Role: {userRole}</p>
                    </div>
                 </div>
 
@@ -119,7 +116,7 @@ export function IssueDetail() {
                       <select 
                         value={selectedStatus}
                         onChange={(e) => setSelectedStatus(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/50"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/40 transition-all"
                       >
                          <option value="REPORTED">Reported</option>
                          <option value="IN_PROGRESS">Processing</option>
@@ -134,16 +131,16 @@ export function IssueDetail() {
                         value={statusNote}
                         onChange={(e) => setStatusNote(e.target.value)}
                         placeholder="ADD A NOTE..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-xs font-black uppercase tracking-widest text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/50"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[10px] font-black uppercase tracking-widest text-white placeholder:text-slate-700 focus:outline-none focus:border-primary/40 transition-all"
                       />
                    </div>
                    <div className="md:col-span-3">
                       <button 
                         onClick={handleUpdateStatus}
                         disabled={statusMutation.isPending || selectedStatus === issue.status}
-                        className="w-full py-3 bg-primary hover:bg-emerald-400 text-black text-[11px] font-black uppercase tracking-[0.2em] rounded-xl shadow-xl transition-all disabled:opacity-50 active:scale-95"
+                        className="w-full py-3 bg-primary hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl transition-all disabled:opacity-50 active:scale-95"
                       >
-                         {statusMutation.isPending ? "Saving..." : "Save Changes"}
+                         {statusMutation.isPending ? "Saving..." : "Update"}
                       </button>
                    </div>
                 </div>

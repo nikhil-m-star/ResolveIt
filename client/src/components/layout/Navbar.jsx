@@ -75,7 +75,7 @@ export function Navbar() {
       <Motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed top-4 inset-x-0 mx-auto z-1200 hidden w-fit max-w-full md:block"
+        className="fixed top-4 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
       >
         <nav className="glass-pill rounded-full px-6 py-3 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border-white/20">
           <div className="flex items-center gap-10">

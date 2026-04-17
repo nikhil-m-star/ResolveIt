@@ -31,9 +31,9 @@ export function MapExplorer() {
 
   return (
     <Layout>
-      <div className="relative h-map-mobile md:h-map-desktop w-full overflow-hidden rounded-5xl border border-white/5 bg-black/20 shadow-2xl">
+      <div className="relative h-map-mobile md:h-map-desktop w-full overflow-hidden rounded-4xl border border-white/5 bg-black/20 shadow-2xl">
         {/* Minimal Map Header */}
-        <div className="absolute left-4 top-4 md:left-8 md:top-8 z-400 flex flex-col md:flex-row items-start md:items-center gap-4 pointer-events-none">
+        <div className="absolute left-4 top-4 md:left-8 md:top-8 z-map-ui flex flex-col md:flex-row items-start md:items-center gap-4 pointer-events-none">
           <Motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
