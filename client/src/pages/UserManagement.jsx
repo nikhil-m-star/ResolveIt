@@ -176,15 +176,29 @@ export function UserManagement() {
 
         {/* Control Bar */}
         <div className="flex flex-col md:flex-row gap-4 sm:gap-6 p-1.5 sm:p-2 rounded-[24px] sm:rounded-[32px] bg-black/20 border border-white/5 backdrop-blur-3xl shadow-2xl overflow-hidden">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-60 group-focus-within:opacity-100 transition-opacity" />
-            <input 
+          <div className="flex flex-1 items-center gap-3 rounded-[24px] bg-black/50 border border-white/10 px-3 py-2 shadow-inner">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <Search className="h-4 w-4 text-primary" />
+            </div>
+            <input
               type="text"
               placeholder="Filter by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-none rounded-2xl pl-11 sm:pl-14 pr-4 sm:pr-6 py-3.5 sm:py-4.5 text-xs text-white placeholder:text-slate-600 focus:outline-none transition-all"
+              className="flex-1 bg-transparent border-none py-2 pr-2 text-xs font-black text-white placeholder:text-slate-600 uppercase tracking-widest focus:outline-none"
             />
+            {searchQuery ? (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white hover:border-primary/30 transition-all"
+              >
+                Clear
+              </button>
+            ) : (
+              <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                Search
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-[24px] overflow-x-auto scrollbar-hide">
              {["ALL", "USER", "OFFICER", "ADMIN"].map((label) => {

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { api } from "../lib/auth";
 import toast from "react-hot-toast";
 import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
@@ -17,6 +17,16 @@ function LocationPicker({ position, setPosition }) {
     },
   });
   return position ? <Marker position={position} /> : null;
+}
+
+function MapCenterSync({ position }) {
+  const map = useMap();
+  useEffect(() => {
+    if (Array.isArray(position) && position.length === 2) {
+      map.flyTo(position, map.getZoom(), { animate: true, duration: 1 });
+    }
+  }, [map, position]);
+  return null;
 }
 
 export function ReportIssue() {
@@ -412,6 +422,14 @@ export function ReportIssue() {
                     <LocationAutocomplete 
                       value={formData.area} 
                       onChange={(val) => updateForm("area", val)}
+                      onSelect={(selection) => {
+                        updateForm("area", selection?.area || selection?.name || "");
+                        updateForm("city", selection?.city || "Bengaluru");
+                        if (Number.isFinite(selection?.lat) && Number.isFinite(selection?.lng)) {
+                          updateForm("latitude", selection.lat);
+                          updateForm("longitude", selection.lng);
+                        }
+                      }}
                       placeholder="e.g. Koramangala"
                     />
                  </div>
@@ -449,6 +467,7 @@ export function ReportIssue() {
                           updateForm("longitude", coords[1]);
                        }} 
                     />
+                    <MapCenterSync position={[formData.latitude, formData.longitude]} />
                   </MapContainer>
                 </div>
               </div>

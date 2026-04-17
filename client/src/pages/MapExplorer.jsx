@@ -14,6 +14,7 @@ export function MapExplorer() {
     search: ""
   });
   const [detectedLocation, setDetectedLocation] = useState(null);
+  const [focusLocation, setFocusLocation] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
 
   const { data: issues, isLoading } = useIssues(filters);
@@ -62,6 +63,12 @@ export function MapExplorer() {
             <LocationAutocomplete 
               value={filters.search}
               onChange={(val) => setFilters({...filters, search: val})}
+              onSelect={(selection) => {
+                if (Number.isFinite(selection?.lat) && Number.isFinite(selection?.lng)) {
+                  setFocusLocation([selection.lat, selection.lng]);
+                }
+                setFilters((prev) => ({ ...prev, search: selection?.name || prev.search }));
+              }}
               placeholder="Search by area..."
               icon={Search}
             />
@@ -82,7 +89,7 @@ export function MapExplorer() {
           </motion.div>
         )}
 
-        <IssueMap issues={issues || []} userLocation={detectedLocation} />
+        <IssueMap issues={issues || []} userLocation={detectedLocation} focusLocation={focusLocation} />
       </div>
     </Layout>
 

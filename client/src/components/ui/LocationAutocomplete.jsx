@@ -6,6 +6,7 @@ import { cn } from "../../utils/helpers";
 export function LocationAutocomplete({ 
   value, 
   onChange, 
+  onSelect,
   placeholder = "Search area...", 
   className,
   icon: Icon = MapPin 
@@ -59,7 +60,11 @@ export function LocationAutocomplete({
           id: item.place_id,
           display: item.display_name,
           name: item.address?.suburb || item.address?.city_district || item.address?.town || item.address?.city || item.display_name.split(',')[0],
-          full: item.display_name
+          full: item.display_name,
+          lat: Number(item.lat),
+          lng: Number(item.lon),
+          city: item.address?.city || item.address?.town || item.address?.village || "Bengaluru",
+          area: item.address?.suburb || item.address?.city_district || item.address?.neighbourhood || item.display_name.split(',')[0]
         }));
       
       // Remove duplicates by name
@@ -89,6 +94,7 @@ export function LocationAutocomplete({
   const handleSelect = (suggestion) => {
     setQuery(suggestion.name);
     onChange(suggestion.name);
+    if (onSelect) onSelect(suggestion);
     setIsOpen(false);
   };
 

@@ -51,11 +51,21 @@ const isValidLatLng = (coords) =>
   Math.abs(Number(coords[0])) <= 90 &&
   Math.abs(Number(coords[1])) <= 180;
 
-const MapUpdater = ({ issues, userLocation }) => {
+const MapUpdater = ({ issues, userLocation, focusLocation }) => {
   const map = useMap();
   const hasCenteredOnUserRef = useRef(false);
+  const prevFocusRef = useRef(null);
 
   useEffect(() => {
+    if (isValidLatLng(focusLocation)) {
+      const nextKey = `${Number(focusLocation[0]).toFixed(6)},${Number(focusLocation[1]).toFixed(6)}`;
+      if (prevFocusRef.current !== nextKey) {
+        map.flyTo(focusLocation, 15, { animate: true, duration: 1.2 });
+        prevFocusRef.current = nextKey;
+      }
+      return;
+    }
+
     if (isValidLatLng(userLocation) && !hasCenteredOnUserRef.current) {
       map.flyTo(userLocation, 14, { animate: true, duration: 1.5 });
       hasCenteredOnUserRef.current = true;
@@ -67,12 +77,14 @@ const MapUpdater = ({ issues, userLocation }) => {
       const bounds = L.latLngBounds(issuesWithCoords.map((i) => [i.latitude, i.longitude]));
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
-  }, [issues, map, userLocation]);
+  }, [issues, map, userLocation, focusLocation]);
 
   return null;
 };
-export function IssueMap({ issues, userLocation }) {
-  const defaultCenter = isValidLatLng(userLocation) ? userLocation : [12.9716, 77.5946];
+export function IssueMap({ issues, userLocation, focusLocation }) {
+  const defaultCenter = isValidLatLng(focusLocation)
+    ? focusLocation
+    : (isValidLatLng(userLocation) ? userLocation : [12.9716, 77.5946]);
   const issuesWithCoords = (issues || []).filter(isValidIssueCoordinate);
 
   return (
@@ -138,7 +150,7 @@ export function IssueMap({ issues, userLocation }) {
             </Popup>
           </CircleMarker>
         )}
-        <MapUpdater issues={issues} userLocation={userLocation} />
+        <MapUpdater issues={issues} userLocation={userLocation} focusLocation={focusLocation} />
       </MapContainer>
     </div>
   );
