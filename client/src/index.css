@@ -335,8 +335,12 @@ body {
 }
 .animate-scan { animation: scan 3s linear infinite; }
 
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes scan-horizontal {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+.animate-scan-horizontal { animation: scan-horizontal 2.5s ease-in-out infinite; }
 
 /* Leaflet Customization */
 .leaflet-container { background: transparent !important; }
