@@ -588,7 +588,7 @@ body {
 }
 .leaflet-popup-content { margin: 0 !important; width: auto !important; }
 .leaflet-popup-close-button { display: none !important; }
-.leaflet-tile-pane { filter: saturate(0.3) brightness(0.7) contrast(1.2); }
+.leaflet-tile-pane { filter: none; }
 
 /* ─── Responsive: sm (640px) ─── */
 @media (min-width: 640px) {
