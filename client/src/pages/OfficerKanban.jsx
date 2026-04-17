@@ -81,15 +81,8 @@ export function OfficerKanban() {
       <div className="max-w-7xl mx-auto px-6 py-16 min-h-screen flex flex-col space-y-12 animate-in fade-in duration-1000">
         
         {/* Kanban Header & Metrics HUD */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
           <div className="space-y-3">
-             <motion.div 
-               initial={{ opacity: 0, x: -20 }}
-               animate={{ opacity: 1, x: 0 }}
-               className="flex items-center gap-3 text-[10px] font-black text-primary uppercase tracking-[0.4em]"
-             >
-                <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#10b981] animate-pulse" /> Monitoring activity
-             </motion.div>
              <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase">Board</h1>
           </div>
 

@@ -78,13 +78,6 @@ export function AIInsights() {
           {/* Header Section - Gradient Branding */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-20">
             <div className="flex flex-col gap-2">
-               <motion.div 
-                 initial={{ opacity: 0, x: -20 }}
-                 animate={{ opacity: 1, x: 0 }}
-                 className="flex items-center gap-3 text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-2"
-               >
-                 <Sparkles className="h-3 w-3" /> System Diagnostics
-               </motion.div>
                <h1 className="text-hero-xl font-heading font-black text-white uppercase tracking-tighter">
                  AI <span className="text-primary">Insights</span>
                </h1>
