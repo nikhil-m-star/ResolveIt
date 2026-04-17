@@ -37,10 +37,10 @@ export function AIInsights() {
       const { data } = await api.get(url);
       setReport(data.report);
       setLastUpdated(new Date());
-      toast.success("Intelligence Briefing Compiled");
+      toast.success("AI Report Generated");
     } catch (error) {
       console.error("Failed to fetch AI report", error);
-      toast.error("Failed to generate AI Insights report");
+      toast.error("Failed to generate AI Report");
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +73,7 @@ export function AIInsights() {
               className="flex items-center gap-2 bg-primary hover:brightness-110 rounded-xl px-6 py-3 text-sm font-black uppercase tracking-widest text-white transition-all shadow-xl disabled:opacity-50"
             >
               <RefreshCcw className={cn("w-4 h-4", isLoading && "animate-spin")} />
-              {isLoading ? 'Processing...' : 'Generate Intelligence'}
+              {isLoading ? 'Analyzing...' : 'Generate Report'}
             </button>
           </div>
         </div>
@@ -89,8 +89,8 @@ export function AIInsights() {
                        <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin relative z-10" />
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                       <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary animate-pulse">Synchronizing Sector Data</span>
-                       <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Accessing Metropolitan Grid Protocol...</span>
+                       <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary animate-pulse">Analyzing Area Reports</span>
+                       <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Processing City Data...</span>
                     </div>
                  </div>
               ) : !report ? (
@@ -98,13 +98,13 @@ export function AIInsights() {
                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6">
                       <FileText className="w-8 h-8 text-slate-700" />
                    </div>
-                   <h3 className="text-lg font-black text-slate-500 uppercase tracking-widest">Awaiting Command</h3>
-                   <p className="text-sm text-slate-600 mt-2 max-w-xs">Initialize city-wide analysis for executive briefing.</p>
+                   <h3 className="text-lg font-black text-slate-500 uppercase tracking-widest">Awaiting Analysis</h3>
+                   <p className="text-sm text-slate-600 mt-2 max-w-xs">Create an AI-powered report for your city.</p>
                  </div>
               ) : (
                  <div className="animate-in fade-in duration-1000 prose prose-invert max-w-none">
                     <div className="flex items-center gap-2 mb-12 text-slate-600 text-[10px] font-black uppercase tracking-widest">
-                       <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Sector Briefing Protocol
+                       <div className="w-1.5 h-1.5 rounded-full bg-primary" /> City Analysis Report
                        <ChevronRight className="w-2.5 h-2.5" /> {new Date().toLocaleDateString()}
                     </div>
                     

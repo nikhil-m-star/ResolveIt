@@ -139,13 +139,6 @@ export function Navbar() {
         </nav>
       </Motion.div>
 
-      {/* Mobile top-left brand chip */}
-      <div className="fixed top-4 left-4 z-1200 md:hidden">
-        <Link to="/" className="glass-pill inline-flex items-center gap-2 rounded-2xl px-3 py-2">
-          <Shield className="h-4 w-4 text-primary" />
-          <span className="text-xs font-bold text-white">ResolveIt</span>
-        </Link>
-      </div>
 
       {/* Mobile More Menu Overlay */}
       <AnimatePresence>
