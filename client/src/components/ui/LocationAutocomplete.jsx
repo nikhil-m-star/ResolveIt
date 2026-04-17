@@ -102,10 +102,8 @@ export function LocationAutocomplete({
           className="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-12 py-4.5 text-white text-sm placeholder:text-slate-700 focus:outline-none focus:border-primary/40 focus:bg-black/60 transition-all font-black uppercase tracking-widest"
         />
         <div className="absolute right-5 top-1/2 -translate-y-1/2">
-          {isLoading ? (
+          {isLoading && (
             <Loader2 className="w-4 h-4 text-primary animate-spin" />
-          ) : (
-            <Search className="w-4 h-4 text-slate-600" />
           )}
         </div>
       </div>
