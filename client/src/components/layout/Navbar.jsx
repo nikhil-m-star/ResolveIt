@@ -75,16 +75,16 @@ export function Navbar() {
       <Motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed top-4 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
+        className="fixed top-6 inset-x-0 mx-auto z-navbar hidden w-fit max-w-full md:block"
       >
-        <nav className="glass-pill rounded-full px-6 py-3 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border-white/20">
-          <div className="flex items-center gap-10">
-            <Link to="/" className="flex shrink-0 items-center gap-3 pr-6 border-r border-white/15">
-              <Shield className="h-7 w-7 text-primary" />
-              <span className="text-white font-heading text-xl font-extrabold tracking-tight">ResolveIt</span>
+        <nav className="glass-pill rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border-white/20 bg-black/40 backdrop-blur-3xl">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex shrink-0 items-center gap-3 pl-4 pr-6 border-r border-white/10 hover:opacity-80 transition-opacity">
+              <Shield className="h-6 w-6 text-primary shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+              <span className="text-white font-heading text-lg font-black tracking-tighter uppercase italic">ResolveIt</span>
             </Link>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5 relative h-10 px-1">
               {navItems.map((item) => {
                 const active = location.pathname === item.to;
                 const Icon = item.icon;
@@ -93,44 +93,49 @@ export function Navbar() {
                     key={item.to}
                     to={item.to}
                     className={cn(
-                      "relative flex items-center gap-2.5 rounded-full px-4 py-2 text-sm font-bold transition-all duration-300",
-                      active 
-                        ? "text-primary bg-primary/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
-                        : "text-slate-400 hover:text-white hover:bg-white/10"
+                      "relative flex items-center gap-2.5 rounded-full px-5 py-2 text-[11px] font-black uppercase tracking-widest transition-all duration-300 group z-10",
+                      active ? "text-primary" : "text-slate-500 hover:text-white"
                     )}
                   >
-                    <Icon className="h-4.5 w-4.5" />
+                    {active && (
+                      <Motion.div
+                        layoutId="active-pill"
+                        className="absolute inset-0 bg-primary/15 rounded-full border border-primary/20 shadow-[inset_0_2px_10px_rgba(16,185,129,0.1)] -z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <Icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 group-active:scale-95", active && "text-primary")} />
                     {item.label}
                   </Link>
                 );
               })}
             </div>
 
-            <div className="flex items-center gap-3 pl-6 border-l border-white/15">
+            <div className="flex items-center gap-2 pl-6 pr-2 border-l border-white/10">
               {user ? (
-                <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 p-1">
+                <div className="flex items-center gap-1.5 rounded-2xl bg-white/5 border border-white/5 p-1">
                   <Link 
                     to="/alerts" 
                     className={cn(
-                      "p-2 rounded-xl transition-all relative group",
-                      location.pathname === "/alerts" ? "bg-primary/20 text-primary border border-primary/20" : "text-slate-400 hover:text-white"
+                      "p-2.5 rounded-xl transition-all relative group overflow-hidden",
+                      location.pathname === "/alerts" ? "bg-primary/20 text-primary border border-primary/20 shadow-lg" : "text-slate-500 hover:text-white"
                     )}
                   >
-                    <Bell className="h-4 w-4" />
+                    <Bell className="h-4 w-4 relative z-10" />
                     <AlertBadge />
                   </Link>
                   <Link 
                     to="/profile" 
                     className={cn(
-                      "p-2 rounded-xl transition-all",
-                      location.pathname === "/profile" ? "bg-primary text-white" : "text-slate-400 hover:text-white"
+                      "p-2.5 rounded-xl transition-all group overflow-hidden",
+                      location.pathname === "/profile" ? "bg-primary text-black shadow-[0_0_20px_rgba(16,185,129,0.4)]" : "text-slate-500 hover:text-white"
                     )}
                   >
-                    <UserCircle2 className="h-4 w-4" />
+                    <UserCircle2 className="h-4 w-4 relative z-10" />
                   </Link>
                 </div>
               ) : (
-                <Link to="/sign-in" className="text-sm font-bold text-slate-400 hover:text-white px-3 py-1.5">
+                <Link to="/sign-in" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary px-4 py-2 transition-colors">
                   Sign In
                 </Link>
               )}
@@ -149,33 +154,37 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMoreOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-1240 md:hidden"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-1240 md:hidden"
             />
             <Motion.div
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed bottom-24 left-4 right-4 z-1245 md:hidden"
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed bottom-28 left-6 right-6 z-1245 md:hidden"
             >
-              <div className="glass-panel rounded-4xl p-6 shadow-2xl border border-white/10 flex flex-col gap-6">
+              <div className="glass-panel rounded-[40px] p-8 shadow-[0_32px_100px_rgba(0,0,0,0.8)] border border-white/15 bg-black/60 flex flex-col gap-8">
                 {user ? (
                    <div className="grid grid-cols-2 gap-4">
                       <Link 
                         to="/profile" 
                         onClick={() => setIsMobileMoreOpen(false)}
-                        className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 transition-all text-white"
+                        className="flex flex-col items-center justify-center gap-4 aspect-square rounded-[32px] bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/30 transition-all group"
                       >
-                        <User className="h-6 w-6 text-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Profile</span>
+                        <div className="p-4 rounded-2xl bg-black/40 group-hover:scale-110 transition-transform">
+                          <User className="h-8 w-8 text-primary" />
+                        </div>
+                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">Profile</span>
                       </Link>
                       <Link 
                         to="/alerts" 
                         onClick={() => setIsMobileMoreOpen(false)}
-                        className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-primary/10 transition-all text-white relative"
+                        className="flex flex-col items-center justify-center gap-4 aspect-square rounded-[32px] bg-white/5 border border-white/5 hover:bg-primary/10 hover:border-primary/30 transition-all group relative"
                       >
-                        <Bell className="h-6 w-6 text-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Alerts</span>
+                        <div className="p-4 rounded-2xl bg-black/40 group-hover:scale-110 transition-transform">
+                          <Bell className="h-8 w-8 text-primary" />
+                        </div>
+                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">Alerts</span>
                         <AlertBadge mobile />
                       </Link>
                    </div>
@@ -183,14 +192,20 @@ export function Navbar() {
                    <Link 
                      to="/sign-in" 
                      onClick={() => setIsMobileMoreOpen(false)}
-                     className="flex items-center justify-center p-8 rounded-2xl bg-primary/10 border border-primary/20 text-primary font-black uppercase tracking-widest"
+                     className="flex items-center justify-center p-10 rounded-[32px] bg-primary group overflow-hidden relative"
                    >
-                     Sign In
+                     <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                     <span className="relative z-10 text-black font-black uppercase tracking-[0.3em] text-sm">Sign In</span>
                    </Link>
                 )}
                 
                 <div className="flex justify-center">
-                   <button onClick={() => setIsMobileMoreOpen(false)} className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors">Close</button>
+                   <button 
+                    onClick={() => setIsMobileMoreOpen(false)} 
+                    className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                   >
+                     <PlusCircle className="h-6 w-6 text-slate-500 rotate-45" />
+                   </button>
                 </div>
               </div>
             </Motion.div>
@@ -202,10 +217,10 @@ export function Navbar() {
       <Motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed bottom-6 left-0 right-0 z-1250 flex justify-center px-4 md:hidden"
+        className="fixed bottom-8 left-0 right-0 z-1250 flex justify-center px-6 md:hidden"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-4xl px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.8)] border-white/20">
-          <div className="flex justify-around items-center gap-2">
+        <nav className="glass-pill w-full max-w-sm rounded-full px-2 py-2 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] border-white/20 bg-black/30 backdrop-blur-3xl">
+          <div className="flex justify-between items-center relative h-14">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
               const Icon = item.icon;
@@ -214,26 +229,39 @@ export function Navbar() {
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "flex flex-col items-center justify-center rounded-2xl flex-1 py-3 transition-all duration-300",
-                    active ? "text-primary bg-primary/15" : "text-slate-500 hover:text-slate-300"
+                    "relative flex flex-col items-center justify-center rounded-full flex-1 h-full transition-all duration-300 z-10",
+                    active ? "text-primary" : "text-slate-500"
                   )}
                 >
-                  <Icon className="h-6 w-6" />
+                  {active && (
+                    <Motion.div
+                      layoutId="mobile-active-pill"
+                      className="absolute inset-1 bg-primary/20 rounded-full border border-primary/20 -z-10"
+                      transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
+                    />
+                  )}
+                  <Icon className={cn("h-6 w-6 transition-all", active ? "scale-110" : "scale-90 opacity-60")} />
                 </Link>
               );
             })}
             <button
               onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
               className={cn(
-                "flex flex-col items-center justify-center rounded-2xl flex-1 py-3 transition-all duration-300",
-                isMobileMoreOpen ? "text-primary bg-primary/15" : "text-slate-500 hover:text-slate-300"
+                "relative flex flex-col items-center justify-center rounded-full flex-1 h-full transition-all duration-300 z-10",
+                isMobileMoreOpen ? "text-primary shadow-[inset_0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-500"
               )}
             >
-              <MoreHorizontal className="h-6 w-6" />
+              {isMobileMoreOpen && (
+                <div className="absolute inset-1 bg-primary/20 rounded-full border border-primary/20 -z-10" />
+              )}
+              <MoreHorizontal className={cn("h-6 w-6 transition-all", isMobileMoreOpen ? "scale-110" : "scale-90 opacity-60")} />
             </button>
           </div>
         </nav>
       </Motion.div>
+    </>
+  );
+}
     </>
   );
 }
