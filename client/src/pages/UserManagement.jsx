@@ -158,13 +158,13 @@ export function UserManagement() {
         {/* Header HUD */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div className="space-y-3">
-             <Motion.div 
+             <motion.div 
                initial={{ opacity: 0, x: -20 }}
                animate={{ opacity: 1, x: 0 }}
                className="flex items-center gap-3 text-[10px] font-black text-primary uppercase tracking-[0.4em]"
              >
                 <Users className="h-3 w-3" /> Access Management
-             </Motion.div>
+             </motion.div>
              <h1 className="text-6xl font-heading font-black text-white tracking-tighter uppercase italic">
                Database
              </h1>
@@ -209,7 +209,7 @@ export function UserManagement() {
                   )}
                 >
                   {roleFilter === role && (
-                    <Motion.div 
+                    <motion.div 
                       layoutId="filter-pill"
                       className="absolute inset-0 bg-primary shadow-[0_0_20px_rgba(16,185,129,0.4)]" 
                     />

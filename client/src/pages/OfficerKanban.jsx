@@ -82,17 +82,17 @@ export function OfficerKanban() {
         {/* Kanban Header & Metrics HUD */}
         <div className="flex flex-col md:flex-row justify-between items-end gap-10">
           <div className="space-y-3">
-             <Motion.div 
+             <motion.div 
                initial={{ opacity: 0, x: -20 }}
                animate={{ opacity: 1, x: 0 }}
                className="flex items-center gap-3 text-[10px] font-black text-primary uppercase tracking-[0.4em]"
              >
                 <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#10b981] animate-pulse" /> Monitoring activity
-             </Motion.div>
+             </motion.div>
              <h1 className="text-6xl font-heading font-black text-white tracking-tighter uppercase italic">Board</h1>
           </div>
 
-          <Motion.div 
+          <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col md:flex-row items-center gap-8 bg-black/40 border border-white/10 rounded-[40px] px-10 py-6 backdrop-blur-3xl shadow-2xl w-full md:w-auto relative group overflow-hidden"
@@ -105,7 +105,7 @@ export function OfficerKanban() {
               </span>
               <div className="flex items-center gap-4">
                 <div className="h-2 flex-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <Motion.div 
+                  <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.round((issues?.filter(i => i.status === "RESOLVED").length / (issues?.length || 1)) * 100)}%` }}
                     className="h-full bg-primary shadow-[0_0_10px_#10b981]" 
@@ -125,7 +125,7 @@ export function OfficerKanban() {
                 <span className="text-2xl font-black text-white tracking-tighter">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
               </div>
             </div>
-          </Motion.div>
+          </motion.div>
         </div>
 
         {/* Board Environment */}
@@ -171,7 +171,7 @@ export function OfficerKanban() {
 
                   <div className="p-8 flex flex-col gap-6 relative z-10">
                      {columnIssues.map((issue) => (
-                       <Motion.div 
+                       <motion.div 
                           key={issue.id}
                           layoutId={issue.id}
                           draggable
@@ -208,7 +208,7 @@ export function OfficerKanban() {
                                </div>
                              )}
                           </div>
-                       </Motion.div>
+                       </motion.div>
                      ))}
                      
                      {columnIssues.length === 0 && (

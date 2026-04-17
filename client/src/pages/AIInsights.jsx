@@ -55,7 +55,7 @@ export function AIInsights() {
       <div className="relative min-h-screen overflow-hidden">
         {/* Immersive Neural Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <Motion.div 
+          <motion.div 
             animate={{ 
               scale: [1, 1.2, 1],
               opacity: [0.1, 0.15, 0.1] 
@@ -63,7 +63,7 @@ export function AIInsights() {
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-primary/20 blur-[120px]" 
           />
-          <Motion.div 
+          <motion.div 
             animate={{ 
               scale: [1.2, 1, 1.2],
               opacity: [0.05, 0.1, 0.05] 
@@ -78,19 +78,19 @@ export function AIInsights() {
           {/* Header Section - Gradient Branding */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-20">
             <div className="flex flex-col gap-2">
-               <Motion.div 
+               <motion.div 
                  initial={{ opacity: 0, x: -20 }}
                  animate={{ opacity: 1, x: 0 }}
                  className="flex items-center gap-3 text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-2"
                >
                  <Sparkles className="h-3 w-3" /> System Diagnostics
-               </Motion.div>
+               </motion.div>
                <h1 className="text-6xl md:text-7xl font-heading font-black text-white uppercase tracking-tighter italic">
                  AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-200">Insights</span>
                </h1>
             </div>
             
-            <Motion.div 
+            <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-3 p-1.5 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-xl shadow-2xl"
@@ -111,7 +111,7 @@ export function AIInsights() {
                 <RefreshCcw className={cn("w-4 h-4 transition-transform group-hover:rotate-180 duration-500", isLoading && "animate-spin")} />
                 {isLoading ? 'Processing...' : 'Generate Report'}
               </button>
-            </Motion.div>
+            </motion.div>
           </div>
 
           {/* Main Container - High Intensity Glass */}
@@ -120,7 +120,7 @@ export function AIInsights() {
                 
                 <AnimatePresence mode="wait">
                   {isLoading ? (
-                     <Motion.div 
+                     <motion.div 
                        key="loading"
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
@@ -131,7 +131,7 @@ export function AIInsights() {
                         <div className="absolute inset-0 flex items-center justify-center opacity-20">
                            <div className="w-full h-full grid grid-cols-8 gap-4 p-8">
                              {[...Array(64)].map((_, i) => (
-                               <Motion.div 
+                               <motion.div 
                                  key={i}
                                  animate={{ opacity: [0.1, 0.4, 0.1] }}
                                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.02 }}
@@ -143,7 +143,7 @@ export function AIInsights() {
                         
                         <div className="relative">
                            <div className="w-24 h-24 border-2 border-primary/10 rounded-full animate-ping absolute inset-0" />
-                           <Motion.div 
+                           <motion.div 
                              animate={{ rotate: 360 }}
                              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                              className="w-24 h-24 border-t-2 border-r-2 border-primary rounded-full relative z-10" 
@@ -157,9 +157,9 @@ export function AIInsights() {
                            <span className="text-[14px] font-black uppercase tracking-[0.4em] text-white">Updating analysis</span>
                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 animate-pulse">Processing city records...</span>
                         </div>
-                     </Motion.div>
+                     </motion.div>
                   ) : !report ? (
-                     <Motion.div 
+                     <motion.div 
                        key="empty"
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
@@ -170,9 +170,9 @@ export function AIInsights() {
                        </div>
                        <h3 className="text-xl font-black text-slate-400 uppercase tracking-widest">Awaiting Analysis</h3>
                        <p className="text-sm text-slate-600 mt-4 max-w-xs leading-relaxed uppercase tracking-tighter">Select an area to generate a high-fidelity diagnostic report.</p>
-                     </Motion.div>
+                     </motion.div>
                   ) : (
-                     <Motion.div 
+                     <motion.div 
                        key="content"
                        initial={{ opacity: 0, y: 20 }}
                        animate={{ opacity: 1, y: 0 }}
@@ -218,7 +218,7 @@ export function AIInsights() {
                              <Download className="h-4 w-4" /> Export Report
                            </button>
                         </div>
-                     </Motion.div>
+                     </motion.div>
                   )}
                 </AnimatePresence>
              </div>

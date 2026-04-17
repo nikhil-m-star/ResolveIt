@@ -34,7 +34,7 @@ export function MapExplorer() {
       <div className="relative h-map-mobile md:h-map-desktop w-full overflow-hidden rounded-[40px] border border-white/5 bg-black/40 shadow-[0_32px_64px_rgba(0,0,0,0.8)]">
         {/* Immersive Map Header */}
         <div className="absolute left-6 top-6 md:left-8 md:top-8 z-map-ui flex flex-col md:flex-row items-start md:items-center gap-4 pointer-events-none">
-          <Motion.div 
+          <motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="flex items-center gap-5 rounded-[24px] border border-white/10 bg-black/60 px-6 py-3.5 backdrop-blur-3xl shadow-2xl pointer-events-auto"
@@ -49,10 +49,10 @@ export function MapExplorer() {
                  Live Reports 
               </p>
             </div>
-          </Motion.div>
+          </motion.div>
 
           {/* Search Pill - High Intensity Glass */}
-          <Motion.div
+          <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -66,12 +66,12 @@ export function MapExplorer() {
               onChange={(e) => setFilters({...filters, search: e.target.value})}
               className="w-full bg-black/60 border border-white/10 rounded-[20px] pl-14 pr-6 py-4 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-primary/40 focus:bg-black/80 transition-all shadow-[0_20px_40px_rgba(0,0,0,0.4)] backdrop-blur-3xl"
             />
-          </Motion.div>
+          </motion.div>
         </div>
 
         {/* Loading Indicator - Simplified Language */}
         {isLoading && (
-          <Motion.div 
+          <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="absolute bottom-24 left-1/2 z-400 -translate-x-1/2 rounded-full border border-white/10 bg-black/80 px-8 py-3.5 backdrop-blur-3xl shadow-[0_24px_48px_rgba(0,0,0,0.8)]"
@@ -80,7 +80,7 @@ export function MapExplorer() {
                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
                 Updating maps...
              </div>
-          </Motion.div>
+          </motion.div>
         )}
 
         <IssueMap issues={issues || []} userLocation={detectedLocation} />
