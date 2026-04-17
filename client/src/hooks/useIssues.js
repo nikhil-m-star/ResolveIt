@@ -8,5 +8,6 @@ export const useIssues = (filters = {}) => {
       const { data } = await api.get('/issues', { params: filters });
       return data;
     },
+    staleTime: 30000, // Keep data fresh for 30 seconds
   });
 };

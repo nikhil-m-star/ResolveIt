@@ -127,66 +127,12 @@ export const createIssue = async (req, res) => {
   }
 };
 
-// Get all issues with filters - Bulletproof Rewrite
+// Get all issues with filters - Optimized Clean Version
 export const getIssues = async (req, res) => {
   try {
     const { city, area, category, status, search, lat, lng } = req.query;
     
-    // 1. Synchronous Recovery Protocol: Ensure SEED data is present
-    const existingSeeds = await prisma.issue.count({
-      where: { title: { startsWith: 'SEED - ' } }
-    });
-
-    if (existingSeeds < 3) {
-      console.log("Synchronous Recovery Triggered: Injecting metropolitan grid...");
-      
-      const admin = await prisma.user.upsert({
-        where: { email: 'admin@resolveit.com' },
-        update: {},
-        create: {
-          clerkId: 'sys_admin_root', name: 'Central Command', email: 'admin@resolveit.com',
-          role: 'PRESIDENT', city: 'Bengaluru', area: 'HQ'
-        }
-      });
-
-      const officer = await prisma.user.upsert({
-        where: { email: 'officer@resolveit.com' },
-        update: {},
-        create: {
-          clerkId: 'sys_officer_1', name: 'Sector Officer Raj', email: 'officer@resolveit.com',
-          role: 'OFFICER', city: 'Bengaluru', area: 'Koramangala'
-        }
-      });
-
-      const seedRecords = [
-        { 
-          title: 'SEED - Major Pothole on 80ft Road', 
-          description: 'Critical road damage impacting metropolitan flow. Dispatch required.',
-          category: 'POTHOLE', status: 'REPORTED', city: 'Bengaluru', area: 'Koramangala',
-          latitude: 12.9352, longitude: 77.6245, intensity: 8, createdById: admin.id,
-          assignedToId: officer.id, imageUrls: ['https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=1200&q=80']
-        },
-        { 
-          title: 'SEED - Streetlight Grid Failure', 
-          description: 'Safety hazard: multiple lights dark at the junction.',
-          category: 'STREETLIGHT', status: 'IN_PROGRESS', city: 'Bengaluru', area: 'Indiranagar',
-          latitude: 12.9784, longitude: 77.6408, intensity: 6, createdById: admin.id,
-          assignedToId: officer.id, imageUrls: ['https://images.unsplash.com/photo-1494522358652-330b6cba186e?auto=format&fit=crop&w=1200&q=80']
-        },
-        { 
-          title: 'SEED - Overflowing Sanitation Point', 
-          description: 'Environmental hazard detected at sector boundary.',
-          category: 'GARBAGE', status: 'RESOLVED', city: 'Bengaluru', area: 'HSR Layout',
-          latitude: 12.9116, longitude: 77.6474, intensity: 5, createdById: admin.id,
-          resolvedById: officer.id, resolvedAt: new Date(), imageUrls: ['https://images.unsplash.com/photo-1532996122724-e3c354a0b10b?auto=format&fit=crop&w=1200&q=80']
-        }
-      ];
-
-      await prisma.issue.deleteMany({ where: { title: { startsWith: 'SEED - ' } } });
-      await prisma.issue.createMany({ data: seedRecords });
-    }
-
-    // 2. Build Atomic Filter
+    // 1. Build Atomic Filter
     const filter = {};
     const isValid = (v) => v && v !== "" && v !== "null" && v !== "undefined";
 
@@ -202,7 +148,7 @@ export const getIssues = async (req, res) => {
     }
     if (req.query.assignedToMe === "true" && req.user?.id) filter.assignedToId = req.user.id;
 
-    // 3. Data Retrieval with Dynamic Include
+    // 2. Data Retrieval with Dynamic Include
     const queryInclude = {
       createdBy: { select: { id: true, name: true, role: true } }
     };
@@ -220,7 +166,7 @@ export const getIssues = async (req, res) => {
       include: queryInclude
     });
 
-    // 4. Force Global Fallback if filter too strict
+    // 3. Force Global Fallback if filter too strict
     if (issues.length === 0 && (isValid(city) || isValid(area))) {
        issues = await prisma.issue.findMany({
          take: 10,
@@ -229,7 +175,7 @@ export const getIssues = async (req, res) => {
        });
     }
 
-    // 5. Transform & Geospatial Precision
+    // 4. Transform & Geospatial Precision
     const uLat = parseFloat(lat);
     const uLng = parseFloat(lng);
 
@@ -248,8 +194,8 @@ export const getIssues = async (req, res) => {
 
     return res.json(processed);
   } catch (error) {
-    console.error("Critical Failure in Case Recovery:", error.message);
-    return res.status(200).json([]);
+    console.error("Critical Failure in Case Retrieval:", error.message);
+    return res.status(500).json({ error: "Failed to fetch incidents", message: error.message });
   }
 };
 
