@@ -7,7 +7,7 @@ import { useState } from "react";
 import { cn } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
+import { AreaSelector } from "../components/ui/AreaSelector";
 
 export function Profile() {
   const { user: clerkUser } = useUserCompat();
@@ -161,17 +161,14 @@ export function Profile() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Area / District</label>
-                <LocationAutocomplete 
+                <AreaSelector 
                   value={formData.area}
-                  onChange={(val) => setFormData({...formData, area: val})}
                   onSelect={(selection) => setFormData((prev) => ({
                     ...prev,
-                    area: selection?.area || selection?.name || prev.area,
-                    city: selection?.city || prev.city,
+                    area: selection.name,
+                    city: "Bengaluru",
                   }))}
-                  cityHint={formData.city || "Bengaluru"}
-                  placeholder="e.g., Downtown"
-                  className="!rounded-xl"
+                  placeholder="Select area..."
                 />
               </div>
             </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "../components/layout/Layout";
 import { IssueCard } from "../components/issues/IssueCard";
 import { useIssues } from "../hooks/useIssues";
+import { AreaSelector } from "../components/ui/AreaSelector";
 import { Search, PlusCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -38,17 +39,28 @@ export function Dashboard() {
     <Layout>
       <div className="px-4 py-8 max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 relative">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 relative z-10 w-full">
-          <div className="relative w-full md:w-auto flex-1 max-w-xl group/search">
-             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 transition-colors" />
-             <input 
-               type="text"
-               placeholder="Search incidents..."
-               value={filters.search}
-               onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
-               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-primary/40 transition-all"
-             />
+          <div className="flex flex-col md:flex-row items-center gap-4 flex-1 w-full max-w-3xl">
+            <div className="relative flex-1 w-full md:w-auto group/search">
+               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 transition-colors" />
+               <input 
+                 type="text"
+                 placeholder="Search keywords..."
+                 value={filters.search}
+                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
+                 className="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-primary/40 transition-all font-black uppercase tracking-widest placeholder:text-slate-700"
+               />
+            </div>
+            
+            <div className="w-full md:w-64">
+              <AreaSelector 
+                value={filters.area}
+                onChange={(val) => setFilters(prev => ({...prev, area: val}))}
+                placeholder="All Sectors"
+              />
+            </div>
           </div>
-          <Link to="/report" className="w-full md:w-auto justify-center bg-primary text-black px-6 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+          
+          <Link to="/report" className="w-full md:w-auto justify-center bg-primary text-black px-8 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-xl">
              <PlusCircle className="h-4 w-4" /> Report
           </Link>
         </div>

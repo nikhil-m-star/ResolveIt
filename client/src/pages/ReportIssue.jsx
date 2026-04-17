@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
 import { cn } from "../utils/helpers";
 import { motion, AnimatePresence } from "framer-motion";
-import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
+import { AreaSelector } from "../components/ui/AreaSelector";
 
 function LocationPicker({ position, setPosition }) {
   useMapEvents({
@@ -419,19 +419,15 @@ export function ReportIssue() {
                  </div>
                  <div className="space-y-3">
                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Area / Neighborhood</label>
-                    <LocationAutocomplete 
+                    <AreaSelector 
                       value={formData.area} 
-                      onChange={(val) => updateForm("area", val)}
-                      onSelect={(selection) => {
-                        updateForm("area", selection?.area || selection?.name || "");
-                        updateForm("city", selection?.city || "Bengaluru");
-                        if (Number.isFinite(selection?.lat) && Number.isFinite(selection?.lng)) {
-                          updateForm("latitude", selection.lat);
-                          updateForm("longitude", selection.lng);
-                        }
+                      onSelect={(area) => {
+                        updateForm("area", area.name);
+                        updateForm("city", "Bengaluru");
+                        updateForm("latitude", area.lat);
+                        updateForm("longitude", area.lng);
                       }}
-                      cityHint={formData.city || "Bengaluru"}
-                      placeholder="e.g. Koramangala"
+                      placeholder="Select Operational Sector..."
                     />
                  </div>
               </div>

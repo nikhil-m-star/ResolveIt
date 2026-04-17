@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../utils/helpers";
-import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
+import { AreaSelector } from "../components/ui/AreaSelector";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -111,12 +111,11 @@ export function UserManagement() {
                     </div>
 
                     <div className="w-full space-y-5">
-                        <LocationAutocomplete 
+                        <AreaSelector 
                           value={promoArea}
                           onChange={(val) => setPromoArea(val)}
-                          onSelect={(selection) => setPromoArea(selection?.area || selection?.name || "")}
-                          cityHint="Bengaluru"
-                          placeholder="Search operational area..."
+                          onSelect={(selection) => setPromoArea(selection.name)}
+                          placeholder="Assign operational area..."
                         />
 
                        <div className="flex gap-4">
@@ -177,32 +176,29 @@ export function UserManagement() {
         </div>
 
         {/* Control Bar */}
-        <div className="flex flex-col md:flex-row gap-4 sm:gap-6 p-1.5 sm:p-2 rounded-[24px] sm:rounded-[32px] bg-black/20 border border-white/5 backdrop-blur-3xl shadow-2xl overflow-hidden">
-          <div className="flex flex-1 items-center gap-3 rounded-[24px] bg-black/50 border border-white/10 px-3 py-2 shadow-inner">
-            <div className="w-8 h-8 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+        <div className="flex flex-col md:flex-row gap-5 p-2 md:p-2 rounded-[32px] bg-black/20 border border-white/5 backdrop-blur-3xl shadow-2xl">
+          <div className="flex flex-1 items-center gap-4 rounded-[24px] bg-black/50 border border-white/10 px-4 py-3 shadow-inner group focus-within:border-primary/40 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
               <Search className="h-4 w-4 text-primary" />
             </div>
             <input
               type="text"
-              placeholder="Filter by name or email..."
+              placeholder="Search personnel..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent border-none py-2 pr-2 text-xs font-black text-white placeholder:text-slate-600 uppercase tracking-widest focus:outline-none"
+              className="flex-1 bg-transparent border-none py-2 text-xs font-black text-white placeholder:text-slate-600 uppercase tracking-widest focus:outline-none"
             />
-            {searchQuery ? (
+            {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white hover:border-primary/30 transition-all"
+                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all"
               >
                 Clear
               </button>
-            ) : (
-              <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                Search
-              </div>
             )}
           </div>
-          <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-[24px] overflow-x-auto scrollbar-hide">
+
+          <div className="flex items-center gap-2 p-1.5 bg-black/40 rounded-[24px] overflow-x-auto scrollbar-hide shrink-0">
              {["ALL", "USER", "OFFICER", "ADMIN"].map((label) => {
                const role = label === "USER" ? "CITIZEN" : label === "ADMIN" ? "PRESIDENT" : label;
                return (
@@ -210,7 +206,7 @@ export function UserManagement() {
                   key={label}
                   onClick={() => setRoleFilter(role)}
                   className={cn(
-                    "px-4 sm:px-6 py-2.5 sm:py-3 rounded-[18px] text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all relative overflow-hidden whitespace-nowrap",
+                    "px-6 py-3 rounded-[18px] text-[10px] font-black uppercase tracking-widest transition-all relative overflow-hidden whitespace-nowrap min-w-[80px]",
                     roleFilter === role ? "text-black" : "text-slate-500 hover:text-white"
                   )}
                 >

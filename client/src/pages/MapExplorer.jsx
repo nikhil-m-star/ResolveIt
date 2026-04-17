@@ -4,7 +4,7 @@ import { IssueMap } from "../components/issues/IssueMap";
 import { useIssues } from "../hooks/useIssues";
 import { Filter, Loader2, LocateFixed, Search, Map as MapIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LocationAutocomplete } from "../components/ui/LocationAutocomplete";
+import { AreaSelector } from "../components/ui/AreaSelector";
 
 export function MapExplorer() {
   const [filters, setFilters] = useState({
@@ -54,30 +54,23 @@ export function MapExplorer() {
             </div>
           </motion.div>
 
-          {/* Search Pill - High Intensity Glass */}
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
             className="relative w-full md:w-80 pointer-events-auto"
           >
-            <LocationAutocomplete 
-              value={filters.search}
-              onChange={(val) => setFilters({...filters, search: val, area: ""})}
-              onSelect={(selection) => {
-                if (Number.isFinite(selection?.lat) && Number.isFinite(selection?.lng)) {
-                  setFocusLocation([selection.lat, selection.lng]);
-                }
+            <AreaSelector 
+              value={filters.area}
+              onSelect={(area) => {
+                setFocusLocation([area.lat, area.lng]);
                 setFilters((prev) => ({
                   ...prev,
-                  search: selection?.name || prev.search,
-                  area: selection?.area || prev.area,
-                  city: selection?.city || prev.city,
+                  area: area.name,
+                  city: "Bengaluru",
                 }));
               }}
-              cityHint={filters.city || "Bengaluru"}
-              placeholder="Search by area..."
-              icon={Search}
+              placeholder="Select Sector..."
             />
           </motion.div>
         </div>
