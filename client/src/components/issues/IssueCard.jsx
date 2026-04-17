@@ -25,7 +25,7 @@ export function IssueCard({ issue }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/5 bg-black hover-border-primary-30 transition-all duration-500 shadow-2xl max-w-md mx-auto w-full"
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md hover:border-primary/40 hover\:-translate-y-2 transition-all duration-500 shadow-2xl max-w-md mx-auto w-full group"
     >
       {/* Hero Image Section - Top Stack */}
       <div className="relative aspect-video w-full overflow-hidden shrink-0">

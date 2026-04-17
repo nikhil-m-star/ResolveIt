@@ -77,14 +77,14 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed top-4 inset-x-0 mx-auto z-1200 hidden w-fit max-w-full md:block"
       >
-        <nav className="glass-pill rounded-full px-5 py-2.5 transition-all duration-500">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="flex shrink-0 items-center gap-2 pr-4 border-r border-white/10">
-              <Shield className="h-6 w-6 text-primary" />
-              <span className="text-white font-heading text-lg font-bold tracking-tight">ResolveIt</span>
+        <nav className="glass-pill rounded-full px-6 py-3 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border-white/20">
+          <div className="flex items-center gap-10">
+            <Link to="/" className="flex shrink-0 items-center gap-3 pr-6 border-r border-white/15">
+              <Shield className="h-7 w-7 text-primary" />
+              <span className="text-white font-heading text-xl font-extrabold tracking-tight">ResolveIt</span>
             </Link>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-4">
               {navItems.map((item) => {
                 const active = location.pathname === item.to;
                 const Icon = item.icon;
@@ -93,20 +93,20 @@ export function Navbar() {
                     key={item.to}
                     to={item.to}
                     className={cn(
-                      "relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-bold transition-all duration-300",
+                      "relative flex items-center gap-2.5 rounded-full px-4 py-2 text-sm font-bold transition-all duration-300",
                       active 
-                        ? "text-primary bg-primary/10 shadow-inner" 
-                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                        ? "text-primary bg-primary/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
+                        : "text-slate-400 hover:text-white hover:bg-white/10"
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4.5 w-4.5" />
                     {item.label}
                   </Link>
                 );
               })}
             </div>
 
-            <div className="flex items-center gap-2 pl-4 border-l border-white/10">
+            <div className="flex items-center gap-3 pl-6 border-l border-white/15">
               {user ? (
                 <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 p-1">
                   <Link 
@@ -211,8 +211,8 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed bottom-6 left-0 right-0 z-1250 flex justify-center px-4 md:hidden"
       >
-        <nav className="glass-pill w-full max-w-sm rounded-4xl px-2 py-2">
-          <div className="flex justify-around items-center gap-1">
+        <nav className="glass-pill w-full max-w-sm rounded-4xl px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.8)] border-white/20">
+          <div className="flex justify-around items-center gap-2">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
               const Icon = item.icon;
@@ -221,22 +221,22 @@ export function Navbar() {
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300",
-                    active ? "text-primary bg-primary/10" : "text-slate-500 hover:text-slate-300"
+                    "flex flex-col items-center justify-center rounded-2xl flex-1 py-3 transition-all duration-300",
+                    active ? "text-primary bg-primary/15" : "text-slate-500 hover:text-slate-300"
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-6 w-6" />
                 </Link>
               );
             })}
             <button
               onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
               className={cn(
-                "flex flex-col items-center justify-center rounded-2xl flex-1 py-2.5 transition-all duration-300",
-                isMobileMoreOpen ? "text-primary bg-primary/10" : "text-slate-500 hover:text-slate-300"
+                "flex flex-col items-center justify-center rounded-2xl flex-1 py-3 transition-all duration-300",
+                isMobileMoreOpen ? "text-primary bg-primary/15" : "text-slate-500 hover:text-slate-300"
               )}
             >
-              <MoreHorizontal className="h-5 w-5" />
+              <MoreHorizontal className="h-6 w-6" />
             </button>
           </div>
         </nav>
