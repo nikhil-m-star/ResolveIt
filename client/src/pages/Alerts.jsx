@@ -158,8 +158,8 @@ export function Alerts() {
         </div>
 
         {/* Intelligence Feed Environment */}
-        <div className="glass-card bg-black/40 border border-white/10 rounded-[48px] shadow-[0_40px_100px_rgba(0,0,0,0.6)] backdrop-blur-3xl overflow-hidden min-h-[500px] flex flex-col">
-           <div className="p-8 border-b border-white/5 bg-white/5 flex items-center justify-between">
+        <div className="glass-card bg-white/[0.02] border border-white/10 rounded-[48px] shadow-[0_15px_40px_rgba(0,0,0,0.6)] backdrop-blur-3xl overflow-hidden min-h-[500px] flex flex-col">
+           <div className="p-8 border-b border-white/10 bg-white/[0.02] flex items-center justify-between">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-3">
                  <History className="w-3.5 h-3.5 text-primary" /> City Feed
               </span>
@@ -194,7 +194,7 @@ export function Alerts() {
                          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
                          className={cn(
                            "p-10 transition-all relative group",
-                           !notif.isRead ? "bg-primary/[0.03] hover:bg-primary/[0.06]" : "opacity-40 hover:opacity-100 bg-transparent hover:bg-white/[0.02]"
+                           !notif.isRead ? "bg-white/[0.05] hover:bg-white/[0.08]" : "opacity-40 hover:opacity-100 bg-transparent hover:bg-white/[0.02]"
                          )}
                        >
                          {!notif.isRead && (
@@ -207,7 +207,7 @@ export function Alerts() {
                              "shrink-0 w-20 h-20 rounded-[28px] border-2 flex items-center justify-center transition-all shadow-2xl relative overflow-hidden group-hover:scale-110",
                              !notif.isRead 
                                 ? "bg-black border-primary text-primary shadow-primary/20" 
-                                : "bg-black/60 border-white/5 text-slate-500 group-hover:border-white/10"
+                                : "bg-white/[0.02] border-white/10 text-white group-hover:border-white/20"
                            )}>
                               {notif.type === "URGENT" && !notif.isRead && (
                                  <div className="absolute inset-0 bg-red-500/10 animate-pulse" />

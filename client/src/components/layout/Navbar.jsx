@@ -125,25 +125,25 @@ export function Navbar() {
 
             <div className="flex items-center gap-2 pl-6 pr-2 border-l border-white/10">
               {user ? (
-                <div className="flex items-center gap-1.5 rounded-2xl bg-white/5 border border-white/5 p-1">
+                <div className="flex items-center gap-2 rounded-2xl bg-white/5 border border-white/5 p-1.5">
                   <Link 
                     to="/alerts" 
                     className={cn(
-                      "p-2.5 rounded-xl transition-all relative group overflow-hidden",
-                      location.pathname === "/alerts" ? "bg-primary/20 text-primary border border-primary/20 shadow-lg" : "text-slate-500 hover:text-white"
+                      "w-10 h-10 flex items-center justify-center rounded-xl transition-all relative group overflow-hidden",
+                      location.pathname === "/alerts" ? "bg-primary/20 text-primary border border-primary/20 shadow-lg" : "text-slate-400 hover:text-white hover:bg-white/5"
                     )}
                   >
-                    <Bell className="h-4 w-4 relative z-10" />
+                    <Bell className="h-5 w-5 relative z-10" />
                     <AlertBadge />
                   </Link>
                   <Link 
                     to="/profile" 
                     className={cn(
-                      "p-2.5 rounded-xl transition-all group overflow-hidden",
-                      location.pathname === "/profile" ? "bg-primary text-black shadow-[0_0_20px_rgba(16,185,129,0.4)]" : "text-slate-500 hover:text-white"
+                      "w-10 h-10 flex items-center justify-center rounded-xl transition-all group overflow-hidden",
+                      location.pathname === "/profile" ? "bg-primary text-black shadow-[0_0_20px_rgba(16,185,129,0.4)]" : "text-slate-400 hover:text-white hover:bg-white/5"
                     )}
                   >
-                    <UserCircle2 className="h-4 w-4 relative z-10" />
+                    <UserCircle2 className="h-5 w-5 relative z-10" />
                   </Link>
                 </div>
               ) : (
