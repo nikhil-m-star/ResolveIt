@@ -88,8 +88,12 @@ const AuthSync = ({ children }) => {
             localStorage.setItem("resolveit_token", data.token);
           }
           
-          // Re-fetch standard user profiles after identity established
+          // Re-fetch app data after identity is established to recover from initial 401s.
           queryClient.invalidateQueries({ queryKey: ["profile"] });
+          queryClient.invalidateQueries({
+            predicate: (query) =>
+              ["issues", "issue", "notifications", "kanbanIssues", "adminStats", "adminIssues"].includes(query.queryKey?.[0]),
+          });
         } catch (err) {
             console.error("Session sync failed", err);
         }
@@ -97,6 +101,10 @@ const AuthSync = ({ children }) => {
           // Server will clear cookie or handle session expiration
           localStorage.removeItem("resolveit_user_role");
           localStorage.removeItem("resolveit_token");
+          queryClient.removeQueries({
+            predicate: (query) =>
+              ["issues", "issue", "notifications", "kanbanIssues", "adminStats", "adminIssues", "profile"].includes(query.queryKey?.[0]),
+          });
       }
     };
 
