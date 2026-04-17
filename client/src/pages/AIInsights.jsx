@@ -82,9 +82,16 @@ export function AIInsights() {
         <div className="glass-card bg-black border border-white/5 p-12 relative overflow-hidden shadow-2xl">
            <div className="relative z-10">
               {isLoading ? (
-                 <div className="py-32 flex flex-col items-center justify-center gap-6 text-slate-500">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                    <span className="text-[10px] font-black uppercase tracking-widest animate-pulse">Syncing Sector Data...</span>
+                 <div className="py-32 flex flex-col items-center justify-center gap-8 relative">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent h-1/2 w-full animate-scan pointer-events-none" />
+                    <div className="relative">
+                       <div className="w-20 h-20 border-4 border-primary/20 rounded-full animate-ping absolute inset-0" />
+                       <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin relative z-10" />
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                       <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary animate-pulse">Synchronizing Sector Data</span>
+                       <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Accessing Metropolitan Grid Protocol...</span>
+                    </div>
                  </div>
               ) : !report ? (
                  <div className="flex flex-col items-center justify-center py-32 text-center border-2 border-dashed border-white/5 rounded-3xl">
@@ -102,19 +109,26 @@ export function AIInsights() {
                     </div>
                     
                     <ReactMarkdown 
-                       components={{
-                           h1: ({node, ...props}) => <h1 className="text-4xl font-heading font-black text-white mt-12 mb-6 uppercase tracking-tight" {...props} />,
-                           h2: ({node, ...props}) => <h2 className="text-2xl font-heading font-bold text-white mt-12 mb-4 border-l-4 border-primary pl-4" {...props} />,
-                           h3: ({node, ...props}) => <h3 className="text-xl font-heading font-bold text-slate-200 mt-8 mb-4 uppercase tracking-wide" {...props} />,
-                           p: ({node, ...props}) => <p className="text-slate-300 leading-relaxed mb-6 font-medium text-lg" {...props} />,
-                           ul: ({node, ...props}) => <ul className="list-disc list-inside space-y-3 mb-8 text-slate-300 font-medium" {...props} />,
-                           li: ({node, ...props}) => <li className="list-item" {...props} />,
-                           strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-sm tracking-widest" {...props} />,
-                           a: ({node, ...props}) => <Link to={props.href} className="text-primary font-bold hover:brightness-125 transition-all underline decoration-primary/30" {...props} />,
-                           blockquote: ({node, ...props}) => (
-                               <blockquote className="border-l-4 border-primary/30 bg-primary/5 p-6 rounded-r-2xl my-8 italic text-slate-300" {...props} />
-                           ),
-                       }}
+                        components={{
+                            h1: ({node, ...props}) => <h1 className="text-4xl font-heading font-black text-white mt-12 mb-8 uppercase tracking-tight border-b-2 border-white/5 pb-4" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-2xl font-heading font-bold text-white mt-12 mb-6 flex items-center gap-3" {...props} >
+                                <div className="w-1 h-8 bg-primary rounded-full" /> {props.children}
+                            </h2>,
+                            h3: ({node, ...props}) => <h3 className="text-xl font-heading font-bold text-slate-200 mt-10 mb-4 uppercase tracking-wider bg-white/5 w-fit px-4 py-1 rounded-lg" {...props} />,
+                            p: ({node, ...props}) => <p className="text-slate-300 leading-relaxed mb-8 font-medium text-lg/8" {...props} />,
+                            ul: ({node, ...props}) => <ul className="space-y-4 mb-10 text-slate-300 font-medium" {...props} />,
+                            li: ({node, ...props}) => (
+                                <li className="flex items-start gap-3">
+                                  <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
+                                  <span>{props.children}</span>
+                                </li>
+                            ),
+                            strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-[11px] tracking-widest bg-white/5 px-2 py-0.5 rounded border border-white/5" {...props} />,
+                            a: ({node, ...props}) => <Link to={props.href} className="text-primary font-bold hover:brightness-125 transition-all underline decoration-primary/30 decoration-2 underline-offset-4" {...props} />,
+                            blockquote: ({node, ...props}) => (
+                                <blockquote className="border-l-4 border-primary/40 bg-primary/5 p-8 rounded-2xl my-10 italic text-slate-300 text-xl font-medium" {...props} />
+                            ),
+                        }}
                     >
                        {report}
                     </ReactMarkdown>
@@ -124,6 +138,5 @@ export function AIInsights() {
         </div>
       </div>
     </Layout>
-
   );
 }
