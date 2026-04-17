@@ -30,7 +30,7 @@ export function MapExplorer() {
   }, []);
 
   return (
-    <Layout>
+    <Layout compact>
       <div className="relative h-map-mobile md:h-map-desktop w-full overflow-hidden rounded-[40px] border border-white/5 bg-black/40 shadow-[0_32px_64px_rgba(0,0,0,0.8)]">
         {/* Immersive Map Header */}
         <div className="absolute left-6 top-6 right-6 md:right-auto z-map-ui flex flex-col md:flex-row items-start md:items-center gap-4 pointer-events-none md:top-8 w-[calc(100%-48px)] md:w-auto">

@@ -2,7 +2,7 @@ import { Navbar } from "./Navbar";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
-export function Layout({ children }) {
+export function Layout({ children, compact }) {
   const location = useLocation();
   
   return (
@@ -20,7 +20,7 @@ export function Layout({ children }) {
           animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 1.01, y: -15, filter: "blur(10px)" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="pt-8 md:pt-32 min-h-screen relative z-10 pb-24 px-4 sm:px-6"
+          className={compact ? "pt-8 md:pt-32 min-h-screen relative z-10 pb-24 px-4 sm:px-6" : "pt-20 md:pt-32 min-h-screen relative z-10 pb-24 px-4 sm:px-6"}
         >
           <div className="mx-auto max-w-7xl">
             {children}
