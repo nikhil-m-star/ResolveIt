@@ -14,12 +14,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
+const STATUS_MARKER_STYLE = {
+  REPORTED: { core: "#06b6d4", glow: "rgba(6,182,212,0.75)", ring: "rgba(6,182,212,0.30)" },
+  IN_PROGRESS: { core: "#f59e0b", glow: "rgba(245,158,11,0.75)", ring: "rgba(245,158,11,0.30)" },
+  RESOLVED: { core: "#10b981", glow: "rgba(16,185,129,0.75)", ring: "rgba(16,185,129,0.30)" },
+  REJECTED: { core: "#ef4444", glow: "rgba(239,68,68,0.75)", ring: "rgba(239,68,68,0.30)" },
+};
+
 const createCustomMarker = (status) => {
+  const palette = STATUS_MARKER_STYLE[status] || STATUS_MARKER_STYLE.REPORTED;
   return L.divIcon({
     className: "custom-marker",
-    html: `<div class="relative flex items-center justify-center w-8 h-8">
-            <div class="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
-            <div class="relative w-3 h-3 bg-primary border-2 border-black rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+    html: `<div style="position:relative;display:flex;align-items:center;justify-content:center;width:32px;height:32px;">
+            <div style="position:absolute;inset:0;border-radius:9999px;background:${palette.ring};animation:ping 1.8s cubic-bezier(0,0,0.2,1) infinite;"></div>
+            <div style="position:relative;width:12px;height:12px;border-radius:9999px;background:${palette.core};border:2px solid #0b0b0b;box-shadow:0 0 12px ${palette.glow};"></div>
           </div>`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
@@ -133,4 +141,3 @@ export function IssueMap({ issues, userLocation }) {
     </div>
   );
 }
-
