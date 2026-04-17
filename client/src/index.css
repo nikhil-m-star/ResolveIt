@@ -908,3 +908,83 @@ table {
   .md\:flex-1 { flex: 1 1 0%; }
   .md\:col-span-6 { grid-column: span 6 / span 6; }
 }
+
+/* ─── Hex bracket background ─── */
+.bg-\[\#111\] { background-color: #111; }
+
+/* ─── Named Group Hover Variants ─── */
+/* Tailwind's group/{name} syntax: the element with class 'group/{name}' 
+   is the container. We approximate by treating it as a regular .group */
+
+/* group/stat hover */
+.group\/stat:hover .group-hover\/stat\:scale-110 { transform: scale(1.1); }
+
+/* group/btn hover */
+.group\/btn:hover .group-hover\/btn\:translate-x-1 { transform: translateX(0.25rem); }
+
+/* group/link hover */
+.group\/link:hover .group-hover\/link\:translate-x-1\.5 { transform: translateX(0.375rem); }
+
+/* group/step hover */
+.group\/step:hover .group-hover\/step\:border-primary { border-color: var(--primary); }
+.group\/step:hover .group-hover\/step\:text-primary { color: var(--primary); }
+
+/* group/votes hover */
+.group\/votes:hover .group-hover\/votes\:opacity-100 { opacity: 1; }
+
+/* group/ledger hover */
+.group\/ledger:hover .group-hover\/ledger\:opacity-100 { opacity: 1; }
+
+/* group/search focus-within */
+.group\/search:focus-within .group-focus-within\/search\:opacity-100 { opacity: 1; }
+.group\/search:focus-within .group-focus-within\/search\:text-primary { color: var(--primary); }
+
+/* group/input focus-within */
+.group\/input:focus-within .group-focus-within\/input\:text-primary { color: var(--primary); }
+
+/* group:hover scan-horizontal (for shine effects) */
+.group-hover\:animate-scan-horizontal { animation: none; }
+.group:hover .group-hover\:animate-scan-horizontal { animation: scan-horizontal 2.5s ease-in-out infinite; }
+
+/* ─── Misc missing utilities ─── */
+.space-y-1 > * + * { margin-top: 0.25rem; }
+.space-y-2 > * + * { margin-top: 0.5rem; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-5 > * + * { margin-top: 1.25rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+.space-y-8 > * + * { margin-top: 2rem; }
+.space-y-10 > * + * { margin-top: 2.5rem; }
+.space-y-12 > * + * { margin-top: 3rem; }
+.space-y-16 > * + * { margin-top: 4rem; }
+.space-x-3 > * + * { margin-left: 0.75rem; }
+
+/* ─── Ring utilities ─── */
+.ring-1 { box-shadow: 0 0 0 1px var(--ring-color, rgba(255,255,255,0.1)); }
+.ring-2 { box-shadow: 0 0 0 2px var(--ring-color, rgba(255,255,255,0.1)); }
+.ring-primary\/20 { --ring-color: rgba(var(--primary-rgb), 0.2); }
+
+/* ─── Cursor ─── */
+.cursor-grab { cursor: grab; }
+.active\:cursor-grabbing:active { cursor: grabbing; }
+
+/* ─── Fill current ─── */
+.fill-current { fill: currentColor; }
+
+/* ─── Hover state for group-hover scan ─── */
+.group:hover .group-hover\:opacity-\[0\.05\] { opacity: 0.05; }
+
+/* ─── Style for animation delay ─── */
+[style*="animationDelay"], [style*="animation-delay"] { animation-delay: inherit; }
+
+/* ─── Ensuring animations have proper duration ─── */
+.animate-in.fade-in { animation-duration: 0.5s; }
+.animate-in.fade-in.duration-300 { animation-duration: 300ms; }
+.animate-in.fade-in.duration-500 { animation-duration: 500ms; }
+.animate-in.fade-in.duration-700 { animation-duration: 700ms; }
+.animate-in.fade-in.duration-1000 { animation-duration: 1000ms; }
+.animate-in.slide-in-from-top-4 { animation-duration: 0.5s; }
+.animate-in.slide-in-from-top-6 { animation-duration: 0.5s; }
+.animate-in.slide-in-from-right-8 { animation-duration: 0.5s; }
+.animate-in.zoom-in { animation-duration: 0.3s; }
+.animate-in.zoom-in-75 { animation-duration: 0.3s; }
