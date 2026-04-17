@@ -69,7 +69,7 @@ export function OfficerKanban() {
       <Layout>
          <div className="max-w-4xl mx-auto px-4 py-32 text-center">
           <AlertCircle className="w-16 h-16 text-red-500/40 mx-auto mb-6" />
-          <h2 className="text-3xl font-heading font-black text-white mb-4 uppercase tracking-tighter italic">Board Error</h2>
+          <h2 className="text-3xl font-heading font-black text-white mb-4 uppercase tracking-tighter">Board Error</h2>
           <p className="text-slate-500 text-sm uppercase tracking-widest leading-loose">Unable to retrieve case data. Check connectivity.</p>
         </div>
       </Layout>
@@ -90,7 +90,7 @@ export function OfficerKanban() {
              >
                 <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#10b981] animate-pulse" /> Monitoring activity
              </motion.div>
-             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase italic">Board</h1>
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase">Board</h1>
           </div>
 
           <motion.div 

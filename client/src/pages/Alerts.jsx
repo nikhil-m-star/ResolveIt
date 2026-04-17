@@ -92,7 +92,7 @@ export function Alerts() {
                      <ShieldAlert className="w-7 h-7" />
                   </div>
                   <div className="text-center md:text-left space-y-1">
-                     <h2 className="text-2xl font-heading font-black text-red-500 uppercase tracking-tighter italic leading-none">Emergency Update</h2>
+                     <h2 className="text-2xl font-heading font-black text-red-500 uppercase tracking-tighter leading-none">Emergency Update</h2>
                      <p className="text-red-500/60 text-[10px] font-black uppercase tracking-[0.2em]">There are {urgentCount} urgent cases requiring immediate attention.</p>
                   </div>
                   <button 
@@ -116,7 +116,7 @@ export function Alerts() {
              >
                 <Activity className="h-3 w-3" /> Updates
              </motion.div>
-             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase italic">
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase">
                Alerts
              </h1>
           </div>
@@ -177,7 +177,7 @@ export function Alerts() {
                         <Bell className="w-10 h-10 text-slate-700 relative z-10" />
                      </div>
                      <div className="space-y-4">
-                        <h3 className="text-3xl font-heading font-black text-white uppercase tracking-tighter italic">All clear</h3>
+                        <h3 className="text-3xl font-heading font-black text-white uppercase tracking-tighter">All clear</h3>
                         <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] max-w-xs mx-auto leading-loose">The city is synchronized. No active updates available.</p>
                      </div>
                   </div>
@@ -231,7 +231,7 @@ export function Alerts() {
                                       <div className="h-px w-10 bg-white/10" />
                                    </div>
                                    <p className={cn(
-                                     "text-2xl font-heading font-black tracking-tight leading-none uppercase italic",
+                                     "text-2xl font-heading font-black tracking-tight leading-none uppercase",
                                      !notif.isRead ? "text-white" : "text-slate-400"
                                    )}>
                                      {notif.message}

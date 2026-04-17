@@ -150,7 +150,7 @@ export function IssueDetail() {
 
         {/* Diagnostic Header Block */}
         <div className="glass-card bg-black/40 border border-white/5 p-8 md:p-12 flex flex-col md:flex-row gap-12 items-start relative overflow-hidden group hover-glow transition-all duration-700">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity" />
           
           <div className="flex-1 space-y-8 w-full relative z-10">
             <div className="flex flex-wrap items-center gap-4">
@@ -205,7 +205,7 @@ export function IssueDetail() {
                   <span className="text-[9px] font-black uppercase tracking-widest">Description</span>
                   <div className="h-px flex-1 bg-white/10" />
                </div>
-               <p className="text-slate-400 leading-relaxed text-lg font-medium italic border-l-2 border-white/10 pl-6">
+               <p className="text-slate-400 leading-relaxed text-lg font-medium border-l-2 border-white/10 pl-6">
                  "{issue.description}"
                </p>
             </div>
@@ -323,7 +323,7 @@ export function IssueDetail() {
              <div className="space-y-10 relative">
                {/* Sequencing Track */}
                <div className="absolute left-[13px] top-2 bottom-2 w-px bg-white/5 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-b from-primary via-transparent to-transparent animate-scan" style={{ animationDuration: '4s' }} />
+                  <div className="w-full h-full bg-primary/10 animate-scan" style={{ animationDuration: '4s' }} />
                </div>
 
                {/* Origin Point */}
@@ -354,7 +354,7 @@ export function IssueDetail() {
                        </div>
                        <p className="text-[9px] font-bold text-slate-500 uppercase">By {history.user?.name} • {formatDistanceToNow(new Date(history.createdAt))} ago</p>
                        {history.note && (
-                         <div className="p-4 bg-white/5 border border-white/5 rounded-xl text-xs text-slate-400 italic font-medium leading-relaxed">
+                         <div className="p-4 bg-white/5 border border-white/5 rounded-xl text-xs text-slate-400 font-medium leading-relaxed">
                            "{history.note}"
                          </div>
                        )}

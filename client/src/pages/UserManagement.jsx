@@ -105,7 +105,7 @@ export function UserManagement() {
                        <ShieldCheck className="w-10 h-10 text-primary" />
                     </div>
                     <div className="space-y-2">
-                       <h2 className="text-3xl font-heading font-black text-white uppercase tracking-tighter italic">Set Area</h2>
+                       <h2 className="text-3xl font-heading font-black text-white uppercase tracking-tighter">Set Area</h2>
                        <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest leading-relaxed">Designate the operational scope for this officer.</p>
                     </div>
 
@@ -165,7 +165,7 @@ export function UserManagement() {
              >
                 <Users className="h-3 w-3" /> Access Management
              </motion.div>
-             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase italic">
+             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase">
                Database
              </h1>
           </div>
@@ -246,7 +246,7 @@ export function UserManagement() {
                       className="group transition-all hover:bg-primary/[0.02]"
                     >
                       <td className="px-10 py-8 relative">
-                        {u.role !== 'CITIZEN' && <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-gradient-to-b from-primary/60 to-primary/10 rounded-r-full" />}
+                        {u.role !== 'CITIZEN' && <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-primary/40 rounded-r-full" />}
                         <div className="flex items-center gap-5">
                           <div className={cn(
                             "w-14 h-14 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center font-black text-lg transition-all shadow-2xl group-hover:scale-105 group-hover:border-primary/40",
@@ -255,7 +255,7 @@ export function UserManagement() {
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex flex-col gap-1">
-                            <h3 className="font-heading font-black text-white text-lg tracking-tight leading-none group-hover:text-primary/90 transition-colors uppercase italic">{u.name}</h3>
+                            <h3 className="font-heading font-black text-white text-lg tracking-tight leading-none group-hover:text-primary/90 transition-colors uppercase">{u.name}</h3>
                             <div className="flex items-center gap-2 text-slate-500 font-black text-[9px] uppercase tracking-widest opacity-60">
                                <Mail className="w-2.5 h-2.5" /> {u.email}
                             </div>
@@ -307,7 +307,7 @@ export function UserManagement() {
                                   <ArrowDownCircle className="w-4 h-4 transition-transform group-hover:translate-y-0.5" /> Remove Officer
                                </button>
                             ) : (
-                               <div className="px-6 py-3 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-inner italic">
+                               <div className="px-6 py-3 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
                                   System Root
                                </div>
                             )}
@@ -340,7 +340,7 @@ export function UserManagement() {
                       {u.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex flex-col gap-1.5 overflow-hidden">
-                      <h3 className="font-heading font-black text-white text-xl tracking-tight leading-none uppercase italic truncate">{u.name}</h3>
+                      <h3 className="font-heading font-black text-white text-xl tracking-tight leading-none uppercase truncate">{u.name}</h3>
                       <div className={cn("w-fit items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[8px] font-black uppercase tracking-[0.15em]", 
                         u.role === 'PRESIDENT' ? "text-yellow-500 bg-yellow-500/10 border-yellow-500/20" :
                         u.role === 'OFFICER' ? "text-primary bg-primary/10 border-primary/20" :
@@ -380,7 +380,7 @@ export function UserManagement() {
                         <ArrowDownCircle className="w-5 h-5" /> Remove Officer
                       </button>
                     ) : (
-                      <div className="w-full py-4 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center italic">
+                      <div className="w-full py-4 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center">
                         System Root Restricted
                       </div>
                     )}

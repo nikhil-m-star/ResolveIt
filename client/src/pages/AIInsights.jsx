@@ -85,8 +85,8 @@ export function AIInsights() {
                >
                  <Sparkles className="h-3 w-3" /> System Diagnostics
                </motion.div>
-               <h1 className="text-hero-xl font-heading font-black text-white uppercase tracking-tighter italic">
-                 AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-200">Insights</span>
+               <h1 className="text-hero-xl font-heading font-black text-white uppercase tracking-tighter">
+                 AI <span className="text-primary">Insights</span>
                </h1>
             </div>
             
@@ -202,7 +202,7 @@ export function AIInsights() {
                                 strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-[11px] tracking-widest bg-white/10 px-2.5 py-1 rounded inline-flex items-center" {...props} />,
                                 a: ({node, ...props}) => <Link to={props.href} className="text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary/30 hover:border-primary transition-all pb-0.5" {...props} />,
                                 blockquote: ({node, ...props}) => (
-                                    <blockquote className="border-l-4 border-primary/40 bg-gradient-to-r from-primary/10 to-transparent p-10 rounded-tr-[32px] rounded-br-[32px] my-14 italic text-slate-200 text-lg md:text-xl font-medium" {...props} />
+                                    <blockquote className="border-l-4 border-primary/40 bg-primary/5 p-10 rounded-tr-[32px] rounded-br-[32px] my-14 text-slate-200 text-lg md:text-xl font-medium" {...props} />
                                 ),
                             }}
                         >

@@ -7,15 +7,10 @@ export function Layout({ children }) {
   
   return (
     <div className="relative min-h-screen bg-black text-white overflow-x-hidden selection:bg-primary/30">
-      {/* Dynamic Ambient Background */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/25 rounded-full blur-[140px] animate-pulse opacity-60" />
-         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/15 rounded-full blur-[140px] animate-pulse opacity-40" style={{ animationDelay: '3s' }} />
-         <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-500/5 rounded-full blur-[120px]" />
-      </div>
+      {/* Clean Background */}
+      <div className="fixed inset-0 z-0 bg-black pointer-events-none" />
 
-      {/* Noise Texture */}
-      <div className="bg-noise fixed inset-0 pointer-events-none z-0 opacity-[0.04]" />
+      {/* Noise Texture Removed */}
 
       <Navbar />
       <AnimatePresence mode="wait">

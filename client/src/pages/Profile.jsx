@@ -78,11 +78,11 @@ export function Profile() {
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
              <Fingerprint className="w-48 h-48 text-primary" />
           </div>
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-primary/30" />
           
           <div className="relative">
             <div className="w-40 h-40 rounded-3xl bg-black border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-2xl relative">
-               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-transparent h-1/2 w-full animate-scan" style={{ animationDuration: '4s' }} />
+               {/* Removed scan gradient */}
                {clerkUser?.imageUrl ? (
                  <img src={clerkUser.imageUrl} alt={profile.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                ) : (

@@ -72,7 +72,7 @@ export function Dashboard() {
             to="/report"
             className="group relative flex items-center justify-center gap-3 bg-primary text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105 active:scale-95 overflow-hidden shrink-0 w-full md:w-auto"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <PlusCircle className="h-4 w-4" />
             Report
           </Link>

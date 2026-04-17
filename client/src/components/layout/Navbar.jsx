@@ -81,7 +81,7 @@ export function Navbar() {
           <div className="flex items-center gap-6">
             <Link to="/" className="flex shrink-0 items-center gap-3 pl-4 pr-6 border-r border-white/10 hover:opacity-80 transition-opacity">
               <Shield className="h-6 w-6 text-primary shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-              <span className="text-white font-heading text-lg font-black tracking-tighter uppercase italic">ResolveIt</span>
+              <span className="text-white font-heading text-lg font-black tracking-tighter uppercase">ResolveIt</span>
             </Link>
 
             <div className="flex items-center gap-1.5 relative h-10 px-1">

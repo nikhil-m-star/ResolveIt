@@ -28,7 +28,7 @@ export function IssueCard({ issue }) {
       className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/5 bg-black/40 backdrop-blur-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-500 shadow-2xl max-w-md mx-auto w-full"
     >
       {/* Scanning Light Effect on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:animate-scan-horizontal pointer-events-none z-20" />
+
 
       {/* Hero Image Section - Top Stack */}
       <div className="relative aspect-video w-full overflow-hidden shrink-0">
@@ -51,7 +51,7 @@ export function IssueCard({ issue }) {
               {issue.status}
            </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <div className="p-6 flex flex-col gap-5 relative z-10">
