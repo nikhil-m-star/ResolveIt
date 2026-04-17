@@ -109,81 +109,110 @@ export function Alerts() {
               <span className="text-[10px] font-black text-primary uppercase tracking-widest">{unreadCount} Pending Clearance</span>
            </div>
 
-           <div className="flex-1 divide-y divide-white-5">
-              {isLoading ? (
-                <div className="p-24 flex flex-col items-center gap-6">
-                  <Loader2 className="w-12 h-12 text-primary animate-spin" />
-                  <span className="text-xs font-black text-slate-500 uppercase tracking-ultra-wide animate-pulse">Scanning Grid Segments...</span>
-                </div>
-              ) : filteredNotifications?.length === 0 ? (
-                 <div className="p-24 text-center space-y-6">
-                    <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-6xl flex items-center justify-center mx-auto shadow-2xl">
-                       <ShieldAlert className="w-8 h-8 text-slate-700" />
+            <div className="flex-1 divide-y divide-white/5 bg-black/20">
+               {isLoading ? (
+                 <div className="p-32 flex flex-col items-center gap-8 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent h-1/2 w-full animate-scan" style={{ animationDuration: '3s' }} />
+                    <div className="relative">
+                       <div className="w-16 h-16 border-4 border-primary/20 rounded-full animate-ping absolute inset-0" />
+                       <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin relative z-10" />
                     </div>
-                    <div>
-                       <h3 className="text-xl font-black text-white uppercase tracking-tight">Grid Secured</h3>
-                       <p className="text-sm text-slate-500 font-medium max-w-xs mx-auto mt-2">No situational alerts detected in selected priority channel.</p>
+                    <div className="flex flex-col items-center gap-2">
+                       <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] animate-pulse">Syncing Intelligence Grid</span>
+                       <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">Accessing Secure Telemetry Node...</span>
                     </div>
                  </div>
-              ) : (
-                <div className="flex flex-col h-full">
-                  <AnimatePresence mode="popLayout">
-                    {filteredNotifications?.map((notif, index) => (
-                      <motion.div 
-                        key={notif.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.4, delay: index * 0.03 }}
-                        className={cn(
-                          "p-8 transition-all relative group",
-                          !notif.isRead ? "bg-primary/5" : "opacity-50"
-                        )}
-                      >
-                        {!notif.isRead && (
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-lg" />
-                        )}
-                        
-                        <div className="flex gap-8">
-                          <div className={cn(
-                            "shrink-0 w-14 h-14 rounded-3xl border flex items-center justify-center transition-all shadow-2xl",
-                            !notif.isRead ? "bg-black border-primary/40 text-primary scale-105" : "bg-white/5 border-white/10 text-slate-600"
-                          )}>
-                            {getIcon(notif.type)}
-                          </div>
-                          
-                          <div className="flex-1 space-y-3">
-                            <div className="flex items-start justify-between gap-4">
-                               <p className={cn(
-                                 "text-lg leading-relaxed",
-                                 !notif.isRead ? "text-white font-bold" : "text-slate-400 font-medium"
-                               )}>
-                                 {notif.message}
-                               </p>
-                               {!notif.isRead && (
-                                 <span className="px-3 py-1 bg-primary/20 text-primary text-[9px] font-black uppercase tracking-widest rounded-lg border border-primary/30">New Intel</span>
+               ) : filteredNotifications?.length === 0 ? (
+                  <div className="p-32 text-center space-y-8">
+                     <div className="w-24 h-24 bg-white/5 border border-white/10 rounded-[3rem] flex items-center justify-center mx-auto shadow-2xl relative group">
+                        <div className="absolute inset-0 bg-primary/20 rounded-[3rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ShieldAlert className="w-10 h-10 text-slate-700 relative z-10" />
+                     </div>
+                     <div className="space-y-3">
+                        <h3 className="text-2xl font-black text-white uppercase tracking-tight">Sector Nominal</h3>
+                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest max-w-xs mx-auto">No prioritized alerts detected in current telemetry window.</p>
+                     </div>
+                  </div>
+               ) : (
+                 <div className="flex flex-col h-full">
+                   <AnimatePresence mode="popLayout">
+                     {filteredNotifications?.map((notif, index) => (
+                       <motion.div 
+                         key={notif.id}
+                         initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                         animate={{ opacity: 1, scale: 1, y: 0 }}
+                         exit={{ opacity: 0, scale: 0.95, x: 20 }}
+                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
+                         className={cn(
+                           "p-10 transition-all relative group border-b border-white/5",
+                           !notif.isRead ? "bg-primary/[0.02] hover:bg-primary/[0.04]" : "opacity-40 hover:opacity-70"
+                         )}
+                       >
+                         {!notif.isRead && (
+                           <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
+                         )}
+                         
+                         <div className="flex flex-col md:flex-row gap-10">
+                           <div className={cn(
+                             "shrink-0 w-16 h-16 rounded-2xl border-2 flex items-center justify-center transition-all shadow-2xl relative overflow-hidden",
+                             !notif.isRead ? "bg-black border-primary/40 text-primary" : "bg-white/5 border-white/10 text-slate-600"
+                           )}>
+                             {!notif.isRead && <div className="absolute inset-0 bg-primary/5 animate-pulse" />}
+                             <div className="relative z-10">{getIcon(notif.type)}</div>
+                           </div>
+                           
+                           <div className="flex-1 space-y-4">
+                             <div className="flex items-start justify-between gap-6">
+                                <div className="space-y-1">
+                                   <div className="flex items-center gap-3">
+                                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Event_Type: {notif.type}</span>
+                                      <div className="h-px w-8 bg-white/10" />
+                                   </div>
+                                   <p className={cn(
+                                     "text-xl leading-snug tracking-tight",
+                                     !notif.isRead ? "text-white font-black uppercase" : "text-slate-400 font-bold uppercase"
+                                   )}>
+                                     {notif.message}
+                                   </p>
+                                </div>
+                                {!notif.isRead && (
+                                  <div className="flex items-center gap-1.5 px-3 py-1 bg-primary text-black text-[9px] font-black uppercase tracking-widest rounded shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                                     <Activity className="w-3 h-3" /> Priority
+                                  </div>
+                                )}
+                             </div>
+                             
+                             <div className="flex flex-wrap items-center gap-8 pt-2">
+                               <div className="flex items-center gap-2">
+                                  <Clock className="w-3.5 h-3.5 text-slate-600" />
+                                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                                    {formatDistanceToNow(new Date(notif.createdAt))} AG0
+                                  </span>
+                               </div>
+
+                               {notif.issueId && (
+                                 <Link 
+                                   to={`/issues/${notif.issueId}`}
+                                   className="text-[10px] font-black text-primary hover:text-emerald-400 uppercase tracking-widest transition-all flex items-center gap-2 group/link border-b border-primary/0 hover:border-primary/40 pb-0.5"
+                                 >
+                                    Initialize Detail_Protocol <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                                 </Link>
                                )}
-                            </div>
-                            
-                            <div className="flex items-center gap-6 pt-2">
-                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                                <div className={cn("w-1.5 h-1.5 rounded-full", !notif.isRead ? "bg-primary animate-pulse" : "bg-slate-700")} />
-                                {formatDistanceToNow(new Date(notif.createdAt))} ago
-                              </span>
-                              {notif.issueId && (
-                                <button className="text-[10px] font-black text-primary hover:text-emerald-400 uppercase tracking-widest transition-colors flex items-center gap-1.5">
-                                   View Source Incident <ArrowRight className="w-3 h-3" />
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-           </div>
+
+                               {!notif.isRead && (
+                                 <div className="ml-auto hidden md:flex items-center gap-2 px-3 py-1 bg-white/5 rounded border border-white/10 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                                    Status: UNVERIFIED
+                                 </div>
+                               )}
+                             </div>
+                           </div>
+                         </div>
+                       </motion.div>
+                     ))}
+                   </AnimatePresence>
+                 </div>
+               )}
+            </div>
 
            <div className="p-6 bg-white/5 border-t border-white/5 flex items-center justify-between">
               <span className="text-[10px] font-black text-slate-600 uppercase tracking-mega-wide">ResolveIt Unified Intelligence Node</span>

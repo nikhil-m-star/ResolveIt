@@ -65,22 +65,25 @@ export function IssueMap({ issues, userLocation }) {
         />
         {issuesWithCoords.map((issue) => (
           <Marker key={issue.id} position={[issue.latitude, issue.longitude]}>
-            <Popup className="glass-popup bg-black border border-white/10 text-white rounded-xl shadow-2xl p-0 overflow-hidden">
-              <div className="p-3 bg-black shadow-xl border border-white/5 rounded-xl min-w-200">
-                  <h4 className="font-heading font-bold text-base mb-1 truncate text-white">
+            <Popup className="glass-popup custom-leaflet-popup">
+              <div className="p-4 bg-black/95 backdrop-blur-xl border-2 border-white/10 rounded-2xl min-w-240 shadow-[0_0_30px_rgba(0,0,0,0.5)] transform -translate-y-2">
+                  <div className="flex items-center gap-2 mb-3">
+                     <div className={cn("w-2 h-2 rounded-full animate-pulse", getStatusColor(issue.status).replace('text-', 'bg-').replace('border-', 'bg-'))} />
+                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Signal Detected</span>
+                  </div>
+                  <h4 className="font-heading font-black text-lg mb-2 text-white uppercase tracking-tight leading-tight">
                       {issue.title}
                   </h4>
-                  <div className="flex items-center gap-2 text-xs mb-2">
-                      <span className="px-2 py-0.5 bg-primary/20 text-primary rounded-md font-medium border border-primary/30 uppercase">
-                          {issue.category.replace(/_/g, " ")}
+                  <div className="flex items-center gap-2 mb-4">
+                      <span className={cn("px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest border", getCategoryColor(issue.category))}>
+                          {issue.category.substring(0, 12)}
                       </span>
-                      <span className="text-slate-400 capitalize">{issue.status.replace(/_/g, " ").toLowerCase()}</span>
                   </div>
                   <Link 
                      to={`/issues/${issue.id}`}
-                     className="block w-full py-1.5 text-center bg-white/10 hover:bg-white/20 text-sm font-medium rounded-md transition-colors mt-2 text-white border border-white/10"
+                     className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95"
                   >
-                      View Details
+                      Open Case <ChevronRight className="w-3 h-3" />
                   </Link>
               </div>
             </Popup>
