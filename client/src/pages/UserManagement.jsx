@@ -80,7 +80,7 @@ export function UserManagement() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto px-6 py-16 space-y-12 animate-in fade-in duration-1000">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 space-y-8 sm:space-y-10 md:space-y-12 animate-in fade-in duration-1000">
         
         {/* Promotion Modal - High Intensity Glass */}
         <AnimatePresence>
@@ -97,7 +97,7 @@ export function UserManagement() {
                  animate={{ scale: 1, opacity: 1, y: 0 }}
                  exit={{ scale: 0.9, opacity: 0, y: 20 }}
                  onClick={(e) => e.stopPropagation()}
-                 className="w-full max-w-md glass-card rounded-[48px] p-10 border border-primary/20 shadow-[0_40px_100px_rgba(16,185,129,0.15)] bg-black/60 relative overflow-hidden"
+                 className="w-full max-w-md glass-card rounded-[32px] sm:rounded-[40px] md:rounded-[48px] p-6 sm:p-8 md:p-10 border border-primary/20 shadow-[0_40px_100px_rgba(16,185,129,0.15)] bg-black/60 relative overflow-hidden"
               >
                   <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
                   
@@ -146,7 +146,7 @@ export function UserManagement() {
         </AnimatePresence>
 
         {/* Header HUD */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8 md:gap-10">
           <div className="space-y-3">
              <motion.div 
                initial={{ opacity: 0, x: -20 }}
@@ -155,18 +155,18 @@ export function UserManagement() {
              >
                 <Users className="h-3 w-3" /> Access Management
              </motion.div>
-             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase">
+             <h1 className="text-4xl sm:text-6xl md:text-hero-xl font-heading font-black text-white tracking-tighter uppercase">
                Database
              </h1>
           </div>
 
-          <div className="flex items-center gap-6">
-             <div className="bg-black/40 border border-white/10 rounded-[32px] px-8 py-5 backdrop-blur-3xl shadow-2xl relative group overflow-hidden">
+          <div className="flex items-center gap-3 sm:gap-5 md:gap-6">
+             <div className="bg-black/40 border border-white/10 rounded-[24px] sm:rounded-[32px] px-5 sm:px-6 md:px-8 py-4 sm:py-5 backdrop-blur-3xl shadow-2xl relative group overflow-hidden">
                 <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Users</span>
                 <span className="block text-3xl font-heading font-black text-white tracking-tighter leading-none">{users?.length || 0}</span>
              </div>
-             <div className="hidden sm:block bg-black/40 border border-primary/20 rounded-[32px] px-8 py-5 backdrop-blur-3xl shadow-2xl relative group overflow-hidden">
+             <div className="hidden sm:block bg-black/40 border border-primary/20 rounded-[24px] md:rounded-[32px] px-6 md:px-8 py-4 md:py-5 backdrop-blur-3xl shadow-2xl relative group overflow-hidden">
                 <div className="absolute inset-0 bg-primary/5 opacity-100 transition-opacity" />
                 <span className="block text-[10px] font-black text-primary uppercase tracking-widest mb-1">Officers</span>
                 <span className="block text-3xl font-heading font-black text-primary tracking-tighter leading-none">{users?.filter(u => u.role !== 'CITIZEN').length || 0}</span>
@@ -175,15 +175,15 @@ export function UserManagement() {
         </div>
 
         {/* Control Bar */}
-        <div className="flex flex-col md:flex-row gap-6 p-2 rounded-[32px] bg-black/20 border border-white/5 backdrop-blur-3xl shadow-2xl">
+        <div className="flex flex-col md:flex-row gap-4 sm:gap-6 p-1.5 sm:p-2 rounded-[24px] sm:rounded-[32px] bg-black/20 border border-white/5 backdrop-blur-3xl shadow-2xl overflow-hidden">
           <div className="relative flex-1 group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-60 group-focus-within:opacity-100 transition-opacity" />
+            <Search className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-60 group-focus-within:opacity-100 transition-opacity" />
             <input 
               type="text"
               placeholder="Filter by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-none rounded-2xl pl-14 pr-6 py-4.5 text-xs text-white placeholder:text-slate-600 focus:outline-none transition-all"
+              className="w-full bg-transparent border-none rounded-2xl pl-11 sm:pl-14 pr-4 sm:pr-6 py-3.5 sm:py-4.5 text-xs text-white placeholder:text-slate-600 focus:outline-none transition-all"
             />
           </div>
           <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-[24px] overflow-x-auto scrollbar-hide">
@@ -194,7 +194,7 @@ export function UserManagement() {
                   key={label}
                   onClick={() => setRoleFilter(role)}
                   className={cn(
-                    "px-6 py-3 rounded-[18px] text-[10px] font-black uppercase tracking-widest transition-all relative overflow-hidden whitespace-nowrap",
+                    "px-4 sm:px-6 py-2.5 sm:py-3 rounded-[18px] text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all relative overflow-hidden whitespace-nowrap",
                     roleFilter === role ? "text-black" : "text-slate-500 hover:text-white"
                   )}
                 >
@@ -212,7 +212,7 @@ export function UserManagement() {
         </div>
 
         {/* Physical Database Database Table / Mobile Grid */}
-        <div className="glass-card bg-black/40 border border-white/10 rounded-[48px] shadow-[0_40px_100px_rgba(0,0,0,0.6)] backdrop-blur-3xl overflow-hidden">
+        <div className="glass-card bg-black/40 border border-white/10 rounded-[28px] sm:rounded-[40px] md:rounded-[48px] shadow-[0_40px_100px_rgba(0,0,0,0.6)] backdrop-blur-3xl overflow-hidden">
           {/* Desktop Table */}
           <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -311,7 +311,7 @@ export function UserManagement() {
           </div>
 
           {/* Mobile Grid View */}
-          <div className="lg:hidden p-8 space-y-6">
+          <div className="lg:hidden p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
             <AnimatePresence mode="popLayout">
               {filteredUsers?.map((u) => (
                 <motion.div
@@ -320,7 +320,7 @@ export function UserManagement() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   key={u.id}
-                  className="p-8 bg-white/5 border border-white/10 rounded-[32px] space-y-8"
+                  className="p-4 sm:p-6 bg-white/5 border border-white/10 rounded-[24px] sm:rounded-[32px] space-y-5 sm:space-y-7"
                 >
                   <div className="flex items-start gap-4">
                     <div className={cn(
@@ -329,9 +329,9 @@ export function UserManagement() {
                     )}>
                       {u.name.charAt(0).toUpperCase()}
                     </div>
-                    <div className="flex flex-col gap-2 flex-1" style={{ minWidth: 0 }}>
+                    <div className="flex flex-col gap-2 flex-1 min-w-0">
                       <h3
-                        className="font-heading font-black text-white text-lg tracking-tight leading-tight uppercase line-clamp-2"
+                        className="font-heading font-black text-white text-base sm:text-lg tracking-tight leading-tight uppercase line-clamp-2"
                         style={{ overflowWrap: "anywhere" }}
                         title={u.name}
                       >
@@ -347,12 +347,12 @@ export function UserManagement() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex flex-col items-center gap-1">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                     <div className="p-3 sm:p-4 bg-black/40 border border-white/5 rounded-2xl flex flex-col items-center gap-1">
                         <span className="text-white font-black text-xl tracking-tighter">{u._count?.issues || 0}</span>
                         <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Reports</span>
                      </div>
-                     <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex flex-col items-center gap-1">
+                     <div className="p-3 sm:p-4 bg-black/40 border border-white/5 rounded-2xl flex flex-col items-center gap-1">
                         <span className="text-emerald-400 font-black text-xl tracking-tighter">{u.resolvedCount || 0}</span>
                         <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Clearance</span>
                      </div>
@@ -363,7 +363,7 @@ export function UserManagement() {
                       <button 
                         onClick={() => setPromotingUserId(u.id)}
                         disabled={roleMutation.isPending}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary text-black rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
+                        className="w-full flex items-center justify-center gap-3 px-5 sm:px-6 py-3.5 sm:py-4 bg-primary text-black rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
                       >
                         <ArrowUpCircle className="w-5 h-5" /> Make Officer
                       </button>
@@ -371,12 +371,12 @@ export function UserManagement() {
                       <button 
                         onClick={() => roleMutation.mutate({ userId: u.id, role: 'CITIZEN' })}
                         disabled={roleMutation.isPending}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white/5 text-slate-400 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
+                        className="w-full flex items-center justify-center gap-3 px-5 sm:px-6 py-3.5 sm:py-4 bg-white/5 text-slate-400 border border-white/10 rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
                       >
                         <ArrowDownCircle className="w-5 h-5" /> Remove Officer
                       </button>
                     ) : (
-                      <div className="w-full py-4 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center">
+                      <div className="w-full py-3.5 sm:py-4 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-center">
                         System Root Restricted
                       </div>
                     )}
