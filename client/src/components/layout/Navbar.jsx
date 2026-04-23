@@ -97,8 +97,7 @@ export function Navbar() {
         <nav className="glass-pill glass-nav rounded-full px-4 py-2.5 transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
           <div className="relative z-10 flex items-center gap-6">
             <Link to="/" className="flex shrink-0 items-center gap-3 pl-4 pr-6 border-r border-white/10 hover:opacity-80 transition-opacity">
-              <Shield className="h-6 w-6 text-primary shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-              <span className="text-white font-heading text-lg font-black tracking-tighter uppercase">ResolveIt</span>
+              <img src="/favicon.svg" alt="ResolveIt Logo" className="h-8 w-8 object-contain" />
             </Link>
 
             <div className="flex items-center gap-1.5 relative h-10 px-1">
