@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat";
 
-const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const isNative = typeof window !== 'undefined' && !!window.Capacitor?.isNative;
+const isLocalHost = !isNative && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 const DEFAULT_API_URL = isLocalHost
   ? "http://localhost:5000/api"
   : "https://resolveit-cyhu.onrender.com/api";
