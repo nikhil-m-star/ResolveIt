@@ -421,9 +421,10 @@ export function ReportIssue() {
                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Area / Neighborhood</label>
                     <AreaSelector 
                       value={formData.area} 
+                      onChange={(val) => updateForm("area", val)}
                       onSelect={(area) => {
                         updateForm("area", area.name);
-                        updateForm("city", "Bengaluru");
+                        updateForm("city", area.city || "Bengaluru");
                         updateForm("latitude", area.lat);
                         updateForm("longitude", area.lng);
                       }}

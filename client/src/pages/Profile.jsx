@@ -163,10 +163,11 @@ export function Profile() {
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Area / District</label>
                 <AreaSelector 
                   value={formData.area}
+                  onChange={(val) => setFormData((prev) => ({ ...prev, area: val }))}
                   onSelect={(selection) => setFormData((prev) => ({
                     ...prev,
                     area: selection.name,
-                    city: "Bengaluru",
+                    city: selection.city || prev.city || "Bengaluru",
                   }))}
                   placeholder="Select area..."
                 />

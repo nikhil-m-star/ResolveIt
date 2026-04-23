@@ -62,13 +62,11 @@ export function MapExplorer() {
           >
             <AreaSelector 
               value={filters.area}
+              onChange={(val) => setFilters((prev) => ({ ...prev, area: val }))}
               onSelect={(area) => {
                 setFocusLocation([area.lat, area.lng]);
-                setFilters((prev) => ({
-                  ...prev,
-                  area: area.name,
-                  city: "Bengaluru",
-                }));
+                // Keep map reports visible while still allowing area lookup + recenter.
+                setFilters((prev) => ({ ...prev, area: "", city: "", search: "" }));
               }}
               placeholder="Select Sector..."
             />
