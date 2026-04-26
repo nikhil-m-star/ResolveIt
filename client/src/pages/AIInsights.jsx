@@ -3,6 +3,7 @@ import { Layout } from "../components/layout/Layout";
 import { api } from "../lib/auth";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Bot, Loader2, Sparkles, Download, RefreshCcw, ShieldAlert, FileText, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -178,6 +179,7 @@ export function AIInsights() {
                         </div>
                         
                         <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]}
                             components={{
                                 h1: ({node, ...props}) => <h1 className="text-4xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300 mt-20 mb-10 uppercase tracking-tighter" {...props} />,
                                 h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-heading font-black text-white mt-16 mb-8 flex items-center gap-4 uppercase tracking-tight pb-4 border-b border-white/5" {...props} >
@@ -185,18 +187,27 @@ export function AIInsights() {
                                 </h2>,
                                 h3: ({node, ...props}) => <h3 className="text-[13px] font-black text-black mt-12 mb-6 uppercase tracking-[0.3em] bg-primary w-fit px-5 py-2 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.3)]" {...props} />,
                                 p: ({node, ...props}) => <p className="text-slate-300 leading-loose mb-8 font-medium text-[15px] md:text-[17px]" {...props} />,
-                                ul: ({node, ...props}) => <ul className="space-y-6 mb-12 text-slate-300" {...props} />,
+                                ul: ({node, ...props}) => <ul className="space-y-4 mb-12 text-slate-300" {...props} />,
                                 li: ({node, ...props}) => (
                                     <li className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/30 transition-colors group shadow-lg backdrop-blur-sm">
                                       <div className="mt-1.5 w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#10b981] shrink-0 group-hover:scale-150 transition-transform" />
                                       <span className="font-medium text-[15px] leading-relaxed">{props.children}</span>
                                     </li>
                                 ),
-                                strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-[12px] tracking-widest bg-primary/10 border border-primary/20 text-primary px-3 py-1 rounded-lg inline-flex items-center mx-1 shadow-[0_0_10px_rgba(16,185,129,0.1)]" {...props} />,
-                                a: ({node, ...props}) => <Link to={props.href} className="text-black bg-primary hover:bg-emerald-400 px-4 py-1.5 rounded-lg font-black uppercase tracking-widest text-[11px] transition-all inline-flex items-center gap-2 shadow-[0_5px_15px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.5)] mx-1" {...props} />,
+                                strong: ({node, ...props}) => <strong className="text-white font-black uppercase text-[12px] tracking-widest bg-primary/20 text-primary px-2 py-0.5 rounded shadow-[0_0_10px_rgba(16,185,129,0.1)] mx-0.5" {...props} />,
+                                a: ({node, ...props}) => <Link to={props.href} className="text-primary hover:text-emerald-300 font-black uppercase tracking-widest text-[12px] border-b border-primary hover:border-emerald-300 transition-colors mx-0.5" {...props} />,
                                 blockquote: ({node, ...props}) => (
                                     <blockquote className="relative border-l-4 border-primary bg-gradient-to-r from-primary/10 to-transparent p-10 rounded-r-3xl my-16 text-white text-lg md:text-xl font-medium italic shadow-2xl" {...props} />
                                 ),
+                                table: ({node, ...props}) => (
+                                  <div className="w-full overflow-x-auto mb-16 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm shadow-2xl">
+                                    <table className="w-full text-left border-collapse min-w-[600px]" {...props} />
+                                  </div>
+                                ),
+                                thead: ({node, ...props}) => <thead className="bg-primary/10 border-b border-primary/20 text-primary font-black uppercase tracking-widest text-[11px]" {...props} />,
+                                th: ({node, ...props}) => <th className="p-4" {...props} />,
+                                td: ({node, ...props}) => <td className="p-4 border-b border-white/5 text-slate-300 font-medium text-[14px]" {...props} />,
+                                tr: ({node, ...props}) => <tr className="hover:bg-white/5 transition-colors" {...props} />,
                             }}
                         >
                            {report}

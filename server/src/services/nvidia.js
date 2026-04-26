@@ -18,7 +18,7 @@ async function nvidiaChatRaw(systemPrompt, userPrompt) {
         { role: "user", content: userPrompt },
       ],
       temperature: 0.2,       // Low temp = consistent structured output
-      max_tokens: 512,
+      max_tokens: 2048,
     }),
   });
 
@@ -85,11 +85,12 @@ export async function generateCityReport(city, issues, area = null) {
   const result = await nvidiaChatRaw(
     "You are a strategic civic data analyst. Generate a comprehensive and beautifully structured markdown report analyzing the provided civic issues.\n" +
     "CRITICAL RULES:\n" +
-    "1. Provide a well-thought-out Executive Summary paragraph at the start.\n" +
+    "1. Provide a well-thought-out Executive Summary.\n" +
     "2. When referencing specific issues, YOU MUST use markdown deep-links in this exact format: [Issue Title](/issues/id). This is mandatory.\n" +
-    "3. Use expressive emojis, clear H2 (##) and H3 (###) headers, bold text, and bullet points to make the report visually engaging and premium.\n" +
-    "4. Include insights, trends, and actionable recommendations for the municipal administration.\n" +
-    "5. Avoid extreme brevity; make the report detailed enough to be highly useful, but keep it well-formatted.",
+    "3. Use expressive emojis, clear H2 (##) and H3 (###) headers, bold text, and bullet points to make the report visually engaging.\n" +
+    "4. You MUST include at least one Markdown Table summarizing key metrics, categories, or trends.\n" +
+    "5. Include actionable recommendations for the municipal administration.\n" +
+    "6. Do not artificially truncate the report. Provide deep, detailed analysis.",
     `${scopeString}. Recent issues: ${JSON.stringify(issues)}.`
   );
   return result;
