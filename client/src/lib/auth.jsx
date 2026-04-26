@@ -17,7 +17,7 @@ const finalBaseURL = isNative ? PROD_API_URL : (isLocalHost ? LOCAL_API_URL : PR
 
 export const api = axios.create({
   baseURL: finalBaseURL,
-  withCredentials: true,
+  withCredentials: !isNative, // Native uses Bearer tokens, not cookies
   headers: { "Content-Type": "application/json" },
 });
 
