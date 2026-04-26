@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat";
 
@@ -51,6 +51,14 @@ const AuthSync = ({ children }) => {
   const { getToken, isSignedIn, isLoaded } = useAuthCompat();
   const { user, isLoaded: isUserLoaded } = useUserCompat();
   const queryClient = useQueryClient();
+  const [authBridgeTick, setAuthBridgeTick] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const onNativeAuthRedirect = () => setAuthBridgeTick((count) => count + 1);
+    window.addEventListener("resolveit:auth-redirected", onNativeAuthRedirect);
+    return () => window.removeEventListener("resolveit:auth-redirected", onNativeAuthRedirect);
+  }, []);
 
   useEffect(() => {
     let interceptor;
@@ -116,7 +124,7 @@ const AuthSync = ({ children }) => {
     return () => {
       if (interceptor) api.interceptors.request.eject(interceptor);
     };
-  }, [isSignedIn, isLoaded, isUserLoaded, getToken, user, queryClient]);
+  }, [isSignedIn, isLoaded, isUserLoaded, getToken, user, queryClient, authBridgeTick]);
 
   return children;
 };

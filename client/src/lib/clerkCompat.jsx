@@ -11,6 +11,7 @@ import { dark } from "@clerk/themes";
 
 const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 export const isClerkConfigured = Boolean(CLERK_KEY);
+const isNative = typeof window !== "undefined" && !!window.Capacitor?.isNative;
 
 const MissingAuthNotice = ({ title }) => (
   <div className="w-full max-w-md rounded-2xl border border-red-400/30 bg-red-500/10 p-6 text-center text-red-100">
@@ -51,6 +52,15 @@ export function ClerkProviderCompat({ children }) {
   return (
     <ClerkProvider 
       publishableKey={CLERK_KEY}
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+      signInForceRedirectUrl="/dashboard"
+      signUpForceRedirectUrl="/dashboard"
+      allowedRedirectOrigins={
+        isNative
+          ? ["https://resolve--it.vercel.app"]
+          : [typeof window !== "undefined" ? window.location.origin : "https://resolve--it.vercel.app"]
+      }
       appearance={{
         baseTheme: dark,
         variables: {
