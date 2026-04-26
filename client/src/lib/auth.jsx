@@ -6,12 +6,14 @@ import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat
 
 const isNative = typeof window !== 'undefined' && !!window.Capacitor?.isNative;
 const isLocalHost = !isNative && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
-const DEFAULT_API_URL = isLocalHost
-  ? "http://localhost:5000/api"
-  : "https://resolveit-cyhu.onrender.com/api";
 
-// Force local API during development to avoid "Ghost Backend" issues
-const finalBaseURL = isLocalHost ? DEFAULT_API_URL : (import.meta.env.VITE_API_URL || DEFAULT_API_URL);
+const PROD_API_URL = import.meta.env.VITE_API_URL || "https://resolveit-3xtz.onrender.com/api";
+const LOCAL_API_URL = "http://localhost:5000/api";
+
+// Native apps always use the production backend
+// Localhost dev uses local backend
+// Deployed web uses the env variable or production backend
+const finalBaseURL = isNative ? PROD_API_URL : (isLocalHost ? LOCAL_API_URL : PROD_API_URL);
 
 export const api = axios.create({
   baseURL: finalBaseURL,

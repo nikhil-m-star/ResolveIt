@@ -1,5 +1,13 @@
 {
   "appId": "com.resolveit.app",
   "appName": "ResolveIt",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "resolveit-3xtz.onrender.com",
+      "*.clerk.accounts.dev",
+      "accounts.clerk.dev"
+    ]
+  }
 }
