@@ -3,9 +3,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat";
+import { isNativeApp } from "./platform";
 
-const isNative = typeof window !== 'undefined' && !!window.Capacitor?.isNative;
-const isLocalHost = !isNative && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+const isNative = isNativeApp();
+const isLocalHost = !isNative && typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
 const PROD_API_URL = import.meta.env.VITE_API_URL || "https://resolveit-3xtz.onrender.com/api";
 const LOCAL_API_URL = "http://localhost:5000/api";
@@ -84,6 +85,8 @@ const AuthSync = ({ children }) => {
         try {
           // Exchange clerk token for an internal JWT session token
           const clerkToken = await getToken();
+          if (!clerkToken) return;
+
           const { data } = await api.post("/auth/session", {
               email: user.primaryEmailAddress?.emailAddress,
               name: user.fullName || user.firstName,

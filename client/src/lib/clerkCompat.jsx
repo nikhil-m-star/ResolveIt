@@ -8,10 +8,11 @@ import {
   useUser as useClerkUser,
 } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
+import { isNativeApp } from "./platform";
 
 const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 export const isClerkConfigured = Boolean(CLERK_KEY);
-const isNative = typeof window !== "undefined" && !!window.Capacitor?.isNative;
+const isNative = isNativeApp();
 
 const MissingAuthNotice = ({ title }) => (
   <div className="w-full max-w-md rounded-2xl border border-red-400/30 bg-red-500/10 p-6 text-center text-red-100">
