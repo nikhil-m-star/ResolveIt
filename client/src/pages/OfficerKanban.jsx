@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import {
+  PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip,
+  BarChart, Bar, XAxis, YAxis
+} from "recharts";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/auth";
 import { Layout } from "../components/layout/Layout";
@@ -123,6 +127,26 @@ export function OfficerKanban() {
     }, {})
   ).sort((a, b) => b[1] - a[1])[0]?.[0] || "City Wide";
 
+  const categoryData = useMemo(() => {
+    if (!issues) return [];
+    const counts = {};
+    issues.forEach(i => counts[i.category] = (counts[i.category] || 0) + 1);
+    return Object.entries(counts).map(([name, value]) => ({ name, value }));
+  }, [issues]);
+
+  const statusData = useMemo(() => {
+    if (!issues) return [];
+    const counts = { REPORTED: 0, IN_PROGRESS: 0, RESOLVED: 0, REJECTED: 0 };
+    issues.forEach(i => counts[i.status] = (counts[i.status] || 0) + 1);
+    return [
+      { name: "Reported", value: counts.REPORTED },
+      { name: "In Progress", value: counts.IN_PROGRESS },
+      { name: "Resolved", value: counts.RESOLVED }
+    ];
+  }, [issues]);
+
+  const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-16 min-h-screen flex flex-col space-y-8 animate-in fade-in duration-1000">
@@ -185,43 +209,41 @@ export function OfficerKanban() {
         </div>
 
         {!isOfficer && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <Users className="w-3.5 h-3.5 text-cyan-300" /> Total Cases
-              </div>
-              <div className="mt-2 text-2xl font-black tracking-tighter text-white">{issues?.length || 0}</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="glass-card p-6 rounded-[32px] h-80 border border-white/5 flex flex-col relative overflow-hidden shadow-2xl bg-black/40">
+              <h3 className="text-white font-black text-[10px] uppercase tracking-[0.2em] mb-2 opacity-50 z-10 flex items-center gap-2">
+                 <Target className="w-3.5 h-3.5"/> Sector Incident Breakdown
+              </h3>
+              <ResponsiveContainer width="100%" height="100%" className="z-10">
+                <PieChart>
+                  <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value" stroke="none">
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', color: '#fff', fontSize: '10px', textTransform: 'uppercase', fontWeight: 900 }} itemStyle={{ color: '#fff' }} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent z-0 pointer-events-none"></div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <Clock3 className="w-3.5 h-3.5 text-amber-400" /> Open Cases
-              </div>
-              <div className="mt-2 text-2xl font-black tracking-tighter text-white">{unresolvedCount}</div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Resolved
-              </div>
-              <div className="mt-2 text-2xl font-black tracking-tighter text-primary">{resolvedCount}</div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <Activity className="w-3.5 h-3.5 text-primary" /> Resolution Rate
-              </div>
-              <div className="mt-2 text-2xl font-black tracking-tighter text-white">{resolutionRate}%</div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <Flame className="w-3.5 h-3.5 text-red-400" /> SLA Breaches
-              </div>
-              <div className="mt-2 text-2xl font-black tracking-tighter text-red-400">{slaBreachedCount}</div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <MapPin className="w-3.5 h-3.5 text-cyan-300" /> Hotspot
-              </div>
-              <div className="mt-2 text-sm font-black tracking-tight text-white truncate" title={topArea}>{topArea}</div>
-              <div className="mt-1 text-[9px] font-black uppercase tracking-widest text-slate-500">{avgVotes} avg votes/case</div>
+            
+            <div className="glass-card p-6 rounded-[32px] h-80 border border-white/5 flex flex-col relative overflow-hidden shadow-2xl bg-black/40">
+              <h3 className="text-white font-black text-[10px] uppercase tracking-[0.2em] mb-2 opacity-50 z-10 flex items-center gap-2">
+                 <Activity className="w-3.5 h-3.5"/> Official Resolution Pipeline
+              </h3>
+              <ResponsiveContainer width="100%" height="100%" className="z-10">
+                <BarChart data={statusData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                  <XAxis dataKey="name" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} fontWeight={900} />
+                  <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
+                  <RechartsTooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', color: '#fff', fontSize: '10px', textTransform: 'uppercase', fontWeight: 900 }} />
+                  <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={40}>
+                    {statusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.name === 'Resolved' ? '#10b981' : entry.name === 'In Progress' ? '#f59e0b' : '#3b82f6'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent z-0 pointer-events-none"></div>
             </div>
           </div>
         )}
