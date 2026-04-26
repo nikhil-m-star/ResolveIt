@@ -9,13 +9,16 @@ import { Layout } from "../components/layout/Layout";
 import { Loader2, KanbanSquare, Target, Activity, CheckCircle2, GripVertical, MapPin, AlertTriangle, AlertCircle, Clock3, ShieldCheck, Flame, Users } from "lucide-react";
 import { cn } from "../utils/helpers";
 import toast from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const COLUMNS = [
   { id: "REPORTED", title: "Reported", icon: Target, color: "text-primary/70" },
   { id: "IN_PROGRESS", title: "In Progress", icon: Activity, color: "text-amber-400" },
   { id: "RESOLVED", title: "Resolved", icon: CheckCircle2, color: "text-primary" },
+  { id: "REJECTED", title: "Rejected", icon: AlertCircle, color: "text-red-400" },
 ];
+
+const MotionDiv = motion.div;
 
 export function OfficerKanban() {
   const queryClient = useQueryClient();
@@ -76,7 +79,8 @@ export function OfficerKanban() {
     return [
       { name: "Reported", value: counts.REPORTED },
       { name: "In Progress", value: counts.IN_PROGRESS },
-      { name: "Resolved", value: counts.RESOLVED }
+      { name: "Resolved", value: counts.RESOLVED },
+      { name: "Rejected", value: counts.REJECTED }
     ];
   }, [issues]);
 
@@ -133,10 +137,12 @@ export function OfficerKanban() {
   const resolvedCount = issues?.filter(i => i.status === "RESOLVED").length || 0;
   const reportedCount = issues?.filter(i => i.status === "REPORTED").length || 0;
   const inProgressCount = issues?.filter(i => i.status === "IN_PROGRESS").length || 0;
+  const rejectedCount = issues?.filter(i => i.status === "REJECTED").length || 0;
   const slaBreachedCount = issues?.filter(i => i.slaBreached).length || 0;
   const unresolvedCount = reportedCount + inProgressCount;
   const totalVotes = issues?.reduce((sum, issue) => sum + (issue.votes || 0), 0) || 0;
-  const totalCount = issues?.length || 1;
+  const issueCount = issues?.length || 0;
+  const totalCount = issueCount || 1;
   const resolutionRate = Math.round((resolvedCount / totalCount) * 100);
   const avgVotes = Math.round(totalVotes / totalCount);
   const topArea = Object.entries(
@@ -146,6 +152,14 @@ export function OfficerKanban() {
       return acc;
     }, {})
   ).sort((a, b) => b[1] - a[1])[0]?.[0] || "City Wide";
+  const boardStats = [
+    { label: "Total Cases", value: issueCount, icon: KanbanSquare, tone: "text-white" },
+    { label: "In Handling", value: unresolvedCount, icon: Clock3, tone: "text-amber-400" },
+    { label: "Resolved", value: resolvedCount, icon: ShieldCheck, tone: "text-primary" },
+    { label: "Rejected", value: rejectedCount, icon: AlertCircle, tone: "text-red-400" },
+    { label: "SLA Flags", value: slaBreachedCount, icon: Flame, tone: "text-red-400" },
+    { label: "Top Area", value: topArea, icon: Users, tone: "text-blue-400" },
+  ];
 
   return (
     <Layout>
@@ -160,28 +174,26 @@ export function OfficerKanban() {
                   <div className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-[8px] font-black text-cyan-300 uppercase tracking-[0.2em]">Citizen View</div>
                 )}
              </div>
-             <h1 className="text-hero-xl font-heading font-black text-white tracking-tighter uppercase leading-tight">Public Case Board</h1>
-             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest max-w-sm">
+             <h1 className="text-4xl font-heading font-black text-white leading-tight">Public Case Board</h1>
+             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
                {isOfficer
-                 ? "Transparency in administrative handling and metropolitan resolution progress."
+                 ? "Transparency in administrative handling and city resolution progress."
                  : "Live visibility into city handling status, case flow, and response performance."}
              </p>
           </div>
 
-          <motion.div 
+          <MotionDiv 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row items-center gap-6 bg-black/40 border border-white/10 rounded-[28px] px-5 py-4 backdrop-blur-3xl shadow-2xl w-full md:w-auto relative group overflow-hidden"
+            className="flex flex-col md:flex-row items-center gap-6 bg-black/40 border border-white/10 rounded-3xl px-5 py-4 backdrop-blur-3xl shadow-2xl w-full md:w-auto relative group overflow-hidden"
           >
-            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-            
             <div className="flex flex-col gap-2 w-full md:w-64">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                City Resolution Speed <Activity className="w-3 h-3 text-primary" />
+                Resolution rate <Activity className="w-3 h-3 text-primary" />
               </span>
               <div className="flex items-center gap-4">
                 <div className="h-2 flex-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <motion.div 
+                  <MotionDiv 
                     initial={{ width: 0 }}
                     animate={{ width: `${resolutionRate}%` }}
                     className="h-full bg-primary shadow-[0_0_15px_#10b981]" 
@@ -198,14 +210,33 @@ export function OfficerKanban() {
             <div className="flex items-center justify-between md:justify-start gap-6 w-full md:w-auto">
               <div className="flex flex-col">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">In Handling</span>
-                <span className="text-xl font-black text-white tracking-tighter">{issues?.filter(i => i.status !== "RESOLVED").length || 0}</span>
+                <span className="text-xl font-black text-white">{unresolvedCount}</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Metropolitan SLA</span>
-                <span className="text-xl font-black text-primary tracking-tighter">Optimal</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Avg Votes</span>
+                <span className="text-xl font-black text-primary">{avgVotes}</span>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {boardStats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <div key={stat.label} className="bg-black/40 border border-white/10 rounded-2xl p-4 backdrop-blur-3xl overflow-hidden">
+                <div className="flex items-center gap-3">
+                  <div className={cn("w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0", stat.tone)}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest truncate">{stat.label}</p>
+                    <p className={cn("text-lg font-black truncate", stat.tone)}>{stat.value}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {!isOfficer && (
@@ -238,7 +269,7 @@ export function OfficerKanban() {
                   <RechartsTooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', color: '#fff', fontSize: '10px', textTransform: 'uppercase', fontWeight: 900 }} />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={40}>
                     {statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.name === 'Resolved' ? '#10b981' : entry.name === 'In Progress' ? '#f59e0b' : '#3b82f6'} />
+                      <Cell key={`cell-${index}`} fill={entry.name === 'Resolved' ? '#10b981' : entry.name === 'In Progress' ? '#f59e0b' : entry.name === 'Rejected' ? '#ef4444' : '#3b82f6'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -274,7 +305,8 @@ export function OfficerKanban() {
                   <div className={cn(
                     "absolute -top-20 left-1/2 -translate-x-1/2 w-48 h-48 blur-[80px] opacity-20 pointer-events-none transition-all duration-700",
                     column.id === "REPORTED" ? "bg-blue-500" : 
-                    column.id === "IN_PROGRESS" ? "bg-amber-500" : "bg-emerald-500"
+                    column.id === "IN_PROGRESS" ? "bg-amber-500" :
+                    column.id === "REJECTED" ? "bg-red-500" : "bg-emerald-500"
                   )} />
 
                   <div className="p-5 border-b border-white/5 bg-white/5 backdrop-blur-xl flex justify-between items-center relative z-10 rounded-t-[32px]">
@@ -291,7 +323,7 @@ export function OfficerKanban() {
 
                   <div className="p-5 flex flex-col gap-4 relative z-10">
                      {columnIssues.map((issue) => (
-                       <motion.div 
+                       <MotionDiv 
                           key={issue.id}
                           layoutId={issue.id}
                           draggable={isOfficer}
@@ -348,7 +380,7 @@ export function OfficerKanban() {
                                </div>
                              )}
                           </div>
-                       </motion.div>
+                       </MotionDiv>
                      ))}
                      
                      {columnIssues.length === 0 && (
