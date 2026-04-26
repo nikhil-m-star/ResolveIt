@@ -5,6 +5,7 @@ import {
   createIssue,
   getIssues,
   getIssueById,
+  getIssueAreas,
   autoCategorize,
   duplicateCheck,
   updateStatus,
@@ -19,6 +20,7 @@ const issueRouter = Router();
 issueRouter.post("/auto-categorize", jwtAuth, autoCategorize);
 issueRouter.post("/check-duplicate", jwtAuth, duplicateCheck);
 issueRouter.get("/ai-report", jwtAuth, getAIReport);
+issueRouter.get("/areas", jwtAuth, getIssueAreas);
 
 // CRUD
 issueRouter.post("/", jwtAuth, upload.array("images", 3), createIssue);

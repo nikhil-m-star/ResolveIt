@@ -1,5 +1,15 @@
 import prisma from "../lib/prisma.js";
-import { autoCategorizIssue, checkDuplicate, assessIntensity, predictETA, generateCityReport } from "../services/nvidia.js";
+import {
+  autoCategorizIssue,
+  checkDuplicate,
+  assessIntensity,
+  predictETA,
+  generateCityReport,
+  getCachedCityReport,
+  setCachedCityReport,
+  invalidateCityReportCache,
+  buildEmptyCityReport
+} from "../services/nvidia.js";
 import { sendEmailNotification } from "../lib/email.js";
 
 const VALID_STATUS = new Set(["REPORTED", "IN_PROGRESS", "RESOLVED", "REJECTED"]);
@@ -140,6 +150,8 @@ export const createIssue = async (req, res) => {
     const newIssue = await prisma.issue.create({
       data: issueData,
     });
+
+    invalidateCityReportCache(issueData.city, area);
 
     // Sector-Wide Notifications: Alert all officers in this area
     if (area) {
@@ -284,6 +296,39 @@ export const getIssueById = async (req, res) => {
   }
 };
 
+export const getIssueAreas = async (req, res) => {
+  try {
+    const city = normalizeQueryParam(req.user?.city);
+    const where = city ? { city, area: { not: null } } : { area: { not: null } };
+
+    const records = await prisma.issue.findMany({
+      where,
+      select: { area: true },
+      distinct: ["area"]
+    });
+
+    const seen = new Set();
+    const areas = [];
+
+    for (const record of records) {
+      const areaLabel = normalizeQueryParam(record.area);
+      if (!areaLabel) continue;
+
+      const normalizedArea = areaLabel.toLowerCase();
+      if (seen.has(normalizedArea)) continue;
+
+      seen.add(normalizedArea);
+      areas.push(areaLabel);
+    }
+
+    areas.sort((left, right) => left.localeCompare(right));
+    res.json({ areas });
+  } catch (error) {
+    console.error("Fetch issue areas error:", error);
+    res.status(500).json({ error: "Failed to fetch issue areas" });
+  }
+};
+
 export const updateStatus = async (req, res) => {
   const { id } = req.params;
   const { newStatus, note } = req.body;
@@ -355,6 +400,8 @@ export const updateStatus = async (req, res) => {
       });
     }
 
+    invalidateCityReportCache(issue.city, issue.area);
+
     res.json({ updatedIssue, statusEntry });
 
   } catch (error) {
@@ -365,14 +412,22 @@ export const updateStatus = async (req, res) => {
 
 export const getAIReport = async (req, res) => {
   const { city } = req.user;
-  const { area } = req.query;
+  const area = normalizeQueryParam(req.query.area);
 
   try {
-    // Get last 50 issues for this filter set to analyze
-    const filter = area ? { city, area } : { city };
+    const cachedReport = getCachedCityReport(city, area);
+    if (cachedReport) return res.json(cachedReport);
+
+    const filter = area
+      ? {
+          city,
+          area: { equals: area, mode: "insensitive" }
+        }
+      : { city };
+
     const issues = await prisma.issue.findMany({
       where: filter,
-      take: 15,
+      take: 24,
       orderBy: { createdAt: 'desc' },
       select: {
           id: true,
@@ -387,11 +442,25 @@ export const getAIReport = async (req, res) => {
     });
 
     if (issues.length === 0) {
-        return res.json({ report: `No issues reported in ${area || city} yet to generate a report.` });
+        return res.json({
+          report: buildEmptyCityReport(city, area),
+          source: "instant",
+          cached: false,
+          generatedAt: new Date().toISOString(),
+          issueCount: 0
+        });
     }
 
-    const reportMarkdown = await generateCityReport(city, issues, area);
-    res.json({ report: reportMarkdown });
+    const reportPayload = await generateCityReport(city, issues, area);
+    const responsePayload = {
+      ...reportPayload,
+      cached: false,
+      generatedAt: new Date().toISOString(),
+      issueCount: issues.length
+    };
+
+    setCachedCityReport(city, area, responsePayload);
+    res.json(responsePayload);
 
   } catch (error) {
     console.error("AI Report Generation Error:", error);
