@@ -7,6 +7,7 @@ import {
   useAuth as useClerkAuth,
   useUser as useClerkUser,
 } from "@clerk/clerk-react";
+import { dark } from "@clerk/themes";
 
 const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 export const isClerkConfigured = Boolean(CLERK_KEY);
@@ -47,5 +48,36 @@ export const UserButtonCompat = isClerkConfigured ? ClerkUserButton : FallbackUs
 
 export function ClerkProviderCompat({ children }) {
   if (!isClerkConfigured) return children;
-  return <ClerkProvider publishableKey={CLERK_KEY}>{children}</ClerkProvider>;
+  return (
+    <ClerkProvider 
+      publishableKey={CLERK_KEY}
+      appearance={{
+        baseTheme: dark,
+        variables: {
+          colorPrimary: '#10b981',
+          colorBackground: 'transparent',
+          colorInputBackground: 'rgba(255,255,255,0.05)',
+          colorInputText: '#ffffff',
+          borderRadius: '16px',
+        },
+        elements: {
+          card: "bg-black/60 border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-3xl rounded-[32px] p-2",
+          headerTitle: "font-heading font-black text-3xl uppercase tracking-tighter text-white",
+          headerSubtitle: "hidden",
+          footer: "hidden",
+          formFieldLabel: "text-[10px] font-black uppercase tracking-widest text-slate-400",
+          formFieldInput: "bg-white/5 border-white/10 text-white rounded-2xl focus:border-primary/50 transition-colors",
+          socialButtonsBlockButton: "bg-white/5 border border-white/10 hover:bg-white/10 transition-colors rounded-2xl",
+          socialButtonsBlockButtonText: "font-bold text-sm text-white",
+          dividerLine: "bg-white/10",
+          dividerText: "text-slate-500 font-bold text-xs uppercase tracking-widest",
+          formButtonPrimary: "bg-primary hover:bg-emerald-400 text-black font-black uppercase tracking-[0.2em] rounded-2xl transition-colors shadow-[0_10px_20px_rgba(16,185,129,0.3)]",
+          footerActionText: "text-slate-400 font-bold",
+          footerActionLink: "text-primary hover:text-emerald-400 font-black"
+        }
+      }}
+    >
+      {children}
+    </ClerkProvider>
+  );
 }

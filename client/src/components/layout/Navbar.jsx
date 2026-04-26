@@ -78,7 +78,7 @@ export function Navbar() {
     { to: "/", label: "Feed", icon: Compass },
     { to: "/map", label: "Map", icon: Map },
     { to: "/ai-insights", label: "AI Insights", icon: Sparkles },
-    ...(isOfficial ? [{ to: "/kanban", label: "Board", icon: KanbanSquare }] : []),
+    { to: "/kanban", label: "Board", icon: KanbanSquare },
     ...(isPresident ? [{ to: "/users", label: "Manage", icon: Users }] : []),
   ];
 
