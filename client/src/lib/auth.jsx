@@ -7,7 +7,7 @@ import { ClerkProviderCompat, useAuthCompat, useUserCompat } from "./clerkCompat
 const isNative = typeof window !== 'undefined' && !!window.Capacitor?.isNative;
 const isLocalHost = !isNative && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-const PROD_API_URL = import.meta.env.VITE_API_URL || "https://resolveit-cyhu.onrender.com/api";
+const PROD_API_URL = import.meta.env.VITE_API_URL || "https://resolveit-3xtz.onrender.com/api";
 const LOCAL_API_URL = "http://localhost:5000/api";
 
 // Native apps always use the production backend

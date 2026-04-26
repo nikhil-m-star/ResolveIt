@@ -5,7 +5,7 @@
   "server": {
     "androidScheme": "https",
     "allowNavigation": [
-      "resolveit-cyhu.onrender.com",
+      "resolveit-3xtz.onrender.com",
       "*.clerk.accounts.dev",
       "accounts.clerk.dev"
     ]
