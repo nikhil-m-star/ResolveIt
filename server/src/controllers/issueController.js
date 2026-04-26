@@ -372,7 +372,7 @@ export const getAIReport = async (req, res) => {
     const filter = area ? { city, area } : { city };
     const issues = await prisma.issue.findMany({
       where: filter,
-      take: 50,
+      take: 15,
       orderBy: { createdAt: 'desc' },
       select: {
           id: true,

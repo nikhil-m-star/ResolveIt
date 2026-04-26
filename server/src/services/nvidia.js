@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 
 // NVIDIA NIM is OpenAI-compatible — no SDK needed, plain fetch works perfectly
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
-const MODEL = "meta/llama-3.3-70b-instruct";
+const MODEL = "meta/llama-3.1-8b-instruct";
 
 async function nvidiaChatRaw(systemPrompt, userPrompt) {
   const res = await fetch(NVIDIA_API_URL, {
@@ -83,11 +83,18 @@ export async function generateCityReport(city, issues, area = null) {
   const scopeString = area ? `Area: ${area} within ${city}` : `City: ${city}`;
   
   const result = await nvidiaChatRaw(
-    "You are a strategic civic data analyst. Generate a structured markdown report. " +
-    "CRITICAL: When referencing specific issues, YOU MUST use markdown links in the format [Title](/issues/id). " +
-    "Focus on top recurring problems, affected zones, and urgent action items.",
-    `${scopeString}. Recent issues (last 50): ${JSON.stringify(issues)}.
-Return a well-formatted markdown report with deep-links to issues.`
+    "You are a strategic civic data analyst. Generate a CONCISE and beautifully structured markdown report. " +
+    "CRITICAL RULES:\n" +
+    "1. Keep it extremely brief. Use bullet points. NO long paragraphs.\n" +
+    "2. When referencing specific issues, YOU MUST use markdown deep-links in this exact format: [Issue Title](/issues/id).\n" +
+    "3. Use emojis for headers. Follow this structure exactly:\n\n" +
+    "### 🚨 Urgent Action Items\n" +
+    "- (Bullet points of urgent issues with links)\n\n" +
+    "### 📈 Top Recurring Problems\n" +
+    "- (Bullet points of common issues with links)\n\n" +
+    "### 📍 Affected Zones\n" +
+    "- (Brief zone summaries)",
+    `${scopeString}. Recent issues: ${JSON.stringify(issues)}.`
   );
   return result;
 }
