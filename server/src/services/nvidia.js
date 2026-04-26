@@ -83,17 +83,13 @@ export async function generateCityReport(city, issues, area = null) {
   const scopeString = area ? `Area: ${area} within ${city}` : `City: ${city}`;
   
   const result = await nvidiaChatRaw(
-    "You are a strategic civic data analyst. Generate a CONCISE and beautifully structured markdown report. " +
+    "You are a strategic civic data analyst. Generate a comprehensive and beautifully structured markdown report analyzing the provided civic issues.\n" +
     "CRITICAL RULES:\n" +
-    "1. Keep it extremely brief. Use bullet points. NO long paragraphs.\n" +
-    "2. When referencing specific issues, YOU MUST use markdown deep-links in this exact format: [Issue Title](/issues/id).\n" +
-    "3. Use emojis for headers. Follow this structure exactly:\n\n" +
-    "### 🚨 Urgent Action Items\n" +
-    "- (Bullet points of urgent issues with links)\n\n" +
-    "### 📈 Top Recurring Problems\n" +
-    "- (Bullet points of common issues with links)\n\n" +
-    "### 📍 Affected Zones\n" +
-    "- (Brief zone summaries)",
+    "1. Provide a well-thought-out Executive Summary paragraph at the start.\n" +
+    "2. When referencing specific issues, YOU MUST use markdown deep-links in this exact format: [Issue Title](/issues/id). This is mandatory.\n" +
+    "3. Use expressive emojis, clear H2 (##) and H3 (###) headers, bold text, and bullet points to make the report visually engaging and premium.\n" +
+    "4. Include insights, trends, and actionable recommendations for the municipal administration.\n" +
+    "5. Avoid extreme brevity; make the report detailed enough to be highly useful, but keep it well-formatted.",
     `${scopeString}. Recent issues: ${JSON.stringify(issues)}.`
   );
   return result;

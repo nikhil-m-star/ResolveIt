@@ -62,6 +62,26 @@ export function OfficerKanban() {
     onSettled: () => setMovingId(false),
   });
 
+  const categoryData = useMemo(() => {
+    if (!issues) return [];
+    const counts = {};
+    issues.forEach(i => counts[i.category] = (counts[i.category] || 0) + 1);
+    return Object.entries(counts).map(([name, value]) => ({ name, value }));
+  }, [issues]);
+
+  const statusData = useMemo(() => {
+    if (!issues) return [];
+    const counts = { REPORTED: 0, IN_PROGRESS: 0, RESOLVED: 0, REJECTED: 0 };
+    issues.forEach(i => counts[i.status] = (counts[i.status] || 0) + 1);
+    return [
+      { name: "Reported", value: counts.REPORTED },
+      { name: "In Progress", value: counts.IN_PROGRESS },
+      { name: "Resolved", value: counts.RESOLVED }
+    ];
+  }, [issues]);
+
+  const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+
   const handleDrop = (e, newStatus) => {
     e.preventDefault();
     if (!isOfficer) {
@@ -126,26 +146,6 @@ export function OfficerKanban() {
       return acc;
     }, {})
   ).sort((a, b) => b[1] - a[1])[0]?.[0] || "City Wide";
-
-  const categoryData = useMemo(() => {
-    if (!issues) return [];
-    const counts = {};
-    issues.forEach(i => counts[i.category] = (counts[i.category] || 0) + 1);
-    return Object.entries(counts).map(([name, value]) => ({ name, value }));
-  }, [issues]);
-
-  const statusData = useMemo(() => {
-    if (!issues) return [];
-    const counts = { REPORTED: 0, IN_PROGRESS: 0, RESOLVED: 0, REJECTED: 0 };
-    issues.forEach(i => counts[i.status] = (counts[i.status] || 0) + 1);
-    return [
-      { name: "Reported", value: counts.REPORTED },
-      { name: "In Progress", value: counts.IN_PROGRESS },
-      { name: "Resolved", value: counts.RESOLVED }
-    ];
-  }, [issues]);
-
-  const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
 
   return (
     <Layout>
