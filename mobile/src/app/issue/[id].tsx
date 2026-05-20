@@ -217,7 +217,7 @@ export default function IssueDetailScreen() {
       Alert.alert('Missing status', 'Select a status.');
       return;
     }
-    if (!pinCode) {
+    if (role !== 'PRESIDENT' && !pinCode) {
       Alert.alert('Missing PIN', 'Enter your PIN.');
       return;
     }
@@ -498,18 +498,22 @@ export default function IssueDetailScreen() {
                   />
                 </View>
 
-                <Text style={styles.panelLabel}>PIN</Text>
-                <View style={[styles.panelInputWrapper, { height: 48 }]}>
-                  <TextInput
-                    style={styles.panelInput}
-                    placeholder="Enter PIN"
-                    placeholderTextColor="#64748b"
-                    value={pinCode}
-                    onChangeText={setPinCode}
-                    secureTextEntry
-                    keyboardType="number-pad"
-                  />
-                </View>
+                {role !== 'PRESIDENT' && (
+                  <>
+                    <Text style={styles.panelLabel}>PIN</Text>
+                    <View style={[styles.panelInputWrapper, { height: 48 }]}>
+                      <TextInput
+                        style={styles.panelInput}
+                        placeholder="Enter PIN"
+                        placeholderTextColor="#64748b"
+                        value={pinCode}
+                        onChangeText={setPinCode}
+                        secureTextEntry
+                        keyboardType="number-pad"
+                      />
+                    </View>
+                  </>
+                )}
 
                 <TouchableOpacity
                   style={[styles.officialSubmit, updateStatusMutation.isPending && { opacity: 0.6 }]}
