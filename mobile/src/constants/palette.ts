@@ -1,0 +1,20 @@
+/** Black-first UI — subtle white tint for depth, not grey panels */
+export const Palette = {
+  background: '#000000',
+  surface: 'rgba(255, 255, 255, 0.04)',
+  surfaceElevated: 'rgba(255, 255, 255, 0.06)',
+  surfaceRaised: 'rgba(255, 255, 255, 0.08)',
+  text: '#ffffff',
+  textSecondary: '#e2e8f0',
+  textMuted: '#64748b',
+  textPlaceholder: '#475569',
+  accent: '#10b981',
+  accentStrong: '#0E9F6E',
+  accentSurface: 'rgba(16, 185, 129, 0.12)',
+  glass: 'rgba(255, 255, 255, 0.05)',
+  glassHover: 'rgba(255, 255, 255, 0.08)',
+  danger: '#ef4444',
+  dangerSurface: 'rgba(239, 68, 68, 0.12)',
+  white: '#ffffff',
+  black: '#000000',
+} as const;

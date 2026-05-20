@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 import "dotenv/config"; // Important to load variables locally
 
 import { issueRouter } from "./routes/issues.js";
@@ -15,6 +17,9 @@ import { initSLA_CronJob } from "./services/sla.js"; // Import Cron
 
 const app = express();
 app.set("trust proxy", 1);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const seedsDir = path.resolve(__dirname, "../seeds");
 
 app.use(helmet());
 const allowedOrigins = [
@@ -50,6 +55,7 @@ app.use(
 );
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
+app.use("/seeds", express.static(seedsDir));
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use("/api/", limiter);

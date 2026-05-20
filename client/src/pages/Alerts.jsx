@@ -63,10 +63,25 @@ export function Alerts() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-full pt-48">
-          <div className="flex flex-col items-center gap-6">
-            <Loader2 className="w-12 h-12 animate-spin text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 animate-pulse">Checking records...</span>
+        <div className="max-w-4xl mx-auto px-6 py-16 space-y-8 animate-pulse">
+          <div className="flex items-center justify-between">
+            <div className="space-y-2 flex-1">
+              <div className="h-3 bg-white/5 rounded-lg w-24"></div>
+              <div className="h-8 bg-white/5 rounded-lg w-48"></div>
+            </div>
+            <div className="h-10 bg-white/5 rounded-xl w-32"></div>
+          </div>
+          <div className="bg-black/40 border border-white/5 rounded-[32px] p-6 space-y-6">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="flex gap-4 p-4 border-b border-white/5 last:border-b-0">
+                <div className="w-16 h-16 rounded-[20px] bg-white/5 shrink-0 animate-pulse"></div>
+                <div className="space-y-2 flex-1">
+                  <div className="h-4 bg-white/5 rounded-lg w-1/4"></div>
+                  <div className="h-5 bg-white/5 rounded-lg w-2/3"></div>
+                  <div className="h-3 bg-white/5 rounded-lg w-1/6"></div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </Layout>

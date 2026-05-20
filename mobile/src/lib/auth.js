@@ -25,8 +25,7 @@ export const tokenCache = {
     } catch (err) {
       console.error("Clerk TokenCache SET Error: ", err);
     }
-  },
-};
+  }};
 
 // 3. ResolveIt Custom Context for Session and Role management
 const AuthContext = createContext({
@@ -35,8 +34,7 @@ const AuthContext = createContext({
   role: "CITIZEN",
   userProfile: null,
   syncLoading: false,
-  logout: async () => {},
-});
+  logout: async () => {}});
 
 export const useResolveItAuth = () => useContext(AuthContext);
 
@@ -62,8 +60,7 @@ function AuthSyncProvider({ children }) {
           const { data } = await api.post("/auth/session", {
             email: user.primaryEmailAddress?.emailAddress,
             name: user.fullName || user.firstName || "Anonymous Citizen",
-            city: "Bengaluru",
-          }, {
+            city: "Bengaluru"}, {
             headers: { Authorization: `Bearer ${clerkToken}` }
           });
 
@@ -124,8 +121,7 @@ function AuthSyncProvider({ children }) {
       role,
       userProfile,
       syncLoading,
-      logout,
-    }}>
+      logout}}>
       {children}
     </AuthContext.Provider>
   );

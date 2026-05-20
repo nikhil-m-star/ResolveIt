@@ -11,18 +11,49 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
-import MapView, { Marker, Callout, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import * as Location from 'expo-location';
 import { api } from '@/lib/api';
 import { OPERATIONAL_AREAS } from '@/utils/constants';
-import { getCategoryIconComponent, getCategoryStyles } from '@/utils/helpers';
-import { MapPin, Navigation, Rss, Layers } from 'lucide-react-native';
+import { Navigation } from 'lucide-react-native';
 
 const BENGALURU_LAT = 12.9716;
 const BENGALURU_LNG = 77.5946;
 
+const darkMapStyle = [
+  { elementType: "geometry", stylers: [{ color: "#0b0c10" }] },
+  { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#a5b4fc" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#0b0c10" }] },
+  { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#1f2937" }] },
+  { featureType: "administrative.country", elementType: "labels.text.fill", stylers: [{ color: "#818cf8" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#c084fc" }] },
+  { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#a5b4fc" }] },
+  { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#064e3b" }] },
+  { featureType: "poi.park", elementType: "labels.text.fill", stylers: [{ color: "#34d399" }] },
+  { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#1e1b4b" }] },
+  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#cbd5e1" }] },
+  { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#312e81" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#4f46e5" }] },
+  { featureType: "road.highway.controlled_access", elementType: "geometry", stylers: [{ color: "#5850ec" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#1e3a8a" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#60a5fa" }] }
+];
+
+const getIntensityColor = (intensity: number) => {
+  const score = Number(intensity) || 5;
+  if (score <= 3) return '#10b981'; // emerald
+  if (score <= 5) return '#06b6d4'; // cyan
+  if (score <= 7) return '#f59e0b'; // amber
+  if (score <= 9) return '#f97316'; // orange
+  return '#ef4444'; // red
+};
+
 export default function MapExplorerScreen() {
   const router = useRouter();
   const mapRef = useRef<MapView | null>(null);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [hasLocationPermission, setHasLocationPermission] = useState<boolean | null>(null);
 
   // Fetch all issues
   const { data: issues = [], isLoading } = useQuery({
@@ -30,8 +61,31 @@ export default function MapExplorerScreen() {
     queryFn: async () => {
       const { data } = await api.get('/issues');
       return data || [];
-    },
-  });
+    }});
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        setHasLocationPermission(status === 'granted');
+        if (status === 'granted') {
+          const location = await Location.getCurrentPositionAsync({});
+          const coords = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude};
+          setUserLocation(coords);
+          if (mapRef.current) {
+            mapRef.current.animateToRegion({
+              ...coords,
+              latitudeDelta: 0.03,
+              longitudeDelta: 0.03}, 1000);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching present location:', err);
+      }
+    })();
+  }, []);
 
   // Calculate coordinates for issues
   const geocodedIssues = Array.isArray(issues) ? issues.map((issue: any) => {
@@ -40,8 +94,7 @@ export default function MapExplorerScreen() {
       return {
         ...issue,
         lat: parseFloat(issue.latitude),
-        lng: parseFloat(issue.longitude),
-      };
+        lng: parseFloat(issue.longitude)};
     }
     // Fallback: look up sector area
     const matchedArea = OPERATIONAL_AREAS.find(
@@ -54,15 +107,13 @@ export default function MapExplorerScreen() {
       return {
         ...issue,
         lat: matchedArea.lat + offsetLat,
-        lng: matchedArea.lng + offsetLng,
-      };
+        lng: matchedArea.lng + offsetLng};
     }
     // Fallback to center
     return {
       ...issue,
       lat: BENGALURU_LAT + (Math.random() - 0.5) * 0.05,
-      lng: BENGALURU_LNG + (Math.random() - 0.5) * 0.05,
-    };
+      lng: BENGALURU_LNG + (Math.random() - 0.5) * 0.05};
   }) : [];
 
   // Center on specific operational sector
@@ -72,13 +123,33 @@ export default function MapExplorerScreen() {
         latitude: lat,
         longitude: lng,
         latitudeDelta: 0.015,
-        longitudeDelta: 0.015,
-      }, 1000);
+        longitudeDelta: 0.015}, 1000);
     }
   };
 
-  const centerOnBengaluru = () => {
-    focusOnArea(BENGALURU_LAT, BENGALURU_LNG);
+  const centerOnUserLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      setHasLocationPermission(status === 'granted');
+      if (status === 'granted') {
+        const location = await Location.getCurrentPositionAsync({});
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude};
+        setUserLocation(coords);
+        if (mapRef.current) {
+          mapRef.current.animateToRegion({
+            ...coords,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.015}, 1000);
+        }
+      } else {
+        focusOnArea(BENGALURU_LAT, BENGALURU_LNG);
+      }
+    } catch (err) {
+      console.error('Error centering on user location:', err);
+      focusOnArea(BENGALURU_LAT, BENGALURU_LNG);
+    }
   };
 
   return (
@@ -98,40 +169,20 @@ export default function MapExplorerScreen() {
               latitude: BENGALURU_LAT,
               longitude: BENGALURU_LNG,
               latitudeDelta: 0.08,
-              longitudeDelta: 0.08,
-            }}
+              longitudeDelta: 0.08}}
             customMapStyle={darkMapStyle}
+            showsUserLocation={true}
+            showsMyLocationButton={false}
           >
             {geocodedIssues.map((issue: any) => {
-              const catStyles = getCategoryStyles(issue.category);
+              const pinColor = getIntensityColor(issue.intensity);
               return (
                 <Marker
                   key={issue.id}
                   coordinate={{ latitude: issue.lat, longitude: issue.lng }}
-                  pinColor={catStyles.color}
-                >
-                  <Callout
-                    tooltip
-                    onPress={() => router.push(`/issue/${issue.id}`)}
-                  >
-                    <View style={styles.calloutCard}>
-                      <View style={styles.calloutHeader}>
-                        <Text style={[styles.calloutCategory, { color: catStyles.color }]}>
-                          {issue.category?.replace('_', ' ')}
-                        </Text>
-                      </View>
-                      <Text style={styles.calloutTitle} numberOfLines={1}>
-                        {issue.title}
-                      </Text>
-                      <Text style={styles.calloutDesc} numberOfLines={2}>
-                        {issue.description}
-                      </Text>
-                      <View style={styles.calloutFooter}>
-                        <Text style={styles.calloutLink}>TAP TO INVESTIGATE</Text>
-                      </View>
-                    </View>
-                  </Callout>
-                </Marker>
+                  pinColor={pinColor}
+                  onPress={() => router.push(`/issue/${issue.id}`)}
+                />
               );
             })}
           </MapView>
@@ -149,7 +200,7 @@ export default function MapExplorerScreen() {
             <View style={styles.actionColumn}>
               <TouchableOpacity
                 style={styles.hudActionButton}
-                onPress={centerOnBengaluru}
+                onPress={centerOnUserLocation}
                 activeOpacity={0.8}
               >
                 <Navigation size={18} color="#10b981" />
@@ -162,217 +213,31 @@ export default function MapExplorerScreen() {
   );
 }
 
-// Elegant pitch dark style mapping configuration for react-native-maps
-const darkMapStyle = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#1a1a1a"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#1a1a1a"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#333333"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.country",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.locality",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#bdbdbd"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#121212"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry.fill",
-    "stylers": [
-      {
-        "color": "#0d0d0d"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#8c8c8c"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#202020"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#282828"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway.controlled_access",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#303030"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#050505"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#3d3d3d"
-      }
-    ]
-  }
-];
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
-  },
+    backgroundColor: '#000000'},
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
-  },
+    gap: 16},
   loadingText: {
     color: '#10b981',
     fontSize: 11,
     fontWeight: '900',
-    letterSpacing: 2,
-  },
+    letterSpacing: 2},
   map: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
+    height: Dimensions.get('window').height},
   hudOverlay: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 20 : 10,
+    top: Platform.OS === 'ios' ? 54 : 36,
     left: 20,
     right: 20,
-    pointerEvents: 'box-none',
-  },
+    pointerEvents: 'box-none'},
   hudHeader: {
-    backgroundColor: 'rgba(10, 10, 10, 0.9)',
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 1,
+    backgroundColor: '#000000',
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 14,
@@ -380,85 +245,71 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.4,
     shadowRadius: 10,
-    elevation: 5,
-  },
+    elevation: 5},
   hudTitle: {
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '900',
-    letterSpacing: 3,
-  },
+    letterSpacing: 3},
   hudSubtitle: {
     color: '#10b981',
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 1.5,
-    marginTop: 4,
-  },
+    marginTop: 4},
   actionColumn: {
     position: 'absolute',
     right: 0,
     top: 90,
-    gap: 12,
-  },
+    gap: 12},
   hudActionButton: {
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: 'rgba(10, 10, 10, 0.95)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
+    backgroundColor: '#000000',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 6,
-    elevation: 4,
-  },
+    elevation: 4},
   calloutCard: {
     width: 220,
-    backgroundColor: '#0a0a0a',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
+    backgroundColor: '#000000',
     borderRadius: 16,
     padding: 14,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.5,
-    shadowRadius: 12,
-  },
+    shadowRadius: 12},
   calloutHeader: {
     flexDirection: 'row',
-    marginBottom: 6,
-  },
+    marginBottom: 6},
   calloutCategory: {
     fontSize: 8,
     fontWeight: '900',
-    letterSpacing: 1.5,
-  },
+    letterSpacing: 1.5},
   calloutTitle: {
     color: '#ffffff',
     fontSize: 13,
     fontWeight: '800',
-    marginBottom: 4,
-  },
+    marginBottom: 4},
   calloutDesc: {
-    color: '#94a3b8',
+    color: '#cbd5e1',
     fontSize: 11,
     lineHeight: 14,
-    marginBottom: 8,
-  },
+    marginBottom: 8},
   calloutFooter: {
-    borderTopWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-    paddingTop: 8,
-  },
+    paddingTop: 8},
   calloutLink: {
     color: '#10b981',
     fontSize: 9,
     fontWeight: '900',
     letterSpacing: 1,
-    textAlign: 'center',
-  },
-});
+    textAlign: 'center'},
+  calloutIntensity: {
+    fontSize: 8,
+    fontWeight: '900',
+    letterSpacing: 1,
+    marginLeft: 'auto'}});

@@ -12,8 +12,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSignIn } from '@clerk/clerk-expo';
-import { useOAuth } from '@clerk/clerk-expo';
+import { useOAuth, useSignIn } from '@clerk/clerk-expo';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import Logo from '@/components/Logo';
@@ -44,8 +43,7 @@ export default function SignInScreen() {
     try {
       const result = await signIn.create({
         identifier: email,
-        password,
-      });
+        password});
 
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
@@ -99,9 +97,7 @@ export default function SignInScreen() {
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.titleText}>Welcome back</Text>
-              <Text style={styles.subtitleText}>
-                Sign in to continue to your city dashboard.
-              </Text>
+              <Text style={styles.subtitleText}>Sign in to continue.</Text>
             </View>
           </View>
 
@@ -183,7 +179,7 @@ export default function SignInScreen() {
 
           {/* Footer matches Web */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don't have an account?</Text>
+            <Text style={styles.footerText}>Do not have an account?</Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/sign-up')}>
               <Text style={styles.footerLink}>Sign up</Text>
             </TouchableOpacity>
@@ -198,162 +194,127 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000000',
-  },
+    paddingTop: Platform.OS === 'ios' ? 50 : 36},
   container: {
-    flex: 1,
-  },
+    flex: 1},
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 40,
-  },
+    paddingVertical: 40},
   headerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     textAlign: 'center',
     marginBottom: 32,
-    gap: 16,
-  },
+    gap: 16},
   logoPill: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 9999,
-    gap: 12,
-  },
+    gap: 12},
   logoPillText: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '900',
-    letterSpacing: 0.5,
-  },
+    letterSpacing: 0.5},
   titleContainer: {
     alignItems: 'center',
-    gap: 8,
-  },
+    gap: 8},
   titleText: {
     fontSize: 32,
     fontWeight: '900',
     color: '#ffffff',
-    textAlign: 'center',
-  },
+    textAlign: 'center'},
   subtitleText: {
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#cbd5e1',
     fontWeight: '500',
     textAlign: 'center',
-    paddingHorizontal: 16,
-  },
+    paddingHorizontal: 16},
   clerkCard: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
+    backgroundColor: '#000000',
     borderRadius: 24,
     padding: 32,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.5,
-    shadowRadius: 20,
-  },
+    shadowRadius: 20},
   errorContainer: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderWidth: 1,
     borderRadius: 12,
     padding: 12,
-    marginBottom: 20,
-  },
+    marginBottom: 20},
   errorText: {
     color: '#ef4444',
     fontSize: 12,
     fontWeight: '600',
-    textAlign: 'center',
-  },
+    textAlign: 'center'},
   googleButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
     borderRadius: 18,
     height: 50,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'},
   googleButtonText: {
     color: '#ffffff',
     fontSize: 14,
-    fontWeight: '700',
-  },
+    fontWeight: '700'},
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
-  },
+    marginVertical: 20},
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  },
+    backgroundColor: 'rgba(255, 255, 255, 0.1)'},
   dividerText: {
     fontSize: 12,
-    color: '#64748b',
+    color: '#94a3b8',
     fontWeight: '700',
-    paddingHorizontal: 16,
-  },
+    paddingHorizontal: 16},
   formGroup: {
     marginBottom: 20,
-    gap: 8,
-  },
+    gap: 8},
   fieldLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#94a3b8',
-    letterSpacing: 0.5,
-  },
+    color: '#cbd5e1',
+    letterSpacing: 0.5},
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
     borderRadius: 18,
     height: 50,
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '600',
-    paddingHorizontal: 16,
-  },
+    paddingHorizontal: 16},
   primaryButton: {
     backgroundColor: '#10b981',
     borderRadius: 18,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 12,
-  },
+    marginTop: 12},
   primaryButtonText: {
     color: '#000000',
     fontSize: 14,
-    fontWeight: '900',
-  },
+    fontWeight: '900'},
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 24,
-    gap: 6,
-  },
+    gap: 6},
   footerText: {
     fontSize: 14,
-    color: '#94a3b8',
-    fontWeight: '500',
-  },
+    color: '#cbd5e1',
+    fontWeight: '500'},
   footerLink: {
     fontSize: 14,
     color: '#10b981',
-    fontWeight: '700',
-  },
-});
+    fontWeight: '700'}});

@@ -12,8 +12,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSignUp } from '@clerk/clerk-expo';
-import { useOAuth } from '@clerk/clerk-expo';
+import { useOAuth, useSignUp } from '@clerk/clerk-expo';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import Logo from '@/components/Logo';
@@ -53,8 +52,7 @@ export default function SignUpScreen() {
         emailAddress: email,
         password,
         firstName,
-        lastName,
-      });
+        lastName});
 
       // Send the email verification code
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
@@ -80,8 +78,7 @@ export default function SignUpScreen() {
 
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
+        code});
 
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
@@ -139,8 +136,8 @@ export default function SignUpScreen() {
               </Text>
               <Text style={styles.subtitleText}>
                 {pendingVerification 
-                  ? 'Enter the security code sent to your email address.' 
-                  : 'Join the civic reporting board in a few seconds.'}
+                  ? 'Enter the code from your email.' 
+                  : 'Create your account.'}
               </Text>
             </View>
           </View>
@@ -267,7 +264,7 @@ export default function SignUpScreen() {
                   {loading ? (
                     <ActivityIndicator color="#000000" />
                   ) : (
-                    <Text style={styles.primaryButtonText}>Verify Code</Text>
+                    <Text style={styles.primaryButtonText}>Verify</Text>
                   )}
                 </TouchableOpacity>
 
@@ -276,7 +273,7 @@ export default function SignUpScreen() {
                   onPress={() => setPendingVerification(false)}
                   disabled={loading}
                 >
-                  <Text style={styles.backButtonText}>Back to registration</Text>
+                  <Text style={styles.backButtonText}>Back</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -284,7 +281,7 @@ export default function SignUpScreen() {
 
           {/* Footer matches Web */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already registered?</Text>
+            <Text style={styles.footerText}>Already have an account?</Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/sign-in')}>
               <Text style={styles.footerLink}>Sign in</Text>
             </TouchableOpacity>
@@ -299,176 +296,137 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000000',
-  },
+    paddingTop: Platform.OS === 'ios' ? 50 : 36},
   container: {
-    flex: 1,
-  },
+    flex: 1},
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 40,
-  },
+    paddingVertical: 40},
   headerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     textAlign: 'center',
     marginBottom: 32,
-    gap: 16,
-  },
+    gap: 16},
   logoPill: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 9999,
-    gap: 12,
-  },
+    gap: 12},
   logoPillText: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '900',
-    letterSpacing: 0.5,
-  },
+    letterSpacing: 0.5},
   titleContainer: {
     alignItems: 'center',
-    gap: 8,
-  },
+    gap: 8},
   titleText: {
     fontSize: 32,
     fontWeight: '900',
     color: '#ffffff',
-    textAlign: 'center',
-  },
+    textAlign: 'center'},
   subtitleText: {
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#cbd5e1',
     fontWeight: '500',
     textAlign: 'center',
-    paddingHorizontal: 16,
-  },
+    paddingHorizontal: 16},
   clerkCard: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
+    backgroundColor: '#000000',
     borderRadius: 24,
     padding: 32,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.5,
-    shadowRadius: 20,
-  },
+    shadowRadius: 20},
   errorContainer: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderWidth: 1,
     borderRadius: 12,
     padding: 12,
-    marginBottom: 20,
-  },
+    marginBottom: 20},
   errorText: {
     color: '#ef4444',
     fontSize: 12,
     fontWeight: '600',
-    textAlign: 'center',
-  },
+    textAlign: 'center'},
   googleButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
     borderRadius: 18,
     height: 50,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'},
   googleButtonText: {
     color: '#ffffff',
     fontSize: 14,
-    fontWeight: '700',
-  },
+    fontWeight: '700'},
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
-  },
+    marginVertical: 20},
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  },
+    backgroundColor: 'rgba(255, 255, 255, 0.1)'},
   dividerText: {
     fontSize: 12,
-    color: '#64748b',
+    color: '#94a3b8',
     fontWeight: '700',
-    paddingHorizontal: 16,
-  },
+    paddingHorizontal: 16},
   formGroup: {
     marginBottom: 20,
-    gap: 8,
-  },
+    gap: 8},
   fieldLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#94a3b8',
-    letterSpacing: 0.5,
-  },
+    color: '#cbd5e1',
+    letterSpacing: 0.5},
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
     borderRadius: 18,
     height: 50,
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '600',
-    paddingHorizontal: 16,
-  },
+    paddingHorizontal: 16},
   primaryButton: {
     backgroundColor: '#10b981',
     borderRadius: 18,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 12,
-  },
+    marginTop: 12},
   primaryButtonText: {
     color: '#000000',
     fontSize: 14,
-    fontWeight: '900',
-  },
+    fontWeight: '900'},
   backButton: {
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 1,
     borderRadius: 18,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 12,
-  },
+    marginTop: 12},
   backButtonText: {
-    color: '#94a3b8',
+    color: '#cbd5e1',
     fontSize: 12,
-    fontWeight: '700',
-  },
+    fontWeight: '700'},
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 24,
-    gap: 6,
-  },
+    gap: 6},
   footerText: {
     fontSize: 14,
-    color: '#94a3b8',
-    fontWeight: '500',
-  },
+    color: '#cbd5e1',
+    fontWeight: '500'},
   footerLink: {
     fontSize: 14,
     color: '#10b981',
-    fontWeight: '700',
-  },
-});
+    fontWeight: '700'}});

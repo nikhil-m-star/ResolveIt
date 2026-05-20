@@ -75,8 +75,32 @@ export function IssueDetail() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-full text-primary pt-20">
-          <Loader2 className="w-10 h-10 animate-spin" />
+        <div className="px-4 py-8 max-w-6xl mx-auto space-y-8 animate-pulse">
+          <div className="h-6 bg-white/5 rounded-lg w-1/4 mb-4"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-black/40 border border-white/5 rounded-[32px] h-96 p-6 space-y-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary animate-ping"></div>
+                  <div className="h-4 bg-white/5 rounded-lg w-32"></div>
+                </div>
+                <div className="h-8 bg-white/5 rounded-lg w-3/4"></div>
+                <div className="h-4 bg-white/5 rounded-lg w-1/3"></div>
+                <div className="h-48 bg-white/5 rounded-2xl w-full"></div>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div className="bg-black/40 border border-white/5 rounded-[32px] h-64 p-6 space-y-4">
+                <div className="h-6 bg-white/5 rounded-lg w-2/3"></div>
+                <div className="h-40 bg-white/5 rounded-2xl w-full"></div>
+              </div>
+              <div className="bg-black/40 border border-white/5 rounded-[32px] h-64 p-6 space-y-4">
+                <div className="h-6 bg-white/5 rounded-lg w-2/3"></div>
+                <div className="h-4 bg-white/5 rounded-lg w-full"></div>
+                <div className="h-4 bg-white/5 rounded-lg w-3/4"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </Layout>
     );
@@ -301,8 +325,33 @@ export function IssueDetail() {
                        </div>
                      </div>
                    )}
-                 </div>
-               </>
+                  </div>
+                  
+                  {issue.latitude && issue.longitude && (
+                    <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-2 opacity-10"><MapPin className="w-16 h-16" /></div>
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                         <MapPin className="w-4 h-4 text-primary" /> Incident Location
+                      </h4>
+                      <div className="w-full h-40 rounded-lg overflow-hidden border border-white/10">
+                        <iframe 
+                          title="Incident Location Map"
+                          width="100%" 
+                          height="100%" 
+                          style={{ border: 0 }}
+                          scrolling="no" 
+                          marginHeight={0} 
+                          marginWidth={0} 
+                          src={`https://maps.google.com/maps?q=${issue.latitude},${issue.longitude}&z=15&output=embed`}
+                        />
+                      </div>
+                      <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex justify-between">
+                         <span>Lat: {issue.latitude?.toFixed(4)}</span>
+                         <span>Lng: {issue.longitude?.toFixed(4)}</span>
+                      </div>
+                    </div>
+                  )}
+                </>
              )}
           </div>
         </div>

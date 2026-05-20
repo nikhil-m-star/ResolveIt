@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
+import { GoogleMap, useJsApiLoader, OverlayViewF, OverlayView } from "@react-google-maps/api";
 import { api } from "../lib/auth";
 import toast from "react-hot-toast";
 import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
@@ -10,26 +10,32 @@ import { cn } from "../utils/helpers";
 import { motion, AnimatePresence } from "framer-motion";
 import { AreaSelector } from "../components/ui/AreaSelector";
 
-function LocationPicker({ position, setPosition }) {
-  useMapEvents({
-    click(e) {
-      setPosition([e.latlng.lat, e.latlng.lng]);
-    },
-  });
-  return position ? <Marker position={position} /> : null;
-}
-
-function MapCenterSync({ position }) {
-  const map = useMap();
-  useEffect(() => {
-    if (Array.isArray(position) && position.length === 2) {
-      map.flyTo(position, map.getZoom(), { animate: true, duration: 1 });
-    }
-  }, [map, position]);
-  return null;
-}
+const darkMapStyle = [
+  { elementType: "geometry", stylers: [{ color: "#0b0c10" }] },
+  { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#a5b4fc" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#0b0c10" }] },
+  { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#1f2937" }] },
+  { featureType: "administrative.country", elementType: "labels.text.fill", stylers: [{ color: "#818cf8" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#c084fc" }] },
+  { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#a5b4fc" }] },
+  { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#064e3b" }] },
+  { featureType: "poi.park", elementType: "labels.text.fill", stylers: [{ color: "#34d399" }] },
+  { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#1e1b4b" }] },
+  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+  { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#312e81" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#4f46e5" }] },
+  { featureType: "road.highway.controlled_access", elementType: "geometry", stylers: [{ color: "#5850ec" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#1e3a8a" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#60a5fa" }] }
+];
 
 export function ReportIssue() {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+  });
+
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -449,24 +455,43 @@ export function ReportIssue() {
                   </button>
                 </div>
                 <div className="w-full h-80 rounded-5xl overflow-hidden border border-white/10 relative z-0 shadow-2xl">
-                  <MapContainer 
-                    center={[formData.latitude, formData.longitude]} 
-                    zoom={15} 
-                    className="w-full h-full"
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <LocationPicker 
-                       position={[formData.latitude, formData.longitude]} 
-                       setPosition={(coords) => {
-                          updateForm("latitude", coords[0]);
-                          updateForm("longitude", coords[1]);
-                       }} 
-                    />
-                    <MapCenterSync position={[formData.latitude, formData.longitude]} />
-                  </MapContainer>
+                  {isLoaded ? (
+                    <GoogleMap
+                      mapContainerClassName="w-full h-full bg-[#111]"
+                      center={{ lat: Number(formData.latitude), lng: Number(formData.longitude) }}
+                      zoom={15}
+                      onClick={(e) => {
+                        if (e.latLng) {
+                          updateForm("latitude", e.latLng.lat());
+                          updateForm("longitude", e.latLng.lng());
+                        }
+                      }}
+                      options={{
+                        styles: darkMapStyle,
+                        disableDefaultUI: true,
+                        zoomControl: false,
+                      }}
+                    >
+                      <OverlayViewF
+                        position={{ lat: Number(formData.latitude), lng: Number(formData.longitude) }}
+                        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                      >
+                        <div 
+                          style={{ transform: "translate(-50%, -50%)" }}
+                          className="relative flex items-center justify-center w-8 h-8"
+                        >
+                          <div className="absolute inset-0 rounded-full bg-primary/30 animate-pulse border border-primary/50" />
+                          <div className="relative w-4 h-4 rounded-full bg-primary border-2 border-[#0b0b0b] shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+                        </div>
+                      </OverlayViewF>
+                    </GoogleMap>
+                  ) : (
+                    <div className="w-full h-full bg-[#111] flex items-center justify-center">
+                      <div className="text-[10px] font-black text-primary uppercase tracking-[0.2em] animate-pulse">
+                        Loading Google Maps Picker...
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

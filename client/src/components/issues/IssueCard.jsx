@@ -24,7 +24,7 @@ export function IssueCard({ issue }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-black/40 backdrop-blur-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-500 shadow-2xl max-w-sm sm:max-w-md mx-auto w-full"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-500 shadow-2xl max-w-sm sm:max-w-md mx-auto w-full"
     >
       {/* Scanning Light Effect on Hover */}
 
@@ -39,7 +39,7 @@ export function IssueCard({ issue }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-white/5 transition-all">
-             <div className="p-4 rounded-2xl bg-black border border-white/5 opacity-50 group-hover:opacity-100 transition-opacity">
+             <div className="p-4 rounded-2xl bg-black border border-white/10 opacity-50 group-hover:opacity-100 transition-opacity">
                {getCategoryIconNode(issue.category, "w-10 h-10 text-primary")}
              </div>
           </div>
@@ -75,9 +75,9 @@ export function IssueCard({ issue }) {
           </div>
         </div>
 
-        <div className="flex items-center pt-4 border-t border-white/5">
+        <div className="flex items-center pt-4 border-t border-white/10">
            {/* Tactical Voting Pill */}
-           <div className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-2xl px-3 py-1.5 shadow-inner">
+           <div className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-2xl px-3 py-1.5 shadow-inner">
               <button
                 onClick={(e) => { e.preventDefault(); voteMutation.mutate('UP'); }}
                 disabled={voteMutation.isPending}

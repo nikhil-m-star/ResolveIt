@@ -68,9 +68,26 @@ export function Dashboard() {
         <section className="min-h-[70vh] rounded-3xl glass-card overflow-hidden">
           <div className="p-4 md:p-8">
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-16 space-y-5">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Syncing Cases...</p>
+              <div className="animate-pulse space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary animate-ping"></div>
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Syncing Cases...</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {[1, 2, 3, 4].map((n) => (
+                    <div key={n} className="bg-black/40 border border-white/5 rounded-[32px] h-80 p-5 space-y-5">
+                      <div className="h-40 bg-white/5 rounded-2xl w-full"></div>
+                      <div className="space-y-3">
+                        <div className="h-5 bg-white/5 rounded-lg w-2/3"></div>
+                        <div className="h-3 bg-white/5 rounded-lg w-1/3"></div>
+                      </div>
+                      <div className="pt-4 border-t border-white/5 flex justify-between">
+                        <div className="h-8 bg-white/5 rounded-xl w-24"></div>
+                        <div className="h-8 bg-white/5 rounded-xl w-12"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : isError ? (
               <div className="p-6 text-center bg-red-500/5 rounded-2xl border border-red-500/20">

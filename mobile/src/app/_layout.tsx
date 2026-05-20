@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, StatusBar as RNStatusBar } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useResolveItAuth, ResolveItAuthProvider } from '@/lib/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,6 +12,10 @@ function RootLayoutNav() {
   const { isSignedIn, isLoaded } = useResolveItAuth();
   const segments = useSegments();
   const router = useRouter();
+
+  useEffect(() => {
+    RNStatusBar.setHidden(true, 'none');
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -47,7 +51,7 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ResolveItAuthProvider>
         <SafeAreaProvider>
-          <StatusBar style="light" backgroundColor="#000000" />
+          <StatusBar hidden={true} />
           <RootLayoutNav />
         </SafeAreaProvider>
       </ResolveItAuthProvider>
@@ -60,6 +64,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    justifyContent: 'center'}});
