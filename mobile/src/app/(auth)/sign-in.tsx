@@ -92,7 +92,7 @@ export default function SignInScreen() {
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           
           {/* Header section (compeletely identical to web) */}
-          <div style={styles.headerContainer as any}>
+          <View style={styles.headerContainer as any}>
             <View style={styles.logoPill}>
               <Logo size={24} />
               <Text style={styles.logoPillText}>ResolveIt</Text>
@@ -103,7 +103,7 @@ export default function SignInScreen() {
                 Sign in to continue to your city dashboard.
               </Text>
             </View>
-          </div>
+          </View>
 
           {/* Form Card (styled exactly like Clerk on the web) */}
           <View style={styles.clerkCard}>
