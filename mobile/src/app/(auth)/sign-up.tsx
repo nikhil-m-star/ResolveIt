@@ -15,7 +15,8 @@ import { useRouter } from 'expo-router';
 import { useSignUp } from '@clerk/clerk-expo';
 import { useOAuth } from '@clerk/clerk-expo';
 import * as WebBrowser from 'expo-web-browser';
-import { Lock, Mail, User, ArrowRight, Shield } from 'lucide-react-native';
+import * as Linking from 'expo-linking';
+import Logo from '@/components/Logo';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -44,7 +45,6 @@ export default function SignUpScreen() {
     setError('');
 
     try {
-      // split name into first and last
       const nameParts = name.trim().split(' ');
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
@@ -102,7 +102,11 @@ export default function SignUpScreen() {
     try {
       setLoading(true);
       setError('');
-      const { createdSessionId, setActive: setOAuthActive } = await startOAuthFlow();
+      
+      const redirectUrl = Linking.createURL('/sso-callback', { scheme: 'mobile' });
+      const { createdSessionId, setActive: setOAuthActive } = await startOAuthFlow({
+        redirectUrl
+      });
       
       if (createdSessionId && setOAuthActive) {
         await setOAuthActive({ session: createdSessionId });
@@ -122,35 +126,59 @@ export default function SignUpScreen() {
         style={styles.container}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-          <View style={styles.headerContainer}>
-            <View style={styles.logoBadge}>
-              <Shield size={24} color="#10b981" />
-              <Text style={styles.badgeText}>CITIZEN HUB</Text>
+          
+          {/* Header section (compeletely identical to web) */}
+          <div style={styles.headerContainer as any}>
+            <View style={styles.logoPill}>
+              <Logo size={24} />
+              <Text style={styles.logoPillText}>ResolveIt</Text>
             </View>
-            <Text style={styles.logoText}>RESOLVE IT</Text>
-            <Text style={styles.subtitleText}>
-              CIVIC ACTION PORTAL • BENGALURU
-            </Text>
-          </View>
+            <View style={styles.titleContainer}>
+              <Text style={styles.titleText}>
+                {pendingVerification ? 'Verification' : 'Create account'}
+              </Text>
+              <Text style={styles.subtitleText}>
+                {pendingVerification 
+                  ? 'Enter the security code sent to your email address.' 
+                  : 'Join the civic reporting board in a few seconds.'}
+              </Text>
+            </View>
+          </div>
 
-          {/* Glass Form Panel */}
-          <View style={styles.glassForm}>
+          {/* Form Card (styled exactly like Clerk on the web) */}
+          <View style={styles.clerkCard}>
+            
+            {error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
             {!pendingVerification ? (
               <>
-                <Text style={styles.formTitle}>CREATE ACCOUNT</Text>
+                {/* Google OAuth Button - placed at the top, just like Clerk */}
+                <TouchableOpacity
+                  style={styles.googleButton}
+                  onPress={handleGoogleSignUp}
+                  disabled={loading}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.googleButtonText}>Continue with Google</Text>
+                </TouchableOpacity>
 
-                {error ? (
-                  <View style={styles.errorContainer}>
-                    <Text style={styles.errorText}>{error.toUpperCase()}</Text>
-                  </View>
-                ) : null}
+                {/* Or Divider */}
+                <View style={styles.dividerContainer}>
+                  <View style={styles.dividerLine} />
+                  <Text style={styles.dividerText}>or</Text>
+                  <View style={styles.dividerLine} />
+                </View>
 
-                {/* Name Field */}
-                <View style={styles.inputWrapper}>
-                  <User size={18} color="#94a3b8" style={styles.inputIcon} />
+                {/* Form Inputs with Clerk styling */}
+                <View style={styles.formGroup}>
+                  <Text style={styles.fieldLabel}>FULL NAME</Text>
                   <TextInput
                     style={styles.input}
-                    placeholder="FULL NAME"
+                    placeholder="Full name"
                     placeholderTextColor="#64748b"
                     value={name}
                     onChangeText={(text) => {
@@ -162,12 +190,11 @@ export default function SignUpScreen() {
                   />
                 </View>
 
-                {/* Email Field */}
-                <View style={styles.inputWrapper}>
-                  <Mail size={18} color="#94a3b8" style={styles.inputIcon} />
+                <View style={styles.formGroup}>
+                  <Text style={styles.fieldLabel}>EMAIL ADDRESS</Text>
                   <TextInput
                     style={styles.input}
-                    placeholder="EMAIL ADDRESS"
+                    placeholder="Email address"
                     placeholderTextColor="#64748b"
                     value={email}
                     onChangeText={(text) => {
@@ -180,12 +207,11 @@ export default function SignUpScreen() {
                   />
                 </View>
 
-                {/* Password Field */}
-                <View style={styles.inputWrapper}>
-                  <Lock size={18} color="#94a3b8" style={styles.inputIcon} />
+                <View style={styles.formGroup}>
+                  <Text style={styles.fieldLabel}>PASSWORD</Text>
                   <TextInput
                     style={styles.input}
-                    placeholder="PASSWORD"
+                    placeholder="Password"
                     placeholderTextColor="#64748b"
                     value={password}
                     onChangeText={(text) => {
@@ -208,48 +234,17 @@ export default function SignUpScreen() {
                   {loading ? (
                     <ActivityIndicator color="#000000" />
                   ) : (
-                    <View style={styles.buttonContent}>
-                      <Text style={styles.primaryButtonText}>REGISTER OPERATOR</Text>
-                      <ArrowRight size={18} color="#000000" />
-                    </View>
+                    <Text style={styles.primaryButtonText}>Continue</Text>
                   )}
-                </TouchableOpacity>
-
-                <View style={styles.dividerContainer}>
-                  <View style={styles.dividerLine} />
-                  <Text style={styles.dividerText}>SECURE FEDERATION</Text>
-                  <View style={styles.dividerLine} />
-                </View>
-
-                {/* Google OAuth Button */}
-                <TouchableOpacity
-                  style={styles.googleButton}
-                  onPress={handleGoogleSignUp}
-                  disabled={loading}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
                 </TouchableOpacity>
               </>
             ) : (
               <>
-                <Text style={styles.formTitle}>VERIFICATION CODE</Text>
-                <Text style={styles.codeInstructions}>
-                  ENTER THE SECURITY CODE SENT TO YOUR EMAIL ADDRESS
-                </Text>
-
-                {error ? (
-                  <View style={styles.errorContainer}>
-                    <Text style={styles.errorText}>{error.toUpperCase()}</Text>
-                  </View>
-                ) : null}
-
-                {/* Verification Code Field */}
-                <View style={styles.inputWrapper}>
-                  <Shield size={18} color="#94a3b8" style={styles.inputIcon} />
+                <View style={styles.formGroup}>
+                  <Text style={styles.fieldLabel}>VERIFICATION CODE</Text>
                   <TextInput
                     style={styles.input}
-                    placeholder="VERIFICATION CODE"
+                    placeholder="Verification code"
                     placeholderTextColor="#64748b"
                     value={code}
                     onChangeText={(text) => {
@@ -272,10 +267,7 @@ export default function SignUpScreen() {
                   {loading ? (
                     <ActivityIndicator color="#000000" />
                   ) : (
-                    <View style={styles.buttonContent}>
-                      <Text style={styles.primaryButtonText}>COMPLETE REGISTRATION</Text>
-                      <ArrowRight size={18} color="#000000" />
-                    </View>
+                    <Text style={styles.primaryButtonText}>Verify Code</Text>
                   )}
                 </TouchableOpacity>
 
@@ -284,17 +276,17 @@ export default function SignUpScreen() {
                   onPress={() => setPendingVerification(false)}
                   disabled={loading}
                 >
-                  <Text style={styles.backButtonText}>BACK TO REGISTER</Text>
+                  <Text style={styles.backButtonText}>Back to registration</Text>
                 </TouchableOpacity>
               </>
             )}
           </View>
 
-          {/* Bottom links */}
+          {/* Footer matches Web */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>ALREADY REGISTERED?</Text>
+            <Text style={styles.footerText}>Already registered?</Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/sign-in')}>
-              <Text style={styles.footerLink}>OPERATOR SIGN IN</Text>
+              <Text style={styles.footerLink}>Sign in</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -318,72 +310,57 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   headerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: 40,
+    textAlign: 'center',
+    marginBottom: 32,
+    gap: 16,
   },
-  logoBadge: {
+  logoPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
-    marginBottom: 16,
-    gap: 6,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 9999,
+    gap: 12,
   },
-  badgeText: {
-    color: '#10b981',
-    fontSize: 10,
+  logoPillText: {
+    color: '#ffffff',
+    fontSize: 14,
     fontWeight: '900',
-    letterSpacing: 2,
+    letterSpacing: 0.5,
   },
-  logoText: {
-    fontSize: 36,
+  titleContainer: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  titleText: {
+    fontSize: 32,
     fontWeight: '900',
     color: '#ffffff',
-    letterSpacing: 6,
     textAlign: 'center',
-    textShadowColor: 'rgba(16, 185, 129, 0.3)',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 15,
   },
   subtitleText: {
-    fontSize: 10,
-    color: '#64748b',
-    fontWeight: '700',
-    letterSpacing: 3,
-    marginTop: 8,
+    fontSize: 14,
+    color: '#94a3b8',
+    fontWeight: '500',
     textAlign: 'center',
+    paddingHorizontal: 16,
   },
-  glassForm: {
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-    borderColor: 'rgba(255, 255, 255, 0.07)',
+  clerkCard: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
     borderWidth: 1,
     borderRadius: 24,
-    padding: 24,
+    padding: 32,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.5,
     shadowRadius: 20,
-  },
-  formTitle: {
-    fontSize: 12,
-    fontWeight: '900',
-    color: '#10b981',
-    letterSpacing: 2,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  codeInstructions: {
-    fontSize: 10,
-    color: '#94a3b8',
-    fontWeight: '600',
-    letterSpacing: 1,
-    textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 14,
   },
   errorContainer: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -395,63 +372,79 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#ef4444',
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1.5,
+    fontSize: 12,
+    fontWeight: '600',
     textAlign: 'center',
-    lineHeight: 16,
   },
-  inputWrapper: {
+  googleButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderRadius: 18,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 1,
-    borderRadius: 14,
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    height: 56,
+    marginVertical: 20,
   },
-  inputIcon: {
-    marginRight: 12,
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  dividerText: {
+    fontSize: 12,
+    color: '#64748b',
+    fontWeight: '700',
+    paddingHorizontal: 16,
+  },
+  formGroup: {
+    marginBottom: 20,
+    gap: 8,
+  },
+  fieldLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#94a3b8',
+    letterSpacing: 0.5,
   },
   input: {
-    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderRadius: 18,
+    height: 50,
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '600',
-    letterSpacing: 1,
-    height: '100%',
+    paddingHorizontal: 16,
   },
   primaryButton: {
     backgroundColor: '#10b981',
-    borderRadius: 14,
-    height: 56,
+    borderRadius: 18,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 8,
-    shadowColor: '#10b981',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
+    marginTop: 12,
   },
   primaryButtonText: {
     color: '#000000',
     fontSize: 14,
     fontWeight: '900',
-    letterSpacing: 2,
   },
   backButton: {
     borderColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderRadius: 14,
-    height: 56,
+    borderRadius: 18,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 12,
@@ -459,58 +452,23 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#94a3b8',
     fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 2,
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 24,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  dividerText: {
-    fontSize: 9,
-    color: '#64748b',
     fontWeight: '700',
-    letterSpacing: 2,
-    paddingHorizontal: 16,
-  },
-  googleButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 1,
-    borderRadius: 14,
-    height: 56,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  googleButtonText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '900',
-    letterSpacing: 2,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 32,
-    gap: 8,
+    marginTop: 24,
+    gap: 6,
   },
   footerText: {
-    fontSize: 12,
-    color: '#64748b',
-    fontWeight: '600',
-    letterSpacing: 1,
+    fontSize: 14,
+    color: '#94a3b8',
+    fontWeight: '500',
   },
   footerLink: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#10b981',
-    fontWeight: '900',
-    letterSpacing: 1,
+    fontWeight: '700',
   },
 });
