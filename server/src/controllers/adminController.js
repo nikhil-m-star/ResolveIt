@@ -4,15 +4,15 @@ import prisma from "../lib/prisma.js";
 export const getDashboardStats = async (req, res) => {
   const { role, city, area, id } = req.user;
 
-  if (role === "CITIZEN") {
-      return res.status(403).json({ error: "Access Denied" });
-  }
+    if (role === "CITIZEN") {
+            return res.status(403).json({ error: "Access Denied" });
+    }
 
   try {
-    // Presidents see city-wide data; officers default to city-wide when area is missing.
-    const filter = role === "PRESIDENT"
-      ? { city }
-      : { city, ...(area ? { area } : {}) };
+        // Presidents see city-wide data; officers default to city-wide when area is missing.
+        const filter = role === "PRESIDENT"
+            ? { city }
+            : { city, ...(area ? { area } : {}) };
 
     const totalIssues = await prisma.issue.count({ where: filter });
     const resolvedIssues = await prisma.issue.count({ where: { ...filter, status: "RESOLVED" } });

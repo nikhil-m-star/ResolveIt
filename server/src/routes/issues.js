@@ -9,6 +9,7 @@ import {
   autoCategorize,
   duplicateCheck,
   updateStatus,
+  deleteIssue,
   getAIReport
 } from "../controllers/issueController.js";
 import { toggleVote } from "../controllers/voteController.js";
@@ -35,5 +36,7 @@ issueRouter.post("/:id/comments", jwtAuth, addComment);
 
 // Officer operations
 issueRouter.patch("/:id/status", jwtAuth, updateStatus);
+// Deletion (PRESIDENT only)
+issueRouter.delete("/:id", jwtAuth, deleteIssue);
 
 export { issueRouter };

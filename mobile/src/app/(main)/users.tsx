@@ -44,7 +44,7 @@ export default function UserManagementScreen() {
       const res = await api.get('/users/admin/all');
       return res.data || [];
     },
-    retry: false // Access restriction failures shouldn't spam retry
+    retry: false
   });
 
   // Promote/Update personnel role targeting PATCH /users/admin/role/:userId

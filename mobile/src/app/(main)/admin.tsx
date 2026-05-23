@@ -37,7 +37,7 @@ export default function AdminScreen() {
       const res = await api.get('/admin/stats');
       return res.data;
     },
-    retry: false // Avoid spamming retries on access denied
+    retry: false
   });
 
   // Fetch all issues for CSV data log export

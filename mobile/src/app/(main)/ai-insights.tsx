@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import {
   View,
   Text,
@@ -42,6 +44,7 @@ function getRelativeTime(dateString: string) {
 }
 
 export default function AIInsightsScreen() {
+  const router = useRouter();
   const [area, setArea] = useState('');
   const [showAreaDropdown, setShowAreaDropdown] = useState(false);
   const [report, setReport] = useState('');
@@ -207,6 +210,91 @@ export default function AIInsightsScreen() {
         continue;
       }
 
+      // Markdown Tables
+      if (trimmed.startsWith('|')) {
+        const tableLines: string[] = [];
+        let tempIndex = i;
+        while (tempIndex < lines.length && lines[tempIndex].trim().startsWith('|')) {
+          tableLines.push(lines[tempIndex].trim());
+          tempIndex++;
+        }
+
+        if (tableLines.length >= 2) {
+          // Parse headers
+          const headers = tableLines[0]
+            .split('|')
+            .map(cell => cell.trim().replace(/\*\*/g, ''))
+            .filter((cell, idx, arr) => idx > 0 && idx < arr.length - 1);
+
+          // Parse rows (skip header and separator)
+          const rows: string[][] = [];
+          for (let j = 1; j < tableLines.length; j++) {
+            const lineTrim = tableLines[j];
+            const cleanSep = lineTrim.replace(/[\s|:-]/g, '');
+            if (cleanSep === '') {
+              continue;
+            }
+            const cells = lineTrim
+              .split('|')
+              .map(cell => cell.trim())
+              .filter((cell, idx, arr) => idx > 0 && idx < arr.length - 1);
+            if (cells.length > 0) {
+              rows.push(cells);
+            }
+          }
+
+          if (headers.length > 0 && rows.length > 0) {
+            elements.push(
+              <View key={`table-${i}`} style={styles.tableContainer}>
+                {/* Table Header */}
+                <View style={styles.tableHeaderRow}>
+                  {headers.map((header, colIdx) => (
+                    <Text
+                      key={`th-${colIdx}`}
+                      style={[
+                        styles.tableHeaderCell,
+                        { flex: headers.length === 2 ? (colIdx === 0 ? 1.8 : 1) : (colIdx === 0 ? 1.4 : 1) },
+                        colIdx > 0 && { textAlign: 'right' }
+                      ]}
+                    >
+                      {header.toUpperCase()}
+                    </Text>
+                  ))}
+                </View>
+
+                {/* Table Body */}
+                {rows.map((row, rowIdx) => (
+                  <View
+                    key={`tr-${rowIdx}`}
+                    style={[
+                      styles.tableRow,
+                      rowIdx === rows.length - 1 && { borderBottomWidth: 0 },
+                      rowIdx % 2 === 1 && { backgroundColor: 'rgba(255, 255, 255, 0.015)' }
+                    ]}
+                  >
+                    {row.map((cell, colIdx) => (
+                      <Text
+                        key={`td-${colIdx}`}
+                        style={[
+                          styles.tableCellText,
+                          { flex: headers.length === 2 ? (colIdx === 0 ? 1.8 : 1) : (colIdx === 0 ? 1.4 : 1) },
+                          colIdx === 0 ? styles.tableCellKey : styles.tableCellValue,
+                          colIdx > 0 && { textAlign: 'right' }
+                        ]}
+                      >
+                        {renderInlineStyles(cell)}
+                      </Text>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            );
+            i = tempIndex;
+            continue;
+          }
+        }
+      }
+
       // Regular paragraph
       elements.push(
         <Text key={`p-${i}`} style={styles.mdParagraph}>
@@ -219,13 +307,56 @@ export default function AIInsightsScreen() {
     return elements;
   };
 
-  // Parse bold **text** inline
+  // Parse bold **text** and markdown [links](url) inline
   const renderInlineStyles = (text: string): React.ReactNode[] => {
-    const parts = text.split('**');
-    return parts.map((part, partIndex) => {
-      const isBold = partIndex % 2 === 1;
+    if (!text) return [];
+
+    // Regex to match bold text **bold** or markdown links [title](url)
+    const regex = /(\*\*.*?\*\*|\[.*?\]\(.*?\))/g;
+    const parts = text.split(regex);
+
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        const content = part.slice(2, -2);
+        return (
+          <Text key={index} style={styles.textBold}>
+            {content}
+          </Text>
+        );
+      }
+      
+      if (part.startsWith('[') && part.includes('](')) {
+        const linkMatch = part.match(/\[(.*?)\]\((.*?)\)/);
+        if (linkMatch) {
+          const [_, title, url] = linkMatch;
+          
+          const handlePress = () => {
+            if (url.startsWith('/issues/') || url.startsWith('/issue/')) {
+              const id = url.split('/').pop();
+              if (id) {
+                router.push(`/issue/${id}`);
+              }
+            } else if (url.startsWith('http')) {
+              WebBrowser.openBrowserAsync(url).catch(err => {
+                console.error("Failed to open browser", err);
+              });
+            }
+          };
+
+          return (
+            <Text
+              key={index}
+              style={styles.textLink}
+              onPress={handlePress}
+            >
+              {title}
+            </Text>
+          );
+        }
+      }
+      
       return (
-        <Text key={partIndex} style={isBold ? styles.textBold : styles.textRegular}>
+        <Text key={index} style={styles.textRegular}>
           {part}
         </Text>
       );
@@ -842,10 +973,58 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21},
 
+  // Table styles
+  tableContainer: {
+    marginVertical: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 3},
+  tableHeaderRow: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(16, 185, 129, 0.2)'},
+  tableHeaderCell: {
+    color: '#10b981',
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1.5,
+    paddingHorizontal: 6},
+  tableRow: {
+    flexDirection: 'row',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
+    alignItems: 'center'},
+  tableCellText: {
+    fontSize: 13,
+    lineHeight: 18,
+    paddingHorizontal: 6},
+  tableCellKey: {
+    color: '#cbd5e1',
+    fontWeight: '600'},
+  tableCellValue: {
+    color: '#ffffff',
+    fontWeight: '800'},
+
   // Inline text styles
   textBold: {
     color: '#ffffff',
     fontWeight: '800'},
+  textLink: {
+    color: '#10b981',
+    fontWeight: '800',
+    textDecorationLine: 'underline'},
   textRegular: {
     color: '#cbd5e1',
     fontWeight: '500'}});

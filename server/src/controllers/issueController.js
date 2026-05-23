@@ -410,6 +410,29 @@ export const updateStatus = async (req, res) => {
   }
 };
 
+// Delete an issue (PRESIDENT only)
+export const deleteIssue = async (req, res) => {
+  const { id } = req.params;
+  if (req.user?.role !== 'PRESIDENT') {
+    return res.status(403).json({ error: 'Only PRESIDENT can delete issues' });
+  }
+
+  try {
+    const existing = await prisma.issue.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ error: 'Issue not found' });
+
+    await prisma.issue.delete({ where: { id } });
+
+    // Invalidate any caches if used
+    invalidateCityReportCache(existing.city, existing.area);
+
+    res.json({ success: true, id });
+  } catch (error) {
+    console.error('Delete Issue Error:', error);
+    res.status(500).json({ error: 'Failed to delete issue' });
+  }
+};
+
 export const getAIReport = async (req, res) => {
   const { city } = req.user;
   const area = normalizeQueryParam(req.query.area);

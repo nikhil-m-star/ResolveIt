@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "Resolve It",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,12 +12,13 @@
       "statusBarHidden": true
     },
     "android": {
+      "package": "com.resolveit.mobile",
       "statusBar": {
         "hidden": true
       },
       "adaptiveIcon": {
         "backgroundColor": "#000000",
-        "foregroundImage": "./assets/images/icon.png"
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
       },
       "predictiveBackGestureEnabled": false
     },
@@ -30,10 +31,10 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#000000",
           "android": {
             "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
+            "imageWidth": 120
           }
         }
       ],

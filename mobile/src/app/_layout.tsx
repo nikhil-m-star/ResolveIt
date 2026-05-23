@@ -5,6 +5,10 @@ import { useResolveItAuth, ResolveItAuthProvider } from '@/lib/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const queryClient = new QueryClient();
 
@@ -16,6 +20,12 @@ function RootLayoutNav() {
   useEffect(() => {
     RNStatusBar.setHidden(true, 'none');
   }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [isLoaded]);
 
   useEffect(() => {
     if (!isLoaded) return;

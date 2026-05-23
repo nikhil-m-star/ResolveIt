@@ -85,7 +85,7 @@ export const getLeaderboard = async (req, res) => {
 // Admin: Get all users (President Only)
 export const getAllUsers = async (req, res) => {
   if (req.user.role !== "PRESIDENT") {
-     return res.status(403).json({ error: "Unauthorized. President only." });
+    return res.status(403).json({ error: "Unauthorized. President only." });
   }
 
   try {

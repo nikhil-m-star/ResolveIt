@@ -2,13 +2,41 @@ import { useState, useCallback, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { GoogleMap, useJsApiLoader, OverlayViewF, OverlayView } from "@react-google-maps/api";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { renderToString } from "react-dom/server";
 import { api } from "../lib/auth";
 import toast from "react-hot-toast";
 import { ArrowRight, ArrowLeft, Bot, UploadCloud, MapPin, AlertCircle, Loader2, CheckCircle2, ShieldAlert, LocateFixed } from "lucide-react";
 import { cn } from "../utils/helpers";
 import { motion, AnimatePresence } from "framer-motion";
 import { AreaSelector } from "../components/ui/AreaSelector";
+
+
+const customMarkerIcon = L.divIcon({
+  html: renderToString(
+    <div style={{ transform: "translate(-50%, -50%)" }} className="relative flex items-center justify-center w-10 h-10">
+      <div className="absolute inset-0 rounded-full bg-emerald-500/30 animate-pulse border border-emerald-500/50" />
+      <div className="relative w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#0b0b0b] shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+    </div>
+  ),
+  className: "",
+  iconSize: [40, 40],
+  iconAnchor: [20, 20]
+});
+
+function LocationPicker({ formData, updateForm }) {
+  useMapEvents({
+    click(e) {
+      updateForm("latitude", e.latlng.lat);
+      updateForm("longitude", e.latlng.lng);
+    }
+  });
+  return formData.latitude && formData.longitude ? (
+    <Marker position={[Number(formData.latitude), Number(formData.longitude)]} icon={customMarkerIcon} />
+  ) : null;
+}
 
 const darkMapStyle = [
   { elementType: "geometry", stylers: [{ color: "#0b0c10" }] },
@@ -31,10 +59,7 @@ const darkMapStyle = [
 ];
 
 export function ReportIssue() {
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
-  });
+  
 
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -455,43 +480,20 @@ export function ReportIssue() {
                   </button>
                 </div>
                 <div className="w-full h-80 rounded-5xl overflow-hidden border border-white/10 relative z-0 shadow-2xl">
-                  {isLoaded ? (
-                    <GoogleMap
-                      mapContainerClassName="w-full h-full bg-[#111]"
-                      center={{ lat: Number(formData.latitude), lng: Number(formData.longitude) }}
-                      zoom={15}
-                      onClick={(e) => {
-                        if (e.latLng) {
-                          updateForm("latitude", e.latLng.lat());
-                          updateForm("longitude", e.latLng.lng());
-                        }
-                      }}
-                      options={{
-                        styles: darkMapStyle,
-                        disableDefaultUI: true,
-                        zoomControl: false,
-                      }}
-                    >
-                      <OverlayViewF
-                        position={{ lat: Number(formData.latitude), lng: Number(formData.longitude) }}
-                        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                      >
-                        <div 
-                          style={{ transform: "translate(-50%, -50%)" }}
-                          className="relative flex items-center justify-center w-8 h-8"
-                        >
-                          <div className="absolute inset-0 rounded-full bg-primary/30 animate-pulse border border-primary/50" />
-                          <div className="relative w-4 h-4 rounded-full bg-primary border-2 border-[#0b0b0b] shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
-                        </div>
-                      </OverlayViewF>
-                    </GoogleMap>
-                  ) : (
-                    <div className="w-full h-full bg-[#111] flex items-center justify-center">
-                      <div className="text-[10px] font-black text-primary uppercase tracking-[0.2em] animate-pulse">
-                        Loading Google Maps Picker...
-                      </div>
-                    </div>
-                  )}
+                  
+    <MapContainer
+      className="w-full h-full bg-[#111]" style={{ filter: "brightness(1.5) contrast(1.2) sepia(0.3) hue-rotate(180deg) saturate(2)" }}
+      center={[Number(formData.latitude) || 12.9716, Number(formData.longitude) || 77.5946]}
+      zoom={15}
+      zoomControl={false}
+    >
+      <TileLayer
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+      />
+      <LocationPicker formData={formData} updateForm={updateForm} />
+    </MapContainer>
+  
                 </div>
               </div>
             </div>

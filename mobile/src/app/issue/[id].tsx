@@ -11,13 +11,14 @@ import {
   Dimensions,
   SafeAreaView,
   Platform,
-  Alert
+  Alert,
+  Linking
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, resolveImageUrl } from '@/lib/api';
 import { useResolveItAuth } from '@/lib/auth';
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import { WebView } from 'react-native-webview';
 import {
   getCategoryIconComponent,
   getCategoryStyles,
@@ -207,6 +208,22 @@ export default function IssueDetailScreen() {
       );
     }});
 
+  const deleteIssueMutation = useMutation({
+    mutationFn: async () => {
+      const { data } = await api.delete(`/issues/${id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['issues'] });
+      Alert.alert('Deleted', 'Report has been removed.');
+      router.replace('/(main)');
+    },
+    onError: (err: any) => {
+      console.error(err);
+      Alert.alert('Delete failed', err?.response?.data?.error || 'Unable to delete report.');
+    }
+  });
+
   const handleSendComment = () => {
     if (!commentText.trim()) return;
     addCommentMutation.mutate(commentText);
@@ -222,6 +239,18 @@ export default function IssueDetailScreen() {
       return;
     }
     updateStatusMutation.mutate();
+  };
+
+  const handleDeleteReport = () => {
+    if (role !== 'PRESIDENT') return;
+    Alert.alert(
+      'Delete report?',
+      'This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => deleteIssueMutation.mutate() }
+      ]
+    );
   };
 
   if (isLoading) {
@@ -254,13 +283,61 @@ export default function IssueDetailScreen() {
     ? issue.imageUrls
     : [];
 
+  
+
+
+  
   const historyLogs = issue.statusHistory || [];
 
+  const issueHtml = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <style>
+          body, html, #map { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #0b0c10; }
+          .leaflet-container { background: #0b0c10; cursor: crosshair; }
+          .leaflet-tile { filter: brightness(1.5) contrast(1.2) sepia(0.3) hue-rotate(180deg) saturate(2); }
+          .neon-pulse {
+              width: 100%; height: 100%; background: #ff00ff; border: 2px solid #00ffff;
+              border-radius: 50%; box-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffff;
+              animation: pulsate 1s infinite alternate;
+          }
+          @keyframes pulsate { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(1.2); opacity: 1; } }
+      </style>
+  </head>
+  <body>
+      <div id="map"></div>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <script>
+          var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${Number(issue.latitude) || 12.9716}, ${Number(issue.longitude) || 77.5946}], 15);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+          var neonIcon = L.divIcon({
+              html: "<div class='neon-pulse'></div>",
+              className: "",
+              iconSize: [24, 24],
+              iconAnchor: [12, 12]
+          });
+          L.marker([${Number(issue.latitude) || 12.9716}, ${Number(issue.longitude) || 77.5946}], { icon: neonIcon }).addTo(map);
+      </script>
+  </body>
+  </html>`;
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Detail Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBack} onPress={() => router.back()}>
+        <TouchableOpacity 
+          style={styles.headerBack} 
+          onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace('/(main)');
+            }
+          }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
           <ArrowLeft size={20} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1}>
@@ -383,37 +460,35 @@ export default function IssueDetailScreen() {
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Location</Text>
             <View style={styles.mapCard}>
-              <MapView
-                provider={PROVIDER_DEFAULT}
-                style={styles.detailMap}
-                initialRegion={{
-                  latitude: Number(issue.latitude),
-                  longitude: Number(issue.longitude),
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005}}
-                scrollEnabled={false}
-                zoomEnabled={false}
-                pitchEnabled={false}
-                rotateEnabled={false}
-                customMapStyle={darkMapStyle}
-              >
-                <Marker
-                  coordinate={{
-                    latitude: Number(issue.latitude),
-                    longitude: Number(issue.longitude)}}
-                  pinColor={
-                    Number(issue.intensity) <= 3 ? '#10b981' :
-                    Number(issue.intensity) <= 5 ? '#06b6d4' :
-                    Number(issue.intensity) <= 7 ? '#f59e0b' :
-                    Number(issue.intensity) <= 9 ? '#f97316' : '#ef4444'
-                  }
-                />
-              </MapView>
+              <WebView style={styles.detailMap} originWhitelist={["*"]} source={{ html: issueHtml }} scrollEnabled={true} nestedScrollEnabled={true} />
               <View style={styles.mapBadgeRow}>
                 <Text style={styles.mapBadgeText}>LAT: {Number(issue.latitude).toFixed(4)}</Text>
                 <Text style={styles.mapBadgeText}>LNG: {Number(issue.longitude).toFixed(4)}</Text>
               </View>
             </View>
+            
+            <TouchableOpacity 
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#1e293b',
+                padding: 14,
+                borderRadius: 12,
+                marginTop: 16,
+                justifyContent: 'center',
+                borderWidth: 1,
+                borderColor: '#ffffff15',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 3,
+                elevation: 3
+              }}
+              onPress={() => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${issue.latitude},${issue.longitude}`)}
+            >
+              <MapPin size={16} color="#2dd4bf" style={{ marginRight: 8 }} />
+              <Text style={{ color: '#f8fafc', fontSize: 15, fontWeight: '600' }}>Open in Google Maps</Text>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -528,6 +603,24 @@ export default function IssueDetailScreen() {
                 </TouchableOpacity>
               </View>
             )}
+          </View>
+        )}
+
+        {role === 'PRESIDENT' && (
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>President Action</Text>
+            <TouchableOpacity
+              style={[styles.deleteButton, deleteIssueMutation.isPending && { opacity: 0.6 }]}
+              onPress={handleDeleteReport}
+              activeOpacity={0.8}
+              disabled={deleteIssueMutation.isPending}
+            >
+              {deleteIssueMutation.isPending ? (
+                <ActivityIndicator size="small" color="#000000" />
+              ) : (
+                <Text style={styles.deleteButtonText}>Delete Report</Text>
+              )}
+            </TouchableOpacity>
           </View>
         )}
 
@@ -853,6 +946,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'},
   officialSubmitText: {
+    color: '#000000',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 2},
+  deleteButton: {
+    backgroundColor: '#ef4444',
+    borderRadius: 14,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center'},
+  deleteButtonText: {
     color: '#000000',
     fontSize: 12,
     fontWeight: '900',

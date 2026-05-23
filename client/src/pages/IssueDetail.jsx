@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useIssue } from "../hooks/useIssue";
 import { Layout } from "../components/layout/Layout";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,6 +15,7 @@ import { useState } from "react";
 
 export function IssueDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: issue, isLoading, isError } = useIssue(id);
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
@@ -34,6 +35,7 @@ export function IssueDetail() {
   const userRole = userData.role || "CITIZEN";
   const userArea = userData.area || "";
   const isOfficial = userRole === "OFFICER" || userRole === "PRESIDENT";
+  const isPresident = userRole === "PRESIDENT";
   const canUpdateStatus = userRole === "PRESIDENT" || (userRole === "OFFICER" && String(issue?.area || "").trim().toLowerCase() === String(userArea).trim().toLowerCase());
 
   const voteMutation = useMutation({
@@ -62,8 +64,25 @@ export function IssueDetail() {
     onError: () => toast.error("Failed to update status"),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => api.delete(`/issues/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["issues"]);
+      toast.success("Report deleted");
+      navigate("/dashboard");
+    },
+    onError: () => toast.error("Failed to delete report"),
+  });
+
   const handleUpdateStatus = () => {
     statusMutation.mutate({ newStatus: selectedStatus, note: statusNote });
+  };
+
+  const handleDeleteReport = () => {
+    if (!isPresident) return;
+    const confirmed = window.confirm("Delete this report? This cannot be undone.");
+    if (!confirmed) return;
+    deleteMutation.mutate();
   };
 
   const handleSubmitComment = async (e) => {
@@ -187,6 +206,29 @@ export function IssueDetail() {
                 </div>
              </div>
           )
+        )}
+
+        {isPresident && (
+          <div className="glass-card bg-black/60 border-l-[6px] border-red-500 p-6 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="w-12 h-12 bg-red-500 flex items-center justify-center rounded-xl shadow-lg">
+                  <AlertTriangle className="w-6 h-6 text-black" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white uppercase tracking-widest">Delete Report</h3>
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">President only action</p>
+                </div>
+              </div>
+              <button
+                onClick={handleDeleteReport}
+                disabled={deleteMutation.isPending}
+                className="ml-auto w-full md:w-auto px-6 py-3 bg-red-500 hover:bg-red-400 text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl transition-all disabled:opacity-50 active:scale-95"
+              >
+                {deleteMutation.isPending ? "Deleting..." : "Delete Report"}
+              </button>
+            </div>
+          </div>
         )}
 
         {/* Diagnostic Header Block */}
@@ -342,14 +384,24 @@ export function IssueDetail() {
                           scrolling="no" 
                           marginHeight={0} 
                           marginWidth={0} 
-                          src={`https://maps.google.com/maps?q=${issue.latitude},${issue.longitude}&z=15&output=embed`}
+                          src={`https://www.openstreetmap.org/export/embed.html?bbox=${Number(issue.longitude)-0.01}%2C${Number(issue.latitude)-0.01}%2C${Number(issue.longitude)+0.01}%2C${Number(issue.latitude)+0.01}&layer=mapnik&marker=${issue.latitude}%2C${issue.longitude}`}
                         />
                       </div>
-                      <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex justify-between">
+                      <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex justify-between mt-2">
                          <span>Lat: {issue.latitude?.toFixed(4)}</span>
                          <span>Lng: {issue.longitude?.toFixed(4)}</span>
                       </div>
                     </div>
+                    
+                    <a 
+                      href={`https://www.google.com/maps/search/?api=1&query=${issue.latitude},${issue.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#1e293b] border border-white/10 hover:border-primary/50 text-slate-200 py-3 rounded-xl flex items-center justify-center gap-2 transition-all mt-4 mb-4 shadow-lg hover:shadow-primary/20 active:scale-[0.98]"
+                    >
+                      <MapPin className="w-4 h-4 text-primary" />
+                      <span className="font-semibold text-sm">Open in Google Maps</span>
+                    </a>
                   )}
                 </>
              )}
